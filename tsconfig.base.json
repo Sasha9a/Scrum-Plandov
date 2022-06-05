@@ -1,0 +1,32 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "strictFunctionTypes": false,
+    "strictNullChecks": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "importHelpers": true,
+    "noUnusedParameters": false,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["es2019", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@scrum/api/*": ["apps/api/src/app/*"],
+      "@scrum/shared/*": ["libs/shared/src/*"],
+      "@scrum/web/*": ["apps/web/src/app/*"]
+    }
+  },
+  "include": ["./libs/*/src/**/*", "./apps/*/src/**/*"],
+  "exclude": ["node_modules", "tmp"]
+}
