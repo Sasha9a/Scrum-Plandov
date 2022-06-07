@@ -32,6 +32,12 @@ export class UserDto extends BaseDto {
   public avatar: FileDto;
 
   @Expose()
+  public isValidatedEmail: boolean;
+
+  @Expose()
+  public pathValidateEmail: string;
+
+  @Expose()
   public token: string;
 
 }

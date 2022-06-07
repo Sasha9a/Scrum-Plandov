@@ -32,6 +32,12 @@ export class User extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: File.name, autopopulate: true })
   public avatar: File;
 
+  @Prop({ default: false })
+  public isValidatedEmail: boolean;
+
+  @Prop()
+  public pathValidateEmail: string;
+
   @Prop()
   public token: string;
 
