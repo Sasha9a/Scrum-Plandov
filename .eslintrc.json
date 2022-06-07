@@ -24,7 +24,10 @@
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "rules": {
+        "no-unexpected-multiline": "error",
+        "no-console": "error"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
