@@ -13,7 +13,13 @@ import { ToastModule } from "primeng/toast";
 const routes: Routes = [
   {
     path: '',
-    component: CommonLayoutComponent
+    component: CommonLayoutComponent,
+    children: [
+      {
+        path: 'user',
+        loadChildren: () => import('../modules/user/user.module').then(m => m.UserModule)
+      }
+    ]
   }
 ];
 

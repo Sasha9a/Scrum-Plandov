@@ -36,7 +36,7 @@ export class HeaderLayoutComponent implements OnInit {
       },
       {
         label: 'Настройки',
-        routerLink: '/settings'
+        routerLink: '/user/settings'
       },
       {
         separator: true

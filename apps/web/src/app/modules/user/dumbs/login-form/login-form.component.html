@@ -1,0 +1,21 @@
+<h1 class="text-center">Авторизация</h1>
+<div class="p-fluid">
+  <div class="field">
+    <label class="font-bold required-field">Почта</label>
+    <input type="email" name="email" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.email }" [(ngModel)]="userLogin.email" />
+    <p *ngIf="errors?.email" class="p-error">{{ errors.email | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold required-field">Пароль</label>
+    <p-password name="password"
+                [ngClass]="{ 'ng-invalid ng-dirty': errors?.password }"
+                [(ngModel)]="userLogin.password"
+                [feedback]="false"
+                [toggleMask]="true">
+    </p-password>
+    <p *ngIf="errors?.password" class="p-error">{{ errors.password | join }}</p>
+  </div>
+</div>
+
+<button pButton label="Войти" class="p-button-success w-full" (click)="onSave(userLogin)"></button>

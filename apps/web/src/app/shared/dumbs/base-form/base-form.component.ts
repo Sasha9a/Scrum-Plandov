@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { validate } from "@scrum/web/core/services/validation/validate.service";
 
 @Component({
-  selector: 'grace-base-form'
+  selector: 'grace-base-form',
+  template: ``
 })
 export abstract class BaseFormComponent<T> {
   @Input() public saveButtonLabel = 'Сохранить';
