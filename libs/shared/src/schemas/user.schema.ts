@@ -36,9 +36,6 @@ export class User extends Document {
   public isValidatedEmail: boolean;
 
   @Prop()
-  public pathValidateEmail: string;
-
-  @Prop()
   public token: string;
 
 }

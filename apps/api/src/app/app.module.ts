@@ -3,6 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { LoggerMiddleware } from "@scrum/api/core/middlewares/logger.middleware";
 import { FileModule } from "@scrum/api/modules/file/file.module";
 import { UserModule } from "@scrum/api/modules/user/user.module";
+import { VerifyModule } from "@scrum/api/modules/verify/verify.module";
 import { environment } from "../environments/environment";
 
 @Module({
@@ -14,7 +15,8 @@ import { environment } from "../environments/environment";
       }
     }),
     FileModule,
-    UserModule
+    UserModule,
+    VerifyModule
   ]
 })
 export class AppModule implements NestModule {

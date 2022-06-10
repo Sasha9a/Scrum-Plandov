@@ -35,9 +35,6 @@ export class UserDto extends BaseDto {
   public isValidatedEmail: boolean;
 
   @Expose()
-  public pathValidateEmail: string;
-
-  @Expose()
   public token: string;
 
 }
