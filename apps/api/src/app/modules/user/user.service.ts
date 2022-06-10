@@ -19,12 +19,12 @@ export class UserService extends BaseService<User> {
     return await this.userModel.findOne({ token: token }).exec();
   }
 
-  public async setToken(id: string, token: string): Promise<null> {
-    return await this.userModel.updateOne({ _id: id }, { $set: { token: token } }).exec() as null;
+  public async setToken(id: string, token: string): Promise<any> {
+    return await this.userModel.updateOne({ _id: id }, { $set: { token: token } }).exec();
   }
 
-  public async logout(id: string): Promise<null> {
-    return await this.userModel.updateOne({ _id: id }, { $unset: { token: '' } }).exec() as null;
+  public async logout(id: string): Promise<any> {
+    return await this.userModel.updateOne({ _id: id }, { $unset: { token: '' } }).exec();
   }
 
 }

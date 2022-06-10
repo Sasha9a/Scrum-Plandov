@@ -3,7 +3,7 @@ import { Expose } from "class-transformer";
 import { IsDefined, IsEmail, IsEnum, IsOptional, IsString, MinLength } from "class-validator";
 
 @Expose()
-export class VerifyDto {
+export class VerifyCreateDto {
 
   @Expose()
   @IsString({ message: "Введите путь" })

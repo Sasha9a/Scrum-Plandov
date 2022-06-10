@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  padding: 0;
+  margin: 0;
+  color: #212121;
+  font-family: "Avenir Next Cyr", "Helvetica Neue", sans-serif !important;
+  font-size: 14px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*:focus, .p-focus {
+  box-shadow: none !important;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.required-field {
+  &::after {
+    content: '*';
+    margin-left: 5px;
+    color: red;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: #5892dc;
+}
+
+a:visited {
+  color: #5892dc;
+}
+
+a:hover {
+  color: #86aede;
+}

@@ -11,11 +11,11 @@ export class VerifyService extends BaseService<Verify> {
     super(verifyModel);
   }
 
-  public async findByEmail(email: string): Promise<Verify> {
+  public async findByEmail(email: string): Promise<Verify | null> {
     return await this.verifyModel.findOne({ email: email }).exec();
   }
 
-  public async findByPath(path: string): Promise<Verify> {
+  public async findByPath(path: string): Promise<Verify | null> {
     return await this.verifyModel.findOne({ path: path }).exec();
   }
 

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "@scrum/web/core/app.component";
 import { GlobalErrorHandler } from "@scrum/web/core/services/error-handler.service";
 import { CommonLayoutComponent } from "@scrum/web/shared/layouts/common-layout/common-layout.component";
+import { CommonLayoutModule } from "@scrum/web/shared/layouts/common-layout/common-layout.module";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ScrollTopModule } from "primeng/scrolltop";
@@ -23,6 +24,7 @@ const routes: Routes = [
     ToastModule,
     ConfirmDialogModule,
     ScrollTopModule,
+    CommonLayoutModule,
     RouterModule.forRoot(routes, {
       onSameUrlNavigation: 'ignore',
       scrollPositionRestoration: 'enabled'
