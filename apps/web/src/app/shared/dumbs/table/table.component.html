@@ -1,0 +1,116 @@
+<p-table
+  #table
+  styleClass="responsive-table {{ styleClass }}"
+  [scrollable]="!!scrollHeight"
+  [scrollHeight]="scrollHeight"
+  [(selection)]="selectedItems"
+  (selectionChange)="selectedItemsChange.emit($event)"
+  [autoLayout]="autoLayout"
+  [rowGroupMode]="groupRowsBy ? rowGroupMode : undefined"
+  [groupRowsBy]="groupRowsBy"
+  [responsiveLayout]="responsiveLayout"
+  [value]="loading ? skeletonItems : inplaceSort ? (values | orderBy: sort) : values">
+  <ng-container *ngIf="captionTemplate">
+    <ng-template pTemplate="caption">
+      <ng-template [ngTemplateOutlet]="captionTemplate"></ng-template>
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="filterColumns">
+    <ng-template pTemplate="caption">
+      <div style="width: 300px">
+        <grace-multi-select
+          [options]="columns"
+          [(selectedItems)]="selectedColumns"
+          (selectedItemsChange)="setFilterColumns($event)"
+          [showHeader]="false"
+          optionDisabled="required"
+          sort="order"
+          optionLabel="label"
+          placeholder="Выберите столбцы"
+          dataKey="name">
+        </grace-multi-select>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template pTemplate="header">
+    <ng-template *ngIf="headerTemplate" [ngTemplateOutlet]="headerTemplate"></ng-template>
+    <tr *ngIf="!headerTemplate">
+      <th *ngIf="selectable" style="width: 40px !important">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th *ngFor="let column of selectedColumns | orderBy: 'order:number'" [ngStyle]="column.style" [ngClass]="column.class">
+        <div *ngIf="column.sort" (click)="setSort(column.sort)" class="pointer">
+          {{ column.label }}
+          <i *ngIf="column.sort" [ngClass]="getSortIconClass(column.sort)"></i>
+        </div>
+        <div *ngIf="!column.sort">
+          {{ column.label }}
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="groupheader" let-item let-rowIndex="rowIndex">
+    <ng-template
+      *ngIf="groupheaderTemplate"
+      [ngTemplateOutlet]="groupheaderTemplate"
+      [ngTemplateOutletContext]="{
+        item: item,
+        rowIndex: rowIndex
+      }"></ng-template>
+  </ng-template>
+  <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+    <ng-container *ngIf="!loading">
+      <ng-template
+        *ngIf="!selectable"
+        [ngTemplateOutlet]="rowTemplate"
+        [ngTemplateOutletContext]="{
+          item: item,
+          rowIndex: rowIndex,
+          selectedCols: selectedColumnsMap
+        }"></ng-template>
+      <tr *ngIf="selectable">
+        <td style="width: 40px !important">
+          <p-tableCheckbox #tableCheckbox [value]="item" [disabled]="selectionDisabled && !tableCheckbox.checked"></p-tableCheckbox>
+        </td>
+        <ng-template
+          [ngTemplateOutlet]="rowTemplate"
+          [ngTemplateOutletContext]="{
+            item: item,
+            rowIndex: rowIndex,
+            selectedCols: selectedColumnsMap
+          }"></ng-template>
+      </tr>
+    </ng-container>
+
+    <tr *ngIf="loading">
+      <td *ngIf="selectable">
+        <p-tableCheckbox [disabled]="true"></p-tableCheckbox>
+      </td>
+      <td *ngFor="let col of selectedColumns">
+        <p-skeleton [shape]="col.skeleton?.shape" [height]="col.skeleton?.height || '1rem'"></p-skeleton>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <tr *ngIf="paginationLoading">
+      <td [colSpan]="selectable ? columns.length + 1 : columns.length" class="text-center">
+        <p-progressSpinner
+          [style]="{
+            width: '50px',
+            height: '50px'
+          }"></p-progressSpinner>
+      </td>
+    </tr>
+    <ng-template [ngTemplateOutlet]="footerTemplate"></ng-template>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="99">
+        <div class="no-results w-full">
+          <i class="pi pi-search"></i>
+          <h2>По вашему запросу ничего не найдено</h2>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

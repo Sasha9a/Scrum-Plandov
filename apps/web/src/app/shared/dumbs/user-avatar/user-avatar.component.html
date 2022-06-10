@@ -1,0 +1,5 @@
+<p-avatar *ngIf="user?.file?.path; else defaultImage" [image]="'file/' + user.file.path | apiUrl" [shape]="shape" [size]="size"> </p-avatar>
+
+<ng-template #defaultImage>
+  <p-avatar [size]="size" [shape]="shape" [label]="userLabel" [style]="{ backgroundColor: 'var(--primary-600)', color: '#ffffff' }"> </p-avatar>
+</ng-template>
