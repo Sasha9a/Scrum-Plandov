@@ -10,7 +10,7 @@
     "strictPropertyInitialization": false,
     "noImplicitAny": true,
     "strictFunctionTypes": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noPropertyAccessFromIndexSignature": false,
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
