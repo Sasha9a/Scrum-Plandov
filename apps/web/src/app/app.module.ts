@@ -30,6 +30,6 @@ moment.locale('ru');
     [{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }],
     [{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }]
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
