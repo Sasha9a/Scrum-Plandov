@@ -24,7 +24,7 @@ export class RoutingService {
 
     this.router.events
       .pipe(
-        filter((event) => event instanceof ActivationEnd && !event.snapshot.routeConfig.children && !event.snapshot.routeConfig.loadChildren),
+        filter((event) => event instanceof ActivationEnd && !event.snapshot.routeConfig?.children && !event.snapshot.routeConfig?.loadChildren),
         map((event: ActivationEnd) => event.snapshot.data)
       )
       .subscribe((routeData) => {
