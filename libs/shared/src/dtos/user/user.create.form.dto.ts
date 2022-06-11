@@ -1,5 +1,5 @@
 import { Expose, Transform } from "class-transformer";
-import { IsEmail, IsOptional, IsString, Length } from "class-validator";
+import { IsEmail, IsOptional, IsString, Length, MinLength } from "class-validator";
 
 @Expose()
 export class UserCreateFormDto {
@@ -10,8 +10,9 @@ export class UserCreateFormDto {
   public email: string;
 
   @Expose()
-  @IsOptional()
-  public login?: string;
+  @IsString({ message: "Введите логин" })
+  @MinLength(5, { message: "Логин должен быть длиной от 5 символов" })
+  public login: string;
 
   @Expose()
   @IsOptional()
@@ -19,7 +20,7 @@ export class UserCreateFormDto {
 
   @Expose()
   @IsString({ message: "Введите пароль" })
-  @Length(8, 25, { message: "Пароль должен состоять от 8 до 25 символов" })
+  @Length(8, 32, { message: "Пароль должен состоять от 8 до 32 символов" })
   public password: string;
 
 }

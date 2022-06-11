@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { ValidateObjectId } from "@scrum/api/core/pipes/validate.object.id.pipes";
 import { AuthService } from "@scrum/api/modules/user/auth.service";
@@ -21,6 +21,15 @@ export class UserController {
   @Get('/check')
   public async check(@Res() res: Response) {
     return res.status(HttpStatus.NO_CONTENT).end();
+  }
+
+  @Get('check-login')
+  public async findByLogin(@Res() res: Response, @Query() query: { login: string }) {
+    const user = await this.userService.findByLogin(query.login);
+    const result: { isBusy: boolean } = {
+      isBusy: !!user
+    };
+    return res.status(HttpStatus.OK).json(result).end();
   }
 
   @UseGuards(JwtAuthGuard)

@@ -17,7 +17,7 @@ export class User extends Document {
   @Prop()
   public lastEntranceDate: Date;
 
-  @Prop()
+  @Prop({ required: true })
   public login: string;
 
   @Prop()

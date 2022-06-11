@@ -15,6 +15,10 @@ export class UserService extends BaseService<User> {
     return await this.userModel.findOne({ email: email }).exec();
   }
 
+  public async findByLogin(login: string): Promise<User> {
+    return await this.userModel.findOne({ login: login }).exec();
+  }
+
   public async findByToken(token: string): Promise<User> {
     return await this.userModel.findOne({ token: token }).exec();
   }
