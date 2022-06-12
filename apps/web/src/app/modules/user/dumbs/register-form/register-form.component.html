@@ -1,22 +1,20 @@
 <h1 class="text-center">Регистрация</h1>
-<div class="p-fluid">
+<div *ngIf="!loading" class="p-fluid">
   <div class="field">
     <label class="font-bold required-field">Почта</label>
-    <input type="email" pInputText
-           [ngClass]="{ 'ng-invalid ng-dirty': errors?.email }"
-           [(ngModel)]="userRegister.email" (ngModelChange)="changeEmail()" />
+    <input type="email" pInputText class="{{ errors?.email || errorEmail ? 'ng-invalid ng-dirty' : '' }}"
+           [(ngModel)]="userRegister.email" (ngModelChange)="changeEmail($event)" />
     <p *ngIf="errors?.email" class="p-error">{{ errors.email | join }}</p>
+    <p *ngIf="errorEmail" class="p-error">{{ errorEmail }}</p>
   </div>
 
   <div class="field">
     <label class="font-bold required-field">Логин</label>
-    <input type="text" pInputText
-           [ngClass]="{ 'ng-invalid ng-dirty': errors?.login || errorLogin }"
-           (ngModelChange)="changeLogin()"
+    <input type="text" pInputText class="{{ errors?.login || errorLogin ? 'ng-invalid ng-dirty' : '' }}"
+           (ngModelChange)="changeLogin($event)"
            [(ngModel)]="userRegister.login" />
-    <p *ngIf="errors?.login && !errorLogin" class="p-error">{{ errors.login | join }}</p>
-    <p *ngIf="errors?.login && errorLogin" class="p-error">{{ errors.login | join }}, {{ errorLogin }}</p>
-    <p *ngIf="!errors?.login && errorLogin" class="p-error">{{ errorLogin }}</p>
+    <p *ngIf="errors?.login" class="p-error">{{ errors.login | join }}</p>
+    <p *ngIf="errorLogin" class="p-error">{{ errorLogin }}</p>
   </div>
 
   <div class="field">
@@ -45,10 +43,11 @@
            [(ngModel)]="passwordRepeat"
            class="w-full"
            [ngClass]="{ 'ng-invalid ng-dirty': errorPasswordRepeat }"
-           (ngModelChange)="changePassword()"
            autocomplete="new-password" />
     <p *ngIf="errorPasswordRepeat" class="p-error">{{ errorPasswordRepeat }}</p>
   </div>
 </div>
 
-<button pButton label="Регистрация" class="p-button-success w-full" (click)="onSave(userRegister)"></button>
+<button *ngIf="!loading" pButton label="Регистрация" class="p-button-success w-full" (click)="onSave(userRegister)"></button>
+
+<grace-spinner *ngIf="loading" class="mt-5"></grace-spinner>

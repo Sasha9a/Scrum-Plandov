@@ -22,6 +22,10 @@ export class UserService extends BaseService {
       );
   }
 
+  public checkEmail(query: { email: string }): Observable<{ isBusy: boolean }> {
+    return this.http.get<{ isBusy: boolean }>(`${this.baseUrl}/check-email`, { params: query });
+  }
+
   public checkLogin(query: { login: string }): Observable<{ isBusy: boolean }> {
     return this.http.get<{ isBusy: boolean }>(`${this.baseUrl}/check-login`, { params: query });
   }

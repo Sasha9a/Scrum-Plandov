@@ -1,10 +1,9 @@
 <div class="grid justify-content-center">
   <div class="xl:col-4 md:col-6 col-12">
-    <grace-register-form [isBusyLogin]="isBusyLogin"
-                         (checkLogin)="checkLogin($event)"
+    <grace-register-form [(loading)]="loading"
                          (save)="create($event)">
     </grace-register-form>
-    <div class="mt-4">
+    <div *ngIf="!loading" class="mt-4">
       <a class="text-lg" routerLink="/user/login">Есть аккаунт?</a>
     </div>
   </div>
