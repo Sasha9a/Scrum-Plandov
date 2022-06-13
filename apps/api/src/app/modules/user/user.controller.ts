@@ -102,11 +102,16 @@ export class UserController extends BaseController {
 
   @Post('/login')
   public async login(@Res() res: Response, @Body() body: UserLoginFormDto) {
-    const user = await this.userService.findByEmail(body.email);
+    const bodyParams = this.validate<UserLoginFormDto>(body, UserLoginFormDto);
+
+    const user = await this.userService.findByEmail(bodyParams.email);
     if (!user) {
       throw new NotFoundException("Нет такого аккаунта");
     }
-    if (bcrypt.compareSync(body.password, user.password)) {
+    if (bcrypt.compareSync(bodyParams.password, user.password)) {
+      if (!user.isValidatedEmail) {
+        throw new NotFoundException("Аккаунт не подтвержден");
+      }
       const token = await this.authService.login(user);
       const login: Partial<UserDto> = {
         _id: user._id,
@@ -135,7 +140,9 @@ export class UserController extends BaseController {
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   public async update(@Res() res: Response, @Param('id') id: string, @Body() body: UserEditFormDto) {
-    const entity = await this.userService.update(id, body);
+    const bodyParams = this.validate<UserEditFormDto>(body, UserEditFormDto);
+
+    const entity = await this.userService.update(id, bodyParams);
     if (!entity) {
       throw new NotFoundException("Нет такого объекта!");
     }

@@ -16,7 +16,8 @@
           </p-avatar>
           <grace-user-avatar *ngIf="authService.currentUser"
                              [user]="userAvatar"
-                             (click)="op.toggle($event)">
+                             (click)="op.toggle($event)"
+                             class="cursor-pointer">
           </grace-user-avatar>
           <p-overlayPanel #op styleClass="dropdown-overlay-panel">
             <ng-template pTemplate>

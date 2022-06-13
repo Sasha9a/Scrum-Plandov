@@ -13,7 +13,7 @@ import { MenuItem } from "primeng/api";
 export class HeaderLayoutComponent implements OnInit {
 
   public menuHeader: MenuItem[] = [];
-  public userAvatar: { name: string, file?: FileDto };
+  public userAvatar: { name: string, login: string, file?: FileDto };
 
   public constructor(public readonly authService: AuthService,
                      private readonly errorService: ErrorService,
@@ -22,6 +22,7 @@ export class HeaderLayoutComponent implements OnInit {
   public ngOnInit(): void {
     this.userAvatar = {
       name: this.authService.currentUser?.name,
+      login: this.authService.currentUser?.login,
       file: this.authService.currentUser?.avatar
     };
 

@@ -39,3 +39,24 @@ a:visited {
 a:hover {
   color: #86aede;
 }
+
+.p-overlaypanel {
+  &.dropdown-overlay-panel {
+    .p-overlaypanel-content {
+      padding: 0;
+    }
+  }
+
+  &.informer-overlay-panel {
+    position: fixed;
+    display: block !important;
+    top: unset !important;
+    bottom: 40px;
+
+    &::before,
+    &::after {
+      content: none;
+    }
+  }
+}
+
