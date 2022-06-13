@@ -1,0 +1,11 @@
+<ng-container *ngIf="!loading">
+  <ng-container *ngIf="verifyInfo?.type === VerifyEmailTypeEnum.REGISTER">
+    <h3>Вы успешно подтвердили свою почту!</h3>
+    <button pButton label="Войти" class="p-button-success mt-3" routerLink="/user/login"></button>
+  </ng-container>
+  <ng-container *ngIf="!verifyInfo">
+    <h3>Ссылка не действительная</h3>
+  </ng-container>
+</ng-container>
+
+<grace-spinner *ngIf="loading"></grace-spinner>

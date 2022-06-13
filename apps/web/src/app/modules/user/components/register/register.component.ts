@@ -11,6 +11,7 @@ import { UserService } from "@scrum/web/core/services/user/user.service";
 export class RegisterComponent {
 
   public loading = false;
+  public nextStep = false;
 
   public constructor(private readonly userService: UserService,
                      private readonly cdRef: ChangeDetectorRef) {}
@@ -19,6 +20,7 @@ export class RegisterComponent {
     this.userService.create<UserCreateFormDto, UserDto>(user).subscribe({
       next: () => {
         this.loading = false;
+        this.nextStep = true;
         this.cdRef.markForCheck();
       },
       error: () => {

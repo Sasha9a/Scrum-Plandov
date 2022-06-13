@@ -1,10 +1,15 @@
 <div class="grid justify-content-center">
   <div class="xl:col-4 md:col-6 col-12">
-    <grace-register-form [(loading)]="loading"
-                         (save)="create($event)">
-    </grace-register-form>
-    <div *ngIf="!loading" class="mt-4">
-      <a class="text-lg" routerLink="/user/login">Есть аккаунт?</a>
+    <ng-container *ngIf="!nextStep">
+      <grace-register-form [(loading)]="loading"
+                           (save)="create($event)">
+      </grace-register-form>
+      <div *ngIf="!loading" class="mt-4">
+        <a class="text-lg" routerLink="/user/login">Есть аккаунт?</a>
+      </div>
+    </ng-container>
+    <div *ngIf="nextStep" class="text-center">
+      <h3>На вашу почту было отправлено письмо с подтверждением аккаунта. Подтвердите и сможете зайти на свой аккаунт.</h3>
     </div>
   </div>
 </div>

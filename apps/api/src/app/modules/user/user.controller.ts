@@ -1,7 +1,6 @@
 import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
-import { ValidateObjectId } from "@scrum/api/core/pipes/validate.object.id.pipes";
 import sendMail from "@scrum/api/core/services/mail.service";
 import { AuthService } from "@scrum/api/modules/user/auth.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
@@ -52,7 +51,7 @@ export class UserController extends BaseController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  public async getUser(@Res() res: Response, @Param('id', new ValidateObjectId()) id: string) {
+  public async getUser(@Res() res: Response, @Param('id') id: string) {
     const user = await this.userService.findById(id, { password: 0, token: 0 });
     return res.status(HttpStatus.OK).json(user).end();
   }
@@ -88,7 +87,7 @@ export class UserController extends BaseController {
         <div>
           <h3>Добрый день! Вы подали заявку на регистрацию в Grace Scrum</h3>
           <p>Чтобы продолжить регистрацию нажмите на кнопку ниже.</p>
-          <form action="${environment.url}/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
+          <form action="${environment.url}/user/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
             <button type="submit" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Подтвердить</button>
           </form>
           <p style="margin-top: 5rem">Если вы не оставляли заявку на регистрацию, то проигнорируйте это письмо</p>
@@ -135,7 +134,7 @@ export class UserController extends BaseController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  public async update(@Res() res: Response, @Param('id', new ValidateObjectId()) id: string, @Body() body: UserEditFormDto) {
+  public async update(@Res() res: Response, @Param('id') id: string, @Body() body: UserEditFormDto) {
     const entity = await this.userService.update(id, body);
     if (!entity) {
       throw new NotFoundException("Нет такого объекта!");

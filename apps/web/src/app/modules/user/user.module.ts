@@ -10,6 +10,10 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./components/register/register.module').then(m => m.RegisterModule)
+  },
+  {
+    path: 'verify',
+    loadChildren: () => import('./components/verify/verify.module').then(m => m.VerifyModule)
   }
 ];
 

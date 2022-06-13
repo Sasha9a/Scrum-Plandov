@@ -20,7 +20,7 @@ export class BaseService {
       });
   }
 
-  public findById<T>(id: number): Observable<T> {
+  public findById<T>(id: string): Observable<T> {
     return this.http.get<T>(this.baseUrl + '/' + id);
   }
 
@@ -32,7 +32,7 @@ export class BaseService {
     return this.http.put<K>(this.baseUrl + '/' + model.id, model);
   }
 
-  public deleteById<T>(id: number): Observable<T> {
+  public deleteById<T>(id: string): Observable<T> {
     return this.http.delete<T>(this.baseUrl + '/' + id);
   }
 
