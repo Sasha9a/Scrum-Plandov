@@ -15,7 +15,7 @@ export class TokenInterceptor implements HttpInterceptor {
     const currentUser = this.authService.currentUser;
 
     if (currentUser && token) {
-      const modifiedReq = req.clone({ withCredentials: true, url: environment.url + req.url, headers: req.headers.set('Authorization', token) });
+      const modifiedReq = req.clone({ withCredentials: true, url: environment.url + req.url, headers: req.headers.set('Authorization', 'Bearer ' + token) });
       return next.handle(modifiedReq);
     } else {
       return next.handle(req.clone({ url: environment.url + req.url }));
