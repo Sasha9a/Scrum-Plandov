@@ -11,8 +11,10 @@
           <grace-change-password-form (save)="recovery($event)"></grace-change-password-form>
         </ng-container>
         <ng-template #nextStepRecovery>
-          <h3>Пароль успешно изменен!</h3>
-          <button pButton label="Войти" class="p-button-success mt-3" routerLink="/user/login"></button>
+          <h3 class="text-center">Пароль успешно изменен!</h3>
+          <div class="flex justify-content-center">
+            <button pButton label="Войти" class="p-button-success mt-3" routerLink="/user/login"></button>
+          </div>
         </ng-template>
       </div>
     </div>

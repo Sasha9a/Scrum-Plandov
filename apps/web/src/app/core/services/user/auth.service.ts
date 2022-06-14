@@ -44,7 +44,7 @@ export class AuthService {
 
     this.userService.logout(this.loggedInUser).subscribe();
     this.loggedInUser = undefined;
-    this.router.navigate(['/login'], { queryParams: { url } }).catch(console.error);
+    this.router.navigate(['/user/login'], { queryParams: { url } }).catch(console.error);
   }
 
   public getToken() {

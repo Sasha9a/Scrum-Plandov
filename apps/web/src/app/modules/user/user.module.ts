@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'verify',
     loadChildren: () => import('./components/verify/verify.module').then(m => m.VerifyModule)
+  },
+  {
+    path: 'recovery',
+    loadChildren: () => import('./components/recovery/recovery.module').then(m => m.RecoveryModule)
   }
 ];
 

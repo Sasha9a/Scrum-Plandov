@@ -8,6 +8,7 @@
           <a class="text-lg" routerLink="/user/login">Назад</a>
         </div>
       </ng-container>
+      <grace-spinner *ngIf="loading"></grace-spinner>
     </ng-container>
     <div *ngIf="nextStep" class="text-center">
       <h3>На эту почту было отправлено письмо с дальнейшими инструкциями.</h3>
