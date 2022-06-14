@@ -42,6 +42,7 @@ export class AuthService {
     localStorage.removeItem('JWT_TOKEN');
     localStorage.removeItem('JWT_USER');
 
+    this.userService.logout(this.loggedInUser).subscribe();
     this.loggedInUser = undefined;
     this.router.navigate(['/login'], { queryParams: { url } }).catch(console.error);
   }

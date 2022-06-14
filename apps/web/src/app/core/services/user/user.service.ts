@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { RecoveryFormDto } from "@scrum/shared/dtos/recovery/recovery.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserLoginFormDto } from "@scrum/shared/dtos/user/user.login.form.dto";
 import { BaseService } from "@scrum/web/core/services/base.service";
@@ -30,7 +31,11 @@ export class UserService extends BaseService {
     return this.http.get<{ isBusy: boolean }>(`${this.baseUrl}/check-login`, { params: query });
   }
 
-  public logout(body: UserDto): Observable<null> {
+  public recovery(body: RecoveryFormDto): Observable<null> {
+    return this.http.post<null>(`${this.baseUrl}/recovery`, body);
+  }
+
+  public logout(body: Partial<UserDto>): Observable<null> {
     return this.http.post<null>(`${this.baseUrl}/logout`, body);
   }
 

@@ -1,0 +1,9 @@
+<div class="p-fluid">
+  <div class="field">
+    <label class="font-bold required-field">Почта</label>
+    <input type="email" name="email" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.email }" [(ngModel)]="recovery.email" />
+    <p *ngIf="errors?.email" class="p-error">{{ errors.email | join }}</p>
+  </div>
+</div>
+
+<button pButton label="Восстановить" class="p-button-success w-full" (click)="onSave(recovery)"></button>

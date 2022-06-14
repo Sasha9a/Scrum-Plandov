@@ -5,6 +5,7 @@ import sendMail from "@scrum/api/core/services/mail.service";
 import { AuthService } from "@scrum/api/modules/user/auth.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
 import { VerifyService } from "@scrum/api/modules/verify/verify.service";
+import { RecoveryFormDto } from "@scrum/shared/dtos/recovery/recovery.form.dto";
 import { UserCreateFormDto } from "@scrum/shared/dtos/user/user.create.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
@@ -128,6 +129,44 @@ export class UserController extends BaseController {
       return res.status(HttpStatus.OK).json(login).end();
     }
     throw new NotFoundException("Неверный пароль");
+  }
+
+  @Post('/recovery')
+  public async recovery(@Res() res: Response, @Body() body: RecoveryFormDto) {
+    const bodyParams = this.validate<RecoveryFormDto>(body, RecoveryFormDto);
+
+    const user = await this.userService.findByEmail(bodyParams.email);
+    if (!user) {
+      throw new NotFoundException("Нет такого аккаунта");
+    }
+
+    const pathVerify = uuid.v4();
+    const verify = await this.verifyService.create<VerifyCreateDto>({
+      path: pathVerify,
+      type: VerifyEmailTypeEnum.RECOVERY,
+      email: bodyParams.email
+    });
+    if (!verify) {
+      throw new NotFoundException("Произошла ошибка");
+    }
+
+    await sendMail({
+      to: bodyParams.email,
+      subject: 'Восстановление пароля на Grace Scrum',
+      html: `
+      <div style="display: flex; justify-content: center; text-align: center">
+        <div>
+          <h3>Добрый день! Вы подали заявку на восстановление пароля в Grace Scrum</h3>
+          <p>Чтобы продолжить процесс восстановление пароля нажмите на кнопку ниже.</p>
+          <form action="${environment.url}/user/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
+            <button type="submit" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Восстановить</button>
+          </form>
+          <p style="margin-top: 5rem">Если вы не оставляли заявку на восстановление пароля, то проигнорируйте это письмо</p>
+        </div>
+      </div>`
+    });
+
+    return res.status(HttpStatus.OK).end();
   }
 
   @UseGuards(JwtAuthGuard)
