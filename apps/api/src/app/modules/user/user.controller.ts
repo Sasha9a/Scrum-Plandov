@@ -6,6 +6,7 @@ import { AuthService } from "@scrum/api/modules/user/auth.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
 import { VerifyService } from "@scrum/api/modules/verify/verify.service";
 import { RecoveryFormDto } from "@scrum/shared/dtos/recovery/recovery.form.dto";
+import { RecoveryPasswordFormDto } from "@scrum/shared/dtos/recovery/recovery.password.form.dto";
 import { UserCreateFormDto } from "@scrum/shared/dtos/user/user.create.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
@@ -166,6 +167,24 @@ export class UserController extends BaseController {
       </div>`
     });
 
+    return res.status(HttpStatus.OK).end();
+  }
+
+  @Post('/recovery-password')
+  public async changePasswordRecovery(@Res() res: Response, @Body() body: RecoveryPasswordFormDto) {
+    const bodyParams = this.validate<RecoveryPasswordFormDto>(body, RecoveryPasswordFormDto);
+
+    const verify = await this.verifyService.findByPath(bodyParams.path);
+    if (!verify) {
+      throw new NotFoundException("Ссылка недействительная");
+    }
+
+    const user = await this.userService.findByEmail(verify.email);
+    if (!user) {
+      throw new NotFoundException("Нет пользователя");
+    }
+    user.password = bcrypt.hashSync(bodyParams.password, 10);
+    await user.save();
     return res.status(HttpStatus.OK).end();
   }
 

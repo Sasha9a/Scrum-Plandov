@@ -3,6 +3,20 @@
     <h3>Вы успешно подтвердили свою почту!</h3>
     <button pButton label="Войти" class="p-button-success mt-3" routerLink="/user/login"></button>
   </ng-container>
+  <ng-container *ngIf="verifyInfo?.type === VerifyEmailTypeEnum.RECOVERY">
+    <div class="grid justify-content-center">
+      <div class="xl:col-4 md:col-6 col-12">
+        <ng-container *ngIf="!recoveryStep; else nextStepRecovery">
+          <h1 class="text-center">Восстановление пароля</h1>
+          <grace-change-password-form (save)="recovery($event)"></grace-change-password-form>
+        </ng-container>
+        <ng-template #nextStepRecovery>
+          <h3>Пароль успешно изменен!</h3>
+          <button pButton label="Войти" class="p-button-success mt-3" routerLink="/user/login"></button>
+        </ng-template>
+      </div>
+    </div>
+  </ng-container>
   <ng-container *ngIf="!verifyInfo">
     <h3>Ссылка не действительная</h3>
   </ng-container>
