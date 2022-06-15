@@ -1,0 +1,46 @@
+<div *ngIf="user">
+  <div class="flex flex-column justify-content-center align-items-center">
+    <div class="w-12rem h-12rem p-1 border-2 border-200 border-dashed border-circle overflow-hidden">
+      <img
+        class="w-full h-full border-circle object-fit-cover"
+        [class.hidden]="!showAvatar"
+        *ngIf="user.avatar; else noAvatar"
+        [src]="'file/' + user.avatar.path | apiUrl"
+        (load)="showAvatar = true"
+        alt="Аватар" />
+      <p-skeleton *ngIf="!showAvatar" shape="circle" height="100%"></p-skeleton>
+      <ng-template #noAvatar>
+        <div class="h-full w-full border-circle flex flex-column justify-content-center align-items-center surface-100">
+          <i class="pi pi-user text-6xl text-400"></i>
+          <div class="text-400">нет фото</div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <p-table [value]="[null]" styleClass="mt-3">
+    <ng-template pTemplate="body">
+      <tr>
+        <td class="font-medium">Email</td>
+        <td class="fw-semibold">
+          <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-medium">Логин</td>
+        <td class="fw-semibold">{{ user.login }}</td>
+      </tr>
+      <tr>
+        <td class="font-medium">ФИО</td>
+        <td class="fw-semibold">{{ user.name || 'Отсутсвует' }}</td>
+      </tr>
+      <tr>
+        <td class="font-medium">Дата регистрации</td>
+        <td class="fw-semibold">{{ user.registerDate | date: 'dd MMMM yyyy HH:mm' }}</td>
+      </tr>
+      <tr>
+        <td class="font-medium">Последняя активность</td>
+        <td class="fw-semibold">{{ user.lastEntranceDate ? (user.lastEntranceDate | date: 'dd MMMM yyyy HH:mm') : 'Отсутсвует' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

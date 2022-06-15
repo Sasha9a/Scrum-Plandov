@@ -1,0 +1,7 @@
+<div *ngIf="!loading && user" class="grid justify-content-center">
+  <div class="xl:col-4 md:col-6 col-12">
+    <grace-user-info [user]="user"></grace-user-info>
+  </div>
+</div>
+
+<grace-spinner *ngIf="loading || !user"></grace-spinner>

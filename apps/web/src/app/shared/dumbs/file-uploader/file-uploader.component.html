@@ -1,0 +1,13 @@
+<p-fileUpload
+  #fileUpload
+  mode="basic"
+  [multiple]="multiple"
+  [customUpload]="true"
+  [auto]="true"
+  [accept]="accept"
+  [maxFileSize]="maxFileSize"
+  (uploadHandler)="uploadFiles($event.files)"
+  [disabled]="uploadingFiles"
+  [chooseIcon]="uploadingFiles ? 'pi-spin pi-spinner' : icon"
+  [chooseLabel]="uploadingFiles ? 'Загрузка...' : label">
+</p-fileUpload>

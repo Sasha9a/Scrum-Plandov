@@ -18,6 +18,14 @@ const routes: Routes = [
   {
     path: 'recovery',
     loadChildren: () => import('./components/recovery/recovery.module').then(m => m.RecoveryModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./components/settings/settings.module').then(m => m.SettingsModule)
+  },
+  {
+    path: 'card/:id',
+    loadChildren: () => import('./components/card/user-card.module').then(m => m.UserCardModule)
   }
 ];
 
