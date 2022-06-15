@@ -36,7 +36,7 @@ export class SettingsComponent implements OnInit {
     this.activeItemMenu = this.itemsMenu[0];
 
     this.userService.findById<UserDto>(this.authService.currentUser?._id).subscribe((user) => {
-      this.authService.updateLoggedUser({ lastEntranceDate: user.lastEntranceDate });
+      this.authService.updateLoggedUser({ ...user });
     });
   }
 
