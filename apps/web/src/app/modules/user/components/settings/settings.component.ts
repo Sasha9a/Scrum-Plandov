@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { RecoveryFormDto } from "@scrum/shared/dtos/recovery/recovery.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
 import { UserPasswordFormDto } from "@scrum/shared/dtos/user/user.password.form.dto";
@@ -15,6 +16,7 @@ import { MenuItem } from "primeng/api";
 export class SettingsComponent implements OnInit {
 
   public loading = false;
+  public nextStep = false;
 
   public itemsMenu: MenuItem[] = [
     { id: 'info', label: 'Информация', icon: 'pi pi-info-circle', command: item => this.activeItemMenu = item.item },
@@ -61,6 +63,23 @@ export class SettingsComponent implements OnInit {
       next: () => {
         this.errorService.addSuccessMessage('Пароль успешно изменен');
         this.loading = false;
+        this.cdRef.markForCheck();
+      },
+      error: () => {
+        this.loading = false;
+        this.cdRef.markForCheck();
+      }
+    });
+  }
+
+  public changeEmail(data: RecoveryFormDto) {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
+    this.userService.taskChangeEmail(data).subscribe({
+      next: () => {
+        this.loading = false;
+        this.nextStep = true;
         this.cdRef.markForCheck();
       },
       error: () => {

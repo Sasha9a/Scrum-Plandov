@@ -45,6 +45,14 @@ export class UserService extends BaseService {
     return this.http.post<null>(`${this.baseUrl}/change-password`, body);
   }
 
+  public taskChangeEmail(body: RecoveryFormDto): Observable<null> {
+    return this.http.post<null>(`${this.baseUrl}/task-change-email`, body);
+  }
+
+  public changeEmail(body: { path: string }): Observable<null> {
+    return this.http.post<null>(`${this.baseUrl}/change-email`, body);
+  }
+
   public logout(body: Partial<UserDto>): Observable<null> {
     return this.http.post<null>(`${this.baseUrl}/logout`, body);
   }

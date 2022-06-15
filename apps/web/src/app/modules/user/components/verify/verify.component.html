@@ -19,6 +19,9 @@
       </div>
     </div>
   </ng-container>
+  <ng-container *ngIf="verifyInfo?.type === VerifyEmailTypeEnum.CHANGE">
+    <h3>Вы успешно сменили свою почту!</h3>
+  </ng-container>
   <ng-container *ngIf="!verifyInfo">
     <h3>Ссылка не действительная</h3>
   </ng-container>

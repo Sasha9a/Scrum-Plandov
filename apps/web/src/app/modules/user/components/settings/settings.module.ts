@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
 import { ChangePasswordFormModule } from "@scrum/web/modules/user/dumbs/change-password-form/change-password-form.module";
+import { RecoveryFormModule } from "@scrum/web/modules/user/dumbs/recovery-form/recovery-form.module";
 import { UserEditFormModule } from "@scrum/web/modules/user/dumbs/user-edit-form/user-edit-form.module";
 import { UserInfoModule } from "@scrum/web/modules/user/dumbs/user-info/user-info.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
@@ -26,7 +27,8 @@ const routes: Routes = [
     SpinnerModule,
     UserInfoModule,
     UserEditFormModule,
-    ChangePasswordFormModule
+    ChangePasswordFormModule,
+    RecoveryFormModule
   ],
 })
 export class SettingsModule {}

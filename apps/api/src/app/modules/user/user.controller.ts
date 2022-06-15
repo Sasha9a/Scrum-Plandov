@@ -190,6 +190,61 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('/task-change-email')
+  public async taskChangeEmail(@Res() res: Response, @Body() body: RecoveryFormDto, @Req() req: Request) {
+    const bodyParams = this.validate<RecoveryFormDto>(body, RecoveryFormDto);
+
+    const user: UserDto = req.user as UserDto;
+    const pathVerify = uuid.v4();
+    const verify = await this.verifyService.create<VerifyCreateDto>({
+      path: pathVerify,
+      type: VerifyEmailTypeEnum.CHANGE,
+      email: bodyParams.email,
+      oldEmail: user.email
+    });
+    if (!verify) {
+      throw new NotFoundException("Произошла ошибка");
+    }
+
+    await sendMail({
+      to: bodyParams.email,
+      subject: 'Смена почты на Grace Scrum',
+      html: `
+      <div style="display: flex; justify-content: center; text-align: center">
+        <div>
+          <h3>Добрый день! Вы подали заявку на смену почты в Grace Scrum</h3>
+          <p>Чтобы продолжить процесс смены почты нажмите на кнопку ниже.</p>
+          <form action="${environment.url}/user/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
+            <button type="submit" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Сменить</button>
+          </form>
+          <p style="margin-top: 5rem">Если вы не оставляли заявку на смену почты, то проигнорируйте это письмо</p>
+        </div>
+      </div>`
+    });
+
+    return res.status(HttpStatus.OK).end();
+  }
+
+  @Post('/change-email')
+  public async changeEmail(@Res() res: Response, @Body() body: { path: string }) {
+    const verify = await this.verifyService.findByPath(body.path);
+    if (!verify) {
+      throw new NotFoundException("Ссылка недействительная");
+    }
+
+    const user = await this.userService.findByEmail(verify.oldEmail);
+    if (!user) {
+      throw new NotFoundException("Нет пользователя");
+    }
+
+    const entity = await this.userService.update<Partial<UserDto>>(user._id, { email: verify.email });
+    if (!entity) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+    return res.status(HttpStatus.OK).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('/change-password')
   public async changePassword(@Res() res: Response, @Body() body: UserPasswordFormDto, @Req() req: Request) {
     const bodyParams = this.validate<UserPasswordFormDto>(body, UserPasswordFormDto);

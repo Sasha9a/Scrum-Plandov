@@ -35,11 +35,21 @@ export class VerifyComponent implements OnInit {
     this.verifyService.findByPath(this.path).subscribe({
       next: (res) => {
         this.verifyInfo = res;
-        if (res && res.type !== VerifyEmailTypeEnum.RECOVERY) {
+        if (res && res.type === VerifyEmailTypeEnum.REGISTER) {
           this.verifyService.deleteById(res._id).subscribe();
         }
-        this.loading = false;
-        this.cdRef.markForCheck();
+        if (res.type === VerifyEmailTypeEnum.CHANGE) {
+          this.userService.changeEmail({ path: res.path }).subscribe({
+            next: () => {
+              this.loading = false;
+              this.verifyService.deleteById(res._id).subscribe();
+              this.cdRef.markForCheck();
+            }
+          });
+        } else {
+          this.loading = false;
+          this.cdRef.markForCheck();
+        }
       },
       error: () => {
         this.loading = false;
