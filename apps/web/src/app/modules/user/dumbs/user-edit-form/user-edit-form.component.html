@@ -1,0 +1,46 @@
+<div *ngIf="!loading" class="flex flex-column justify-content-center align-items-center">
+  <div class="w-12rem h-12rem p-1 border-2 border-200 border-dashed border-circle overflow-hidden">
+    <img
+      class="w-full h-full border-circle object-fit-cover"
+      [class.hidden]="!showAvatar"
+      *ngIf="user.avatar; else noAvatar"
+      [src]="'file/' + user.avatar.path | apiUrl"
+      (load)="showAvatar = true"
+      alt="Аватар" />
+    <p-skeleton *ngIf="!showAvatar" shape="circle" height="100%"></p-skeleton>
+    <ng-template #noAvatar>
+      <div class="h-full w-full border-circle flex flex-column justify-content-center align-items-center surface-100">
+        <i class="pi pi-user text-6xl text-400"></i>
+        <div class="text-400">нет фото</div>
+      </div>
+    </ng-template>
+  </div>
+  <div class="text-500 mt-3">Доступные форматы *.jpeg, *.jpg, *.png, *.gif</div>
+  <div class="text-500">Максимальный размер 7 Мб.</div>
+  <div class="mt-4">
+    <grace-file-uploader
+      (filesUploaded)="onAvatarFileSelect($event[0])"
+      accept="image/gif, image/jpeg, image/jpg, image/png"
+      [maxFileSize]="7340032"
+      label="Сменить аватар"
+      icon="pi-pencil">
+    </grace-file-uploader>
+  </div>
+</div>
+
+<div class="p-fluid mt-3">
+  <div class="field">
+    <label class="font-bold required-field">Логин</label>
+    <input type="text" pInputText class="{{ errors?.login || errorLogin ? 'ng-invalid ng-dirty' : '' }}" [(ngModel)]="user.login" />
+    <p *ngIf="errors?.login" class="p-error">{{ errors.login | join }}</p>
+    <p *ngIf="errorLogin" class="p-error">{{ errorLogin }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">ФИО</label>
+    <input type="text" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.name }" [(ngModel)]="user.name" />
+    <p *ngIf="errors?.name" class="p-error">{{ errors.name | join }}</p>
+  </div>
+</div>
+
+<button pButton label="Сохранить" class="p-button-success" (click)="onSave(user)"></button>

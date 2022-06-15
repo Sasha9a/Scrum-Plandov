@@ -61,6 +61,7 @@ export class AuthService {
   public updateLoggedUser(user: Partial<UserDto>) {
     this.loggedInUser = { ...this.loggedInUser, ...user };
     localStorage.setItem('JWT_USER', JSON.stringify(this.loggedInUser));
+    this.loginUser$.next(this.loggedInUser);
   }
 
   public isAuthenticated(): Observable<boolean> {

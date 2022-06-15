@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { UserDto } from "@scrum/shared/dtos/user/user.dto";
+import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
+import { ErrorService } from "@scrum/web/core/services/error.service";
 import { AuthService } from "@scrum/web/core/services/user/auth.service";
+import { UserService } from "@scrum/web/core/services/user/user.service";
 import { MenuItem } from "primeng/api";
 
 @Component({
@@ -20,9 +24,32 @@ export class SettingsComponent implements OnInit {
 
   public activeItemMenu: MenuItem;
 
-  public constructor(public readonly authService: AuthService) {}
+  public constructor(public readonly authService: AuthService,
+                     private readonly userService: UserService,
+                     public readonly cdRef: ChangeDetectorRef,
+                     private readonly errorService: ErrorService) {}
 
   public ngOnInit(): void {
     this.activeItemMenu = this.itemsMenu[0];
+
+    this.userService.findById<UserDto>(this.authService.currentUser?._id).subscribe((user) => {
+      this.authService.updateLoggedUser({ lastEntranceDate: user.lastEntranceDate });
+    });
   }
+
+  public edit(user: UserEditFormDto) {
+    this.userService.update<UserEditFormDto, UserDto>(this.authService.currentUser?._id, { login: user.login, name: user.name }).subscribe({
+      next: () => {
+        this.authService.updateLoggedUser({ name: user.name, login: user.login });
+        this.errorService.addSuccessMessage('Изменения сохранены');
+        this.loading = false;
+        this.cdRef.markForCheck();
+      },
+      error: () => {
+        this.loading = false;
+        this.cdRef.markForCheck();
+      }
+    });
+  }
+
 }

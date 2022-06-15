@@ -1,10 +1,13 @@
 <p-tabMenu [model]="itemsMenu" [activeItem]="activeItemMenu"></p-tabMenu>
 
-<div *ngIf="!loading" class="grid justify-content-center mt-3">
+<div class="grid justify-content-center mt-3">
   <div class="xl:col-4 md:col-6 col-12">
     <div class="mt-3">
       <ng-container *ngIf="activeItemMenu.id === 'info'">
-        <grace-user-info [user]="$any(authService.currentUser)"></grace-user-info>
+        <grace-user-info *ngIf="!loading" [user]="$any(authService.currentUser)"></grace-user-info>
+      </ng-container>
+      <ng-container *ngIf="activeItemMenu.id === 'edit'">
+        <grace-user-edit-form [user]="$any(authService.currentUser)" [(loading)]="loading" (save)="edit($event)"></grace-user-edit-form>
       </ng-container>
     </div>
   </div>

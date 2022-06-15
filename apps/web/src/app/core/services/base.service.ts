@@ -28,8 +28,8 @@ export class BaseService {
     return this.http.post<K>(this.baseUrl, model);
   }
 
-  public update<T extends { id?: string }, K>(model: T): Observable<K> {
-    return this.http.put<K>(this.baseUrl + '/' + model.id, model);
+  public update<T, K>(id: string, model: T): Observable<K> {
+    return this.http.put<K>(this.baseUrl + '/' + id, model);
   }
 
   public deleteById<T>(id: string): Observable<T> {
