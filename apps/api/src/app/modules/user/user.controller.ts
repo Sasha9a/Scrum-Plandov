@@ -90,9 +90,9 @@ export class UserController extends BaseController {
         <div>
           <h3>Добрый день! Вы подали заявку на регистрацию в Grace Scrum</h3>
           <p>Чтобы продолжить регистрацию нажмите на кнопку ниже.</p>
-          <form action="${environment.url}/user/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
-            <button type="submit" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Подтвердить</button>
-          </form>
+          <div style="margin-top: 1rem">
+            <a href="${environment.url}/user/verify/${pathVerify}" target="_blank" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Подтвердить</a>
+          </div>
           <p style="margin-top: 5rem">Если вы не оставляли заявку на регистрацию, то проигнорируйте это письмо</p>
         </div>
       </div>`
@@ -160,9 +160,9 @@ export class UserController extends BaseController {
         <div>
           <h3>Добрый день! Вы подали заявку на восстановление пароля в Grace Scrum</h3>
           <p>Чтобы продолжить процесс восстановление пароля нажмите на кнопку ниже.</p>
-          <form action="${environment.url}/user/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
-            <button type="submit" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Восстановить</button>
-          </form>
+          <div style="margin-top: 1rem">
+            <a href="${environment.url}/user/verify/${pathVerify}" target="_blank" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Восстановить</a>
+          </div>
           <p style="margin-top: 5rem">Если вы не оставляли заявку на восстановление пароля, то проигнорируйте это письмо</p>
         </div>
       </div>`
@@ -214,9 +214,9 @@ export class UserController extends BaseController {
         <div>
           <h3>Добрый день! Вы подали заявку на смену почты в Grace Scrum</h3>
           <p>Чтобы продолжить процесс смены почты нажмите на кнопку ниже.</p>
-          <form action="${environment.url}/user/verify/${pathVerify}" target="_blank" style="margin-top: 1rem">
-            <button type="submit" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Сменить</button>
-          </form>
+          <div style="margin-top: 1rem">
+            <a href="${environment.url}/user/verify/${pathVerify}" target="_blank" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Сменить</a>
+          </div>
           <p style="margin-top: 5rem">Если вы не оставляли заявку на смену почты, то проигнорируйте это письмо</p>
         </div>
       </div>`
