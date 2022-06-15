@@ -9,6 +9,9 @@
       <ng-container *ngIf="activeItemMenu.id === 'edit'">
         <grace-user-edit-form [user]="$any(authService.currentUser)" [(loading)]="loading" (save)="edit($event)"></grace-user-edit-form>
       </ng-container>
+      <ng-container *ngIf="activeItemMenu.id === 'pass'">
+        <grace-change-password-form *ngIf="!loading" (save)="changePassword($event)"></grace-change-password-form>
+      </ng-container>
     </div>
   </div>
 </div>

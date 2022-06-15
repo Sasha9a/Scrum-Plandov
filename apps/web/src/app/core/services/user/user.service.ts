@@ -3,6 +3,7 @@ import { RecoveryFormDto } from "@scrum/shared/dtos/recovery/recovery.form.dto";
 import { RecoveryPasswordFormDto } from "@scrum/shared/dtos/recovery/recovery.password.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserLoginFormDto } from "@scrum/shared/dtos/user/user.login.form.dto";
+import { UserPasswordFormDto } from "@scrum/shared/dtos/user/user.password.form.dto";
 import { BaseService } from "@scrum/web/core/services/base.service";
 import { map, Observable } from "rxjs";
 
@@ -38,6 +39,10 @@ export class UserService extends BaseService {
 
   public recoveryPassword(body: RecoveryPasswordFormDto): Observable<null> {
     return this.http.post<null>(`${this.baseUrl}/recovery-password`, body);
+  }
+
+  public changePassword(body: UserPasswordFormDto): Observable<null> {
+    return this.http.post<null>(`${this.baseUrl}/change-password`, body);
   }
 
   public logout(body: Partial<UserDto>): Observable<null> {

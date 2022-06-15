@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Query, Req, Res, UseGuards } from "@nestjs/common";
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import sendMail from "@scrum/api/core/services/mail.service";
@@ -11,10 +11,11 @@ import { UserCreateFormDto } from "@scrum/shared/dtos/user/user.create.form.dto"
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
 import { UserLoginFormDto } from "@scrum/shared/dtos/user/user.login.form.dto";
+import { UserPasswordFormDto } from "@scrum/shared/dtos/user/user.password.form.dto";
 import { VerifyCreateDto } from "@scrum/shared/dtos/verify/verify.create.dto";
 import { VerifyEmailTypeEnum } from "@scrum/shared/enums/verify.email.type.enum";
 import * as bcrypt from "bcrypt";
-import { Response } from "express";
+import { Response, Request } from "express";
 import * as uuid from "uuid";
 import { environment } from "../../../environments/environment";
 
@@ -185,6 +186,17 @@ export class UserController extends BaseController {
     }
     user.password = bcrypt.hashSync(bodyParams.password, 10);
     await user.save();
+    return res.status(HttpStatus.OK).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/change-password')
+  public async changePassword(@Res() res: Response, @Body() body: UserPasswordFormDto, @Req() req: Request) {
+    const bodyParams = this.validate<UserPasswordFormDto>(body, UserPasswordFormDto);
+
+    const user: UserDto = req.user as UserDto;
+    user.password = bcrypt.hashSync(bodyParams.password, 10);
+    await this.userService.update<Partial<UserDto>>(user._id, { password: user.password });
     return res.status(HttpStatus.OK).end();
   }
 

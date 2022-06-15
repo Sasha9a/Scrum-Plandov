@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
+import { UserPasswordFormDto } from "@scrum/shared/dtos/user/user.password.form.dto";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { AuthService } from "@scrum/web/core/services/user/auth.service";
 import { UserService } from "@scrum/web/core/services/user/user.service";
@@ -42,6 +43,23 @@ export class SettingsComponent implements OnInit {
       next: () => {
         this.authService.updateLoggedUser({ name: user.name, login: user.login });
         this.errorService.addSuccessMessage('Изменения сохранены');
+        this.loading = false;
+        this.cdRef.markForCheck();
+      },
+      error: () => {
+        this.loading = false;
+        this.cdRef.markForCheck();
+      }
+    });
+  }
+
+  public changePassword(data: UserPasswordFormDto) {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
+    this.userService.changePassword(data).subscribe({
+      next: () => {
+        this.errorService.addSuccessMessage('Пароль успешно изменен');
         this.loading = false;
         this.cdRef.markForCheck();
       },
