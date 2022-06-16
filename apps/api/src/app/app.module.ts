@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { LoggerMiddleware } from "@scrum/api/core/middlewares/logger.middleware";
+import { BoardModule } from "@scrum/api/modules/board/board.module";
 import { FileModule } from "@scrum/api/modules/file/file.module";
 import { UserModule } from "@scrum/api/modules/user/user.module";
 import { VerifyModule } from "@scrum/api/modules/verify/verify.module";
@@ -16,7 +17,8 @@ import { environment } from "../environments/environment";
     }),
     FileModule,
     UserModule,
-    VerifyModule
+    VerifyModule,
+    BoardModule
   ]
 })
 export class AppModule implements NestModule {
