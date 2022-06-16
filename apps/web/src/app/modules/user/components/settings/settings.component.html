@@ -14,7 +14,7 @@
       </ng-container>
       <ng-container *ngIf="activeItemMenu.id === 'email'">
         <ng-container *ngIf="!loading">
-          <grace-recovery-form *ngIf="!nextStep" (save)="changeEmail($event)"></grace-recovery-form>
+          <grace-recovery-form *ngIf="!nextStep" (save)="changeEmail($event)" textButton="Сменить"></grace-recovery-form>
           <div *ngIf="nextStep" class="text-center">
             <h3>На эту почту было отправлено письмо с подтверждением. Подтвердите и почта поменяется на вашем аккаунте.</h3>
           </div>
