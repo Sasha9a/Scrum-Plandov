@@ -1,0 +1,13 @@
+<div *ngIf="!saving" class="grid justify-content-center">
+  <div class="xl:col-4 md:col-6 col-12">
+    <h1 class="text-center">Создание доски</h1>
+    <grace-board-form [board]="board"
+                      [users]="users"
+                      (searchUser)="searchUser($event)"
+                      (save)="create($event)"
+                      route="/board">
+    </grace-board-form>
+  </div>
+</div>
+
+<grace-spinner *ngIf="saving"></grace-spinner>

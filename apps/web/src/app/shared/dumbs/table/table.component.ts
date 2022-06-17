@@ -68,6 +68,9 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() public groupRowsBy: string;
   @Input() public rowGroupMode: string;
 
+  @Input() public reorderableColumns: boolean;
+  @Output() public rowReorder = new EventEmitter<{ dragIndex: number, dropIndex: number }>();
+
   @Input() public autoLayout = false;
 
   public skeletonItems = Array(15).fill(null);

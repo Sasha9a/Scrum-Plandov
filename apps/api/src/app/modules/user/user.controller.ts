@@ -53,6 +53,13 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('search')
+  public async searchUsers(@Res() res: Response, @Query() query: { q: string }) {
+    const entities = await this.userService.findAll({ $or: [ { login: { $regex: query.q } }, { email: { $regex: query.q } } ] }, { password: 0, token: 0 });
+    return res.status(HttpStatus.OK).json(entities).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public async getUser(@Res() res: Response, @Param('id') id: string) {
     const user = await this.userService.findById(id, { password: 0, token: 0 });

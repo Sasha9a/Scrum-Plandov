@@ -1,0 +1,71 @@
+<div class="p-fluid">
+  <div class="field">
+    <label class="font-bold required-field">Название</label>
+    <input type="text" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.name }" [(ngModel)]="board.name" />
+    <p *ngIf="errors?.name" class="p-error">{{ errors.name | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold required-field">Код</label>
+    <input type="text" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.code }" [(ngModel)]="board.code" />
+    <p *ngIf="errors?.code" class="p-error">{{ errors.code | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Пользователи</label>
+    <p-autoComplete [(ngModel)]="board.users"
+                    [suggestions]="users"
+                    (completeMethod)="searchUser.emit($event.query)"
+                    [ngClass]="{ 'ng-invalid ng-dirty': errors?.users }"
+                    [minLength]="2"
+                    field="login"
+                    [multiple]="true">
+    </p-autoComplete>
+    <p *ngIf="errors?.users" class="p-error">{{ errors.users | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold required-field">Столбцы</label>
+    <grace-table name="columnsBoard"
+                 [reorderableColumns]="true"
+                 (rowReorder)="rowReorder($event)"
+                 [columns]="columns"
+                 [values]="board.columns">
+      <ng-template #rowTemplate let-column="item" let-index="rowIndex">
+        <tr *ngIf="toColumn(column) as column" [pReorderableRow]="index">
+          <td class="w-3rem">
+            <span class="pi pi-bars" [pReorderableRowHandle]=""></span>
+          </td>
+          <td>
+            <input type="text" pInputText [(ngModel)]="column.name">
+          </td>
+          <td>
+            <p-colorPicker [(ngModel)]="column.color"></p-colorPicker>
+          </td>
+          <td>
+            <button pButton type="button"
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-danger p-button-text"
+                    (click)="deleteColumn(column)">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </grace-table>
+
+    <button pButton label="Добавить столбец"
+            class="p-button-text w-14rem mt-2"
+            icon="pi pi-plus"
+            (click)="addColumn()">
+    </button>
+    <p *ngIf="errors?.columns" class="p-error">{{ errors.columns | join }}</p>
+  </div>
+</div>
+
+<div class="flex flex-wrap justify-content-between mt-5">
+  <div>
+    <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(board)"></button>
+    <grace-go-back-button [route]="route"></grace-go-back-button>
+  </div>
+  <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(board)"></button>
+</div>

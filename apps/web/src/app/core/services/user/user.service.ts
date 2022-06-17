@@ -33,6 +33,10 @@ export class UserService extends BaseService {
     return this.http.get<{ isBusy: boolean }>(`${this.baseUrl}/check-login`, { params: query });
   }
 
+  public searchUsers(query: { q: string }): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.baseUrl}/search`, { params: query });
+  }
+
   public recovery(body: RecoveryFormDto): Observable<null> {
     return this.http.post<null>(`${this.baseUrl}/recovery`, body);
   }

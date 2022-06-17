@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./components/list/board-list.module').then(m => m.BoardListModule)
+  },
+  {
+    path: 'add',
+    loadChildren: () => import('./components/add/board-add.module').then(m => m.BoardAddModule)
   }
 ];
 

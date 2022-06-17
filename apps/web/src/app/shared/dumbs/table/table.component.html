@@ -4,6 +4,8 @@
   [scrollable]="!!scrollHeight"
   [scrollHeight]="scrollHeight"
   [(selection)]="selectedItems"
+  [reorderableColumns]="reorderableColumns"
+  (onRowReorder)="rowReorder.emit($event)"
   (selectionChange)="selectedItemsChange.emit($event)"
   [autoLayout]="autoLayout"
   [rowGroupMode]="groupRowsBy ? rowGroupMode : undefined"
