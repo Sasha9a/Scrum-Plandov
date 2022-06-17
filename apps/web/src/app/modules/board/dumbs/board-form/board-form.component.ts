@@ -33,6 +33,7 @@ export class BoardFormComponent extends BaseFormComponent<BoardFormDto> {
     const column = new ColumnBoardFormDto();
     column.order = this.board.columns.length;
     this.board.columns.push(new ColumnBoardFormDto());
+    this.board.columns = [...this.board.columns];
   }
 
   public deleteColumn(column: ColumnBoardFormDto) {
