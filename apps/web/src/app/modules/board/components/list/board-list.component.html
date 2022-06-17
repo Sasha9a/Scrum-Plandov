@@ -1,0 +1,21 @@
+<div class="flex justify-content-between align-items-center mb-3">
+  <h1 class="my-0">Доски</h1>
+  <button pButton type="button" icon="pi pi-plus" label="Создать доску" class="p-button-success" routerLink="/board/add"></button>
+</div>
+
+<grace-table name="boards"
+             [loading]="loading"
+             [columns]="columns"
+             [values]="boards">
+  <ng-template #rowTemplate let-board="item">
+    <tr *ngIf="toBoard(board) as board">
+      <td>
+        <a routerLink="/board/{{ board._id }}">{{ board.name }}</a>
+      </td>
+      <td>{{ board.code }}</td>
+      <td>
+        <a routerLink="/user/card/{{ board.createdUser?._id }}" target="_blank">{{ board.createdUser?.name || board.createdUser?.login }}</a>
+      </td>
+    </tr>
+  </ng-template>
+</grace-table>

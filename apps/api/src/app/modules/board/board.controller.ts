@@ -16,6 +16,15 @@ export class BoardController extends BaseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('my')
+  public async findByMy(@Res() res: Response, @Req() req: Request) {
+    const user: UserDto = req.user as UserDto;
+
+    const entities = await this.boardService.findByMy(user?._id);
+    return res.status(HttpStatus.OK).json(entities).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public async findById(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
     const user: UserDto = req.user as UserDto;
@@ -30,15 +39,6 @@ export class BoardController extends BaseController {
     }
 
     return res.status(HttpStatus.OK).json(entity).end();
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('my')
-  public async findByMy(@Res() res: Response, @Req() req: Request) {
-    const user: UserDto = req.user as UserDto;
-
-    const entities = await this.boardService.findByMy(user?._id);
-    return res.status(HttpStatus.OK).json(entities).end();
   }
 
   @UseGuards(JwtAuthGuard)

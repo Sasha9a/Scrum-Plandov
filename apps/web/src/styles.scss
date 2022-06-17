@@ -60,3 +60,14 @@ a:hover {
   }
 }
 
+.no-results {
+  padding: 2rem;
+  text-align: center;
+  animation: scaleIn 0.2s;
+
+  i.pi {
+    font-size: 70px;
+    color: #afafaf;
+  }
+}
+
