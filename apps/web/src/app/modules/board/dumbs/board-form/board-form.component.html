@@ -58,7 +58,7 @@
             icon="pi pi-plus"
             (click)="addColumn()">
     </button>
-    <p *ngIf="errors?.columns" class="p-error">{{ errors.columns | join }}</p>
+    <p *ngIf="errors?.columns" class="p-error">{{ errors.columns | joinWithChild }}</p>
   </div>
 </div>
 
