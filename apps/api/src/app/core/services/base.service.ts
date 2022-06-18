@@ -9,7 +9,7 @@ export class BaseService<T> {
 
   public async create<K>(entity: K): Promise<T> {
     const createEntity = new this.model(entity);
-    return await createEntity.save() as T;
+    return await createEntity.save() as unknown as T;
   }
 
   public async findAll(filter?: FilterQuery<T>, projection?: ProjectionType<T>): Promise<T[]> {
@@ -21,7 +21,7 @@ export class BaseService<T> {
   }
 
   public async update<K>(id: string, entity: K): Promise<T> {
-    return await this.model.findOneAndUpdate({ _id: id }, { $set: entity }, { new: true }).exec();
+    return await this.model.findOneAndUpdate(<Partial<FilterQuery<T>>>{ _id: id }, {$set: entity}, {new: true}).exec() as unknown as T;
   }
 
   public async delete(id: string): Promise<T> {
