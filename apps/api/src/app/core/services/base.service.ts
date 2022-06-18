@@ -21,7 +21,7 @@ export class BaseService<T> {
   }
 
   public async update<K>(id: string, entity: K): Promise<T> {
-    return await this.model.findOneAndUpdate(<Partial<FilterQuery<T>>>{ _id: id }, {$set: entity}, {new: true}).exec() as unknown as T;
+    return await this.model.findOneAndUpdate(<Partial<FilterQuery<T>>>{ _id: id }, { $set: entity }, { new: true }).exec() as unknown as T;
   }
 
   public async delete(id: string): Promise<T> {
