@@ -1,0 +1,12 @@
+.drop-column {
+  border: 1px dotted transparent;
+  transition: border-color .2s;
+
+  &.p-draggable-enter {
+    border-color: var(--primary-color);
+  }
+}
+
+.cards-hidden {
+  display: none;
+}

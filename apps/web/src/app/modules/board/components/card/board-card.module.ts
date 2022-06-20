@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
+import { BoardDashboardModule } from "@scrum/web/modules/board/components/card/dashboard/board-dashboard.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { TabMenuModule } from "primeng/tabmenu";
 import { BoardCardComponent } from './board-card.component';
@@ -16,11 +17,12 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [BoardCardComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    SpinnerModule,
-    TabMenuModule
-  ]
+	imports: [
+		CommonModule,
+		RouterModule.forChild(routes),
+		SpinnerModule,
+		TabMenuModule,
+		BoardDashboardModule
+	]
 })
 export class BoardCardModule {}

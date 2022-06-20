@@ -10,7 +10,7 @@
   <ng-template #rowTemplate let-board="item">
     <tr *ngIf="toBoard(board) as board">
       <td>
-        <a routerLink="/board/{{ board._id }}">{{ board.name }}</a>
+        <a routerLink="/board/card/{{ board._id }}">{{ board.name }}</a>
       </td>
       <td>{{ board.code }}</td>
       <td>

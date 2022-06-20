@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
@@ -9,8 +9,6 @@ import { MenuItem } from "primeng/api";
 @Component({
   selector: 'grace-board-card',
   templateUrl: './board-card.component.html',
-  styleUrls: ['./board-card.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardCardComponent implements OnInit {

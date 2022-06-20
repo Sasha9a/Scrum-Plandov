@@ -3,6 +3,7 @@ import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
+import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
@@ -55,6 +56,32 @@ export class BoardController extends BaseController {
 
     const entity = await this.boardService.create<BoardFormDto>(bodyParams);
     return res.status(HttpStatus.CREATED).json(entity).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('leave/:id')
+  public async leave(@Res() res: Response, @Param('id') id: string, @Body() body: { user?: UserDto }, @Req() req: Request) {
+    const user: UserDto = req.user as UserDto;
+
+    const board = await this.boardService.findById(id);
+    if (!board) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    if (user?._id === board.createdUser?.id) {
+      if (!body.user) {
+        throw new NotFoundException("Не передан пользователь");
+      }
+      const bodyUser = await this.userService.findById(body.user._id);
+      if (!bodyUser) {
+        throw new NotFoundException("Нет такого аккаунта");
+      }
+      if (board.users.findIndex((_user) => _user?._id === bodyUser?.id) === -1) {
+        throw new NotFoundException("Нет такого пользователя в доске");
+      }
+      await this.boardService.update<Partial<BoardDto>>(id, { createdUser: bodyUser, $pull: { _id: bodyUser?._id } });
+    }
+    return res.status(HttpStatus.OK).end();
   }
 
   @UseGuards(JwtAuthGuard)

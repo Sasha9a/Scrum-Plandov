@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { FilterQuery, Model, ProjectionType } from "mongoose";
+import { FilterQuery, Model, ProjectionType, UpdateQuery } from "mongoose";
 
 @Injectable()
 export class BaseService<T> {
@@ -20,7 +20,7 @@ export class BaseService<T> {
     return await this.model.findById(id, projection).exec();
   }
 
-  public async update<K>(id: string, entity: K): Promise<T> {
+  public async update<K>(id: string, entity: UpdateQuery<K>): Promise<T> {
     return await this.model.findOneAndUpdate(<Partial<FilterQuery<T>>>{ _id: id }, { $set: entity }, { new: true }).exec() as unknown as T;
   }
 
