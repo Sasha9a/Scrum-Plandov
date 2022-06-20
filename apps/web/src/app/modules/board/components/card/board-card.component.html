@@ -1,0 +1,9 @@
+<p-tabMenu [model]="itemsMenu" [activeItem]="activeItemMenu"></p-tabMenu>
+
+<div *ngIf="activeItemMenu.id === 'board'">
+  <div *ngIf="!loading && board">
+
+  </div>
+</div>
+
+<grace-spinner *ngIf="loading"></grace-spinner>
