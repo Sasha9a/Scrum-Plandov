@@ -34,7 +34,7 @@ export class BoardController extends BaseController {
       throw new NotFoundException("Нет такого объекта!");
     }
 
-    if (entity.createdUser?._id !== user._id && entity.users.findIndex((_user) => _user._id === user._id) === -1) {
+    if (entity.createdUser?.id !== user._id && entity.users.findIndex((_user) => _user._id === user._id) === -1) {
       throw new NotFoundException("Нет доступа!");
     }
 
@@ -73,7 +73,7 @@ export class BoardController extends BaseController {
       throw new NotFoundException("Нет такого объекта!");
     }
 
-    if (board.createdUser?._id !== user._id) {
+    if (board.createdUser?.id !== user._id) {
       throw new NotFoundException("Нет прав");
     }
 
@@ -96,7 +96,7 @@ export class BoardController extends BaseController {
       throw new NotFoundException("Нет такого объекта!");
     }
 
-    if (board.createdUser?._id !== user._id) {
+    if (board.createdUser?.id !== user._id) {
       throw new NotFoundException("Нет прав");
     }
 
