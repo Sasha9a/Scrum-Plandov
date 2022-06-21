@@ -7,8 +7,8 @@ import { Model } from "mongoose";
 @Injectable()
 export class SprintService extends BaseService<Sprint> {
 
-  public constructor(@InjectModel(Sprint.name) private readonly boardModel: Model<Sprint>) {
-    super(boardModel);
+  public constructor(@InjectModel(Sprint.name) private readonly sprintModel: Model<Sprint>) {
+    super(sprintModel);
   }
 
 }
