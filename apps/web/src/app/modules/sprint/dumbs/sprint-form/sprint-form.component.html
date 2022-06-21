@@ -1,0 +1,27 @@
+<div class="p-fluid">
+  <div class="field">
+    <label class="font-bold required-field">Название</label>
+    <input type="text" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.name }" [(ngModel)]="sprint.name" />
+    <p *ngIf="errors?.name" class="p-error">{{ errors.name | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Дата начала спринта</label>
+    <grace-datepicker [(value)]="sprint.startDate" [ngClass]="{ 'ng-invalid ng-dirty': errors?.startDate }"></grace-datepicker>
+    <p *ngIf="errors?.startDate" class="p-error">{{ errors.startDate | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Дата окончания спринта</label>
+    <grace-datepicker [(value)]="sprint.endDate" [ngClass]="{ 'ng-invalid ng-dirty': errors?.endDate }"></grace-datepicker>
+    <p *ngIf="errors?.endDate" class="p-error">{{ errors.endDate | join }}</p>
+  </div>
+</div>
+
+<div class="flex flex-wrap justify-content-between mt-5">
+  <div>
+    <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(sprint)"></button>
+    <grace-go-back-button [route]="route"></grace-go-back-button>
+  </div>
+  <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(sprint)"></button>
+</div>

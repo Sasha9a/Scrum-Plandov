@@ -22,6 +22,10 @@ const routes: Routes = [
       {
         path: 'board',
         loadChildren: () => import('../modules/board/board.module').then(m => m.BoardModule)
+      },
+      {
+        path: 'sprint',
+        loadChildren: () => import('../modules/sprint/sprint.module').then(m => m.SprintModule)
       }
     ]
   }
