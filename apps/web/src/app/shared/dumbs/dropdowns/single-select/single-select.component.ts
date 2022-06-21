@@ -24,7 +24,7 @@ export class SingleSelectComponent implements OnInit, OnChanges {
 
   @Input() public changeValueOptions: any;
   @Input() public class: string | null;
-  @Input() public dataKey = 'id';
+  @Input() public dataKey = '_id';
   @Input() public disabled = false;
   @Input() public editValue = 'name';
   @Input() public editable = false;

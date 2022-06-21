@@ -16,7 +16,7 @@ export class BoardService extends BaseService<Board> {
   }
 
   public async findByMy(userId: string): Promise<Board[]> {
-    return await this.boardModel.find({ $or: [ { createdUser: userId }, { $in: [userId] } ] }).exec();
+    return await this.boardModel.find({ $or: [ { createdUser: userId }, { users: { $in: [userId] } } ] }).exec();
   }
 
 }

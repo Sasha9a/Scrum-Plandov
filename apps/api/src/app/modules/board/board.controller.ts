@@ -3,7 +3,6 @@ import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
@@ -35,7 +34,7 @@ export class BoardController extends BaseController {
       throw new NotFoundException("Нет такого объекта!");
     }
 
-    if (entity.createdUser?.id !== user._id && entity.users.findIndex((_user) => _user._id === user._id) === -1) {
+    if (entity.createdUser?.id !== user._id && entity.users.findIndex((_user) => _user.id === user._id) === -1) {
       throw new NotFoundException("Нет доступа!");
     }
 
@@ -76,10 +75,15 @@ export class BoardController extends BaseController {
       if (!bodyUser) {
         throw new NotFoundException("Нет такого аккаунта");
       }
-      if (board.users.findIndex((_user) => _user?._id === bodyUser?.id) === -1) {
+      if (board.users.findIndex((_user) => _user?.id === bodyUser?.id) === -1) {
         throw new NotFoundException("Нет такого пользователя в доске");
       }
-      await this.boardService.update<Partial<BoardDto>>(id, { createdUser: bodyUser, $pull: { _id: bodyUser?._id } });
+      board.createdUser = bodyUser;
+      board.users = board.users.filter((_user) => _user?.id !== bodyUser.id);
+      await board.save();
+    } else {
+      board.users = board.users.filter((_user) => _user?.id !== user._id);
+      await board.save();
     }
     return res.status(HttpStatus.OK).end();
   }

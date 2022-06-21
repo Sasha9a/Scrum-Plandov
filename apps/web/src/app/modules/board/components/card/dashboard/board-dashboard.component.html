@@ -12,8 +12,28 @@
       <button pButton type="button"
               icon="pi pi-times"
               label="Покинуть"
-              class="p-button-danger p-button-text">
+              class="p-button-danger p-button-text"
+              (click)="op.toggle($event)">
       </button>
+      <p-overlayPanel #op [style]="{ 'width': '450px' }">
+        <ng-template pTemplate="">
+          <ng-container *ngIf="!loadingLeave">
+            <p>Вы действительно хотите покинуть доску?</p>
+            <div *ngIf="authService.currentUser?._id === board.createdUser?._id" class="mt-3">
+              <p>Так как вы являетесь владельцем доски, выберите пользователя которому передадите свои права</p>
+              <grace-single-select [options]="board.users"
+                                   [(selectedItem)]="userSelect"
+                                   optionLabel="login"
+                                   styleClass="mt-2"
+                                   filterBy="login"
+                                   placeholder="Пользователь">
+              </grace-single-select>
+            </div>
+            <button pButton type="button" icon="pi pi-times" label="Покинуть" class="p-button-danger mt-3" (click)="leaveBoard()"></button>
+          </ng-container>
+          <grace-spinner *ngIf="loadingLeave"></grace-spinner>
+        </ng-template>
+      </p-overlayPanel>
     </div>
   </div>
 
