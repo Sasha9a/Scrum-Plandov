@@ -50,7 +50,7 @@ export class TaskFormDto {
 
   @Expose()
   @IsEnum(TaskPriorityEnum, { message: "Не выбран приоритет" })
-  public priority: TaskPriorityEnum;
+  public priority: TaskPriorityEnum = TaskPriorityEnum.AVERAGE;
 
   @Expose()
   @IsOptional()

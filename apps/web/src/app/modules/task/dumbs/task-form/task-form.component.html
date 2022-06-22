@@ -1,0 +1,61 @@
+<div class="p-fluid">
+  <div class="field">
+    <label class="font-bold required-field">Название</label>
+    <input type="text" pInputText [ngClass]="{ 'ng-invalid ng-dirty': errors?.name }" [(ngModel)]="task.name" />
+    <p *ngIf="errors?.name" class="p-error">{{ errors.name | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Описание</label>
+    <textarea rows="5" cols="30" pInputTextarea [autoResize]="false" [(ngModel)]="task.description" [ngClass]="{ 'ng-invalid ng-dirty': errors?.description }"></textarea>
+    <p *ngIf="errors?.description" class="p-error">{{ errors.description | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Исполнитель</label>
+    <grace-single-select [options]="users"
+                         [(selectedItem)]="task.executor"
+                         [ngClass]="{ 'ng-invalid ng-dirty': errors?.executor }"
+                         optionLabel="login"
+                         filterBy="login">
+    </grace-single-select>
+    <p *ngIf="errors?.executor" class="p-error">{{ errors.executor | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Спринт</label>
+    <grace-single-select [options]="sprints"
+                         [(selectedItem)]="task.sprint"
+                         [ngClass]="{ 'ng-invalid ng-dirty': errors?.sprint }">
+    </grace-single-select>
+    <p *ngIf="errors?.sprint" class="p-error">{{ errors.sprint | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold required-field">Приоритет</label>
+    <grace-single-select [options]="priorities"
+                         [(selectedItem)]="task.priority"
+                         [ngClass]="{ 'ng-invalid ng-dirty': errors?.priority }"
+                         [isTemplateCombined]="true"
+                         [filter]="false"
+                         dataKey="name">
+      <ng-template #itemTemplate let-priority="item">{{ priority.value | taskPriorityName }}</ng-template>
+    </grace-single-select>
+    <p *ngIf="errors?.priority" class="p-error">{{ errors.priority | join }}</p>
+  </div>
+
+  <div class="field">
+    <label class="font-bold">Оценка (ч.)</label>
+    <p-inputNumber [(ngModel)]="task.grade" [styleClass]="errors?.grade ? 'ng-invalid ng-dirty' : ''"></p-inputNumber>
+    <p *ngIf="errors?.grade" class="p-error">{{ errors.grade | join }}</p>
+  </div>
+
+</div>
+
+<div class="flex flex-wrap justify-content-between mt-5">
+  <div>
+    <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(task)"></button>
+    <grace-go-back-button [route]="route"></grace-go-back-button>
+  </div>
+  <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(task)"></button>
+</div>
