@@ -20,7 +20,7 @@ export class BoardFormDto {
   @Expose()
   @IsOptional()
   @Type(() => SprintDto)
-  public activeSprint?: SprintDto;
+  public activeSprints?: SprintDto[];
 
   @Expose()
   @IsOptional()

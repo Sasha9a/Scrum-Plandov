@@ -1,21 +1,44 @@
-<div class="flex justify-content-end my-2">
-  <button pButton type="button"
-          icon="pi pi-plus"
-          label="Создать спринт"
-          class="p-button-success p-button-text"
-          routerLink="/sprint/add" [queryParams]="{ boardId: board?._id }">
-  </button>
-</div>
-
-<div *ngIf="!loading">
+<div *ngIf="!loading" class="mt-2">
   <p-accordion [multiple]="true">
     <p-accordionTab *ngFor="let sprint of sprints" [selected]="true">
       <ng-template pTemplate="header">
-        <div class="flex justify-content-between">
+        <div class="flex justify-content-between w-full">
           <div class="flex gap-2 align-items-center">
             <h4 class="my-2">{{ sprint.sprint?.name || 'Список задач' }}</h4>
             <small class="text-gray-600">{{ sprint.tasks?.length }} проблем(ы)</small>
-            <p-tag *ngIf="sprint.sprint && board.activeSprint?._id === sprint.sprint?._id" severity="success" value="АКТИВНО"></p-tag>
+            <p-tag *ngIf="sprint.sprint && (board.activeSprints | findByKey: '_id': sprint.sprint?._id)" severity="success" value="АКТИВНО"></p-tag>
+            <small *ngIf="sprint.sprint" class="text-gray-600">
+              {{ sprint.sprint?.startDate ? (sprint.sprint?.startDate | date) : 'Неизвестно' }} - {{ sprint.sprint?.endDate ? (sprint.sprint?.endDate | date) : 'Неизвестно' }}
+            </small>
+          </div>
+          <div>
+            <button *ngIf="!sprint.sprint"
+                    pButton type="button"
+                    label="Создать спринт"
+                    class="p-button-secondary p-button-text"
+                    routerLink="/sprint/add"
+                    [queryParams]="{ boardId: board?._id }"
+                    (click)="$event.stopPropagation()">
+            </button>
+            <button *ngIf="sprint.sprint && !(board.activeSprints | findByKey: '_id': sprint.sprint?._id)"
+                    pButton type="button"
+                    label="Запустить спринт"
+                    class="p-button-success p-button-text"
+                    (click)="startSprint(sprint); $event.stopPropagation()">
+            </button>
+            <button *ngIf="sprint.sprint"
+                    pButton type="button"
+                    label="Изменить"
+                    class="p-button-secondary p-button-text"
+                    routerLink="/sprint/edit/{{ sprint.sprint?._id }}"
+                    (click)="$event.stopPropagation()">
+            </button>
+            <button *ngIf="sprint.sprint"
+                    pButton type="button"
+                    label="Сводка"
+                    class="p-button-text"
+                    (click)="openSprintUsersInfo(sprint); $event.stopPropagation()">
+            </button>
           </div>
         </div>
       </ng-template>

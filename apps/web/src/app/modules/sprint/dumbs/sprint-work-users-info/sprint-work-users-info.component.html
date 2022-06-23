@@ -1,0 +1,28 @@
+<grace-table name="sprintWorkUsersInfo"
+             [columns]="columns"
+             [values]="values">
+  <ng-template #rowTemplate let-info="item">
+    <tr *ngIf="toInfo(info) as info">
+      <td>
+        <ng-container *ngIf="info.user; else noUser">
+          <grace-user-avatar [user]="{ name: info.user?.name, login: info.user?.login, file: info.user?.avatar }"></grace-user-avatar>
+          <p>{{ info.user?.name || info.user?.login }}</p>
+        </ng-container>
+        <ng-template #noUser>Не назначен</ng-template>
+      </td>
+      <td>{{ info.count | number }}</td>
+      <td>{{ info.grade | number }} ч.</td>
+      <td>{{ info.left | number }} ч.</td>
+    </tr>
+  </ng-template>
+  <ng-template #footerTemplate>
+    <tr>
+      <td>
+        <p class="font-bold">ИТОГО:</p>
+      </td>
+      <td>{{ sprint.sumInfo?.count | number }}</td>
+      <td>{{ sprint.sumInfo?.grade | number }} ч.</td>
+      <td>{{ sprint.sumInfo?.left | number }} ч.</td>
+    </tr>
+  </ng-template>
+</grace-table>

@@ -12,4 +12,9 @@ export class SprintService extends BaseService {
   public findAllByBoard(boardId: string): Observable<SprintTasksInfoDto[]> {
     return this.http.get<SprintTasksInfoDto[]>(`${this.baseUrl}/board/${boardId}`);
   }
+
+  public startSprint(id: string): Observable<null> {
+    return this.http.get<null>(`${this.baseUrl}/start/${id}`);
+  }
+
 }

@@ -19,8 +19,8 @@ export class Board extends Document {
   @Prop({ default: 1 })
   public indexTaskNumber: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Sprint", autopopulate: true })
-  public activeSprint: Sprint;
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: "Sprint", autopopulate: true })
+  public activeSprints: Sprint[];
 
   @Prop({ default: moment().toDate() })
   public createDate: Date;

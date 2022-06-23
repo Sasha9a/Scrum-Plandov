@@ -18,7 +18,7 @@ export class BoardDto extends BaseDto {
 
   @Expose()
   @Type(() => SprintDto)
-  public activeSprint: SprintDto;
+  public activeSprints: SprintDto[];
 
   @Expose()
   public createDate: Date;
