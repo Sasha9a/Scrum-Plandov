@@ -1,4 +1,4 @@
-<div class="flex justify-content-end">
+<div class="flex justify-content-end my-2">
   <button pButton type="button"
           icon="pi pi-plus"
           label="Создать спринт"
@@ -12,10 +12,10 @@
     <p-accordionTab *ngFor="let sprint of sprints" [selected]="true">
       <ng-template pTemplate="header">
         <div class="flex justify-content-between">
-          <div class="flex align-items-center">
-            <h3>{{ sprint.sprint?.name }}</h3>
-            <p class="text-gray-400">{{ sprint.tasks?.length }} проблем(ы)</p>
-            <p-tag *ngIf="board.activeSprint?._id === sprint.sprint?._id" severity="success" value="АКТИВНО"></p-tag>
+          <div class="flex gap-2 align-items-center">
+            <h4 class="my-2">{{ sprint.sprint?.name || 'Список задач' }}</h4>
+            <small class="text-gray-600">{{ sprint.tasks?.length }} проблем(ы)</small>
+            <p-tag *ngIf="sprint.sprint && board.activeSprint?._id === sprint.sprint?._id" severity="success" value="АКТИВНО"></p-tag>
           </div>
         </div>
       </ng-template>

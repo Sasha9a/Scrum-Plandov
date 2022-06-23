@@ -71,3 +71,33 @@ a:hover {
   }
 }
 
+.p-calendar .p-datepicker {
+  min-width: 300px !important;
+}
+
+.p-calendar {
+
+  .p-datepicker {
+    min-width: 300px !important;
+
+    table td > span.p-highlight {
+      color: #000000;
+      background: #cfe9fd;
+    }
+  }
+}
+
+.p-datepicker table td {
+  padding: 0.1rem !important;
+}
+
+.p-calendar > input.text-datepicker-input {
+  width: 220px;
+  border: none;
+  text-align: center;
+  font-weight: 700;
+  font-family: Lato, "Helvetica Neue", sans-serif !important;
+  font-size: 24px;
+  color: #4a9aff;
+  cursor: pointer;
+}
