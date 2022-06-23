@@ -16,7 +16,9 @@ export class SprintFormComponent extends BaseFormComponent<SprintFormDto> {
   @Input() public board: BoardDto;
 
   public override onSave(entity: SprintFormDto) {
-    entity.board = this.board;
+    if (!entity.board) {
+      entity.board = this.board;
+    }
     super.onSave(entity);
   }
 

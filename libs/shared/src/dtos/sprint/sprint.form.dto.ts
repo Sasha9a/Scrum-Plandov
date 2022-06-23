@@ -23,4 +23,8 @@ export class SprintFormDto {
   @IsOptional()
   public endDate?: Date;
 
+  @Expose()
+  @IsOptional()
+  public isCompleted?: boolean;
+
 }

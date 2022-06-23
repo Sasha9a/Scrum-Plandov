@@ -9,7 +9,7 @@ export class Sprint extends Document {
   @Prop({ required: true })
   public name: string;
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Board.name, autopopulate: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: "Board", autopopulate: true })
   public board: Board;
 
   @Prop()
@@ -17,6 +17,9 @@ export class Sprint extends Document {
 
   @Prop()
   public endDate: Date;
+
+  @Prop({ default: false })
+  public isCompleted: boolean;
 
 }
 

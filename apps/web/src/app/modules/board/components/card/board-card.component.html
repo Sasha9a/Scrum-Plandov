@@ -2,7 +2,12 @@
 
 <div *ngIf="activeItemMenu.id === 'board'">
   <div *ngIf="!loading && board">
-    <grace-board-dashboard *ngIf="!loading" [board]="board"></grace-board-dashboard>
+    <grace-board-dashboard [board]="board"></grace-board-dashboard>
+  </div>
+</div>
+<div *ngIf="activeItemMenu.id === 'sprint'">
+  <div *ngIf="!loading && board">
+    <grace-board-sprint [board]="board"></grace-board-sprint>
   </div>
 </div>
 

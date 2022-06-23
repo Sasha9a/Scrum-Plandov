@@ -1,0 +1,26 @@
+<div class="flex justify-content-end">
+  <button pButton type="button"
+          icon="pi pi-plus"
+          label="Создать спринт"
+          class="p-button-success p-button-text"
+          routerLink="/sprint/add" [queryParams]="{ boardId: board?._id }">
+  </button>
+</div>
+
+<div *ngIf="!loading">
+  <p-accordion [multiple]="true">
+    <p-accordionTab *ngFor="let sprint of sprints" [selected]="true">
+      <ng-template pTemplate="header">
+        <div class="flex justify-content-between">
+          <div class="flex align-items-center">
+            <h3>{{ sprint.sprint?.name }}</h3>
+            <p class="text-gray-400">{{ sprint.tasks?.length }} проблем(ы)</p>
+            <p-tag *ngIf="board.activeSprint?._id === sprint.sprint?._id" severity="success" value="АКТИВНО"></p-tag>
+          </div>
+        </div>
+      </ng-template>
+    </p-accordionTab>
+  </p-accordion>
+</div>
+
+<grace-spinner *ngIf="loading"></grace-spinner>

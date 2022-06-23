@@ -1,5 +1,6 @@
 import { BaseDto } from "@scrum/shared/dtos/base.dto";
 import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
+import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Expose, Type } from "class-transformer";
 
@@ -14,6 +15,10 @@ export class BoardDto extends BaseDto {
 
   @Expose()
   public indexTaskNumber: number;
+
+  @Expose()
+  @Type(() => SprintDto)
+  public activeSprint: SprintDto;
 
   @Expose()
   public createDate: Date;

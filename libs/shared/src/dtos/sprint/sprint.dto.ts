@@ -18,4 +18,7 @@ export class SprintDto extends BaseDto {
   @Expose()
   public endDate: Date;
 
+  @Expose()
+  public isCompleted: boolean;
+
 }

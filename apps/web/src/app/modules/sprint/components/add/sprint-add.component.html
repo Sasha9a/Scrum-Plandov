@@ -1,0 +1,11 @@
+<div *ngIf="!saving" class="grid justify-content-center">
+  <div class="xl:col-4 md:col-6 col-12">
+    <h1 class="text-center">Создание спринта</h1>
+    <grace-sprint-form [board]="board"
+                       (save)="create($event)"
+                       route="/board/card/{{ boardId }}">
+    </grace-sprint-form>
+  </div>
+</div>
+
+<grace-spinner *ngIf="saving"></grace-spinner>

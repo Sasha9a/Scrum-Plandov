@@ -1,4 +1,5 @@
 import { ColumnBoardFormDto } from "@scrum/shared/dtos/board/column.board.form.dto";
+import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Expose, Type } from "class-transformer";
 import { ArrayMinSize, IsOptional, IsString, Length, MinLength, ValidateNested } from "class-validator";
@@ -15,6 +16,11 @@ export class BoardFormDto {
   @IsString({ message: "Введите код" })
   @Length(2, 5, { message: "Код должен быть длиной от 2 до 5 символов" })
   public code: string;
+
+  @Expose()
+  @IsOptional()
+  @Type(() => SprintDto)
+  public activeSprint?: SprintDto;
 
   @Expose()
   @IsOptional()

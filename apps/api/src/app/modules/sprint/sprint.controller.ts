@@ -3,7 +3,10 @@ import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
 import { SprintService } from "@scrum/api/modules/sprint/sprint.service";
+import { TaskService } from "@scrum/api/modules/task/task.service";
 import { SprintFormDto } from "@scrum/shared/dtos/sprint/sprint.form.dto";
+import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
+import { SprintWorkUserInfoDto } from "@scrum/shared/dtos/sprint/sprint.work.user.info.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
 
@@ -11,7 +14,8 @@ import { Request, Response } from "express";
 export class SprintController extends BaseController {
 
   public constructor(private readonly sprintService: SprintService,
-                     private readonly boardService: BoardService) {
+                     private readonly boardService: BoardService,
+                     private readonly taskService: TaskService) {
     super();
   }
 
@@ -19,6 +23,7 @@ export class SprintController extends BaseController {
   @Get('board/:id')
   public async findAllByBoard(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
     const user: UserDto = req.user as UserDto;
+    const results: SprintTasksInfoDto[] = [];
 
     const board = await this.boardService.findById(id);
     if (!board) {
@@ -29,8 +34,49 @@ export class SprintController extends BaseController {
       throw new NotFoundException("Нет доступа!");
     }
 
-    const entities = await this.sprintService.findAll({ board: board });
-    return res.status(HttpStatus.OK).json(entities).end();
+    const sprints = await this.sprintService.findAll({ board: board, isCompleted: false });
+    for (const sprint of sprints) {
+      const tasks = await this.taskService.findAll({ board: board, sprint: sprint });
+      const usersInfo: SprintWorkUserInfoDto[] = [];
+      for (const task of tasks) {
+        let userInfo = usersInfo.find((userInfo) => userInfo.user._id === task.executor?._id);
+        if (!userInfo) {
+          userInfo = {
+            user: task.executor,
+            count: 1,
+            grade: task.grade,
+            left: task.left
+          };
+          usersInfo.push(userInfo);
+        } else {
+          userInfo.count++;
+          userInfo.grade += task.grade;
+          userInfo.left += task.left;
+        }
+      }
+      results.push({
+        sprint: sprint,
+        tasks: tasks,
+        notAssignedInfo: {
+          count: tasks.reduce((sum, task) => !task.executor ? sum + 1 : sum, 0),
+          grade: tasks.reduce((sum, task) => !task.executor ? sum + task.grade : sum, 0),
+          left: tasks.reduce((sum, task) => !task.executor ? sum + task.left : sum, 0)
+        },
+        usersInfo: usersInfo,
+        sumInfo: {
+          count: tasks.length,
+          grade: tasks.reduce((sum, task) => sum + task.grade, 0),
+          left: tasks.reduce((sum, task) => sum + task.left, 0)
+        }
+      });
+    }
+
+    const tasks = await this.taskService.findAll({ board: board, sprint: null });
+    results.push({
+      tasks: tasks
+    });
+
+    return res.status(HttpStatus.OK).json(results).end();
   }
 
   @UseGuards(JwtAuthGuard)

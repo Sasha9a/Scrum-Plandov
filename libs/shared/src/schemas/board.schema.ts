@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
 import { ColumnBoardSchema } from "@scrum/shared/schemas/column.board.schema";
+import { Sprint } from "@scrum/shared/schemas/sprint.schema";
 import { User } from "@scrum/shared/schemas/user.schema";
 import moment from "moment-timezone";
 import * as mongoose from "mongoose";
@@ -17,6 +18,9 @@ export class Board extends Document {
 
   @Prop({ default: 1 })
   public indexTaskNumber: number;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Sprint", autopopulate: true })
+  public activeSprint: Sprint;
 
   @Prop({ default: moment().toDate() })
   public createDate: Date;
