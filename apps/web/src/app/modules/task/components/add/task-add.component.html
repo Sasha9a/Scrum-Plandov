@@ -1,0 +1,9 @@
+<grace-task-form *ngIf="!saving"
+                 [board]="board"
+                 [users]="users"
+                 [sprints]="sprints"
+                 (save)="create($event)"
+                 [showBack]="false">
+</grace-task-form>
+
+<grace-spinner *ngIf="saving"></grace-spinner>

@@ -42,6 +42,15 @@
           </div>
         </div>
       </ng-template>
+      <ng-template pTemplate="content">
+        <button *ngIf="!sprint.sprint"
+                pButton type="button"
+                icon="pi pi-plus"
+                label="Создать задачу"
+                class="p-button-text"
+                (click)="createTask()">
+        </button>
+      </ng-template>
     </p-accordionTab>
   </p-accordion>
 </div>

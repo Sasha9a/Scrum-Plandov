@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from "@angular/router";
 import { SprintWorkUsersInfoModule } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.module";
+import { TaskAddModule } from "@scrum/web/modules/task/components/add/task-add.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { FindByKeyPipeModule } from "@scrum/web/shared/pipes/find-by-key/find-by-key-pipe.module";
 import { AccordionModule } from "primeng/accordion";
@@ -21,7 +22,8 @@ import { BoardSprintComponent } from './board-sprint.component';
 		AccordionModule,
 		TagModule,
 		FindByKeyPipeModule,
-    SprintWorkUsersInfoModule
+    SprintWorkUsersInfoModule,
+    TaskAddModule
 	],
   providers: [DialogService]
 })

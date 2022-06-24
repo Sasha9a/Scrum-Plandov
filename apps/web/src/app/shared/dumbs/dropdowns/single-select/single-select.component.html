@@ -24,7 +24,7 @@
     [showClear]="showClear"
     [virtualScroll]="virtualScroll"
     [itemSize]="itemSize"
-    scrollHeight="400px">
+    [scrollHeight]="scrollHeight">
     <ng-template pTemplate="selectedItem">
       <ng-template
         *ngIf="selectedItemTemplate || isTemplateCombined; else baseTemplate"

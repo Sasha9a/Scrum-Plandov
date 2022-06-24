@@ -51,7 +51,11 @@ export class TaskController extends BaseController {
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
       throw new NotFoundException("Нет доступа!");
     }
+    bodyParams.number = board.indexTaskNumber;
+    await this.boardService.incrementTaskNumber(board._id);
 
+    bodyParams.createdUser = user;
+    bodyParams.status = board.columns.sort((a, b) => a.order < b.order ? -1 : 1)?.[0];
     const entity = await this.taskService.create<TaskFormDto>(bodyParams);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }

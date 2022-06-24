@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
-import { ColumnBoardSchema } from "@scrum/shared/schemas/column.board.schema";
+import { ColumnBoard } from "@scrum/shared/schemas/column.board.schema";
 import { Sprint } from "@scrum/shared/schemas/sprint.schema";
 import { User } from "@scrum/shared/schemas/user.schema";
 import moment from "moment-timezone";
@@ -31,8 +30,8 @@ export class Board extends Document {
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: User.name, autopopulate: true })
   public users: User[];
 
-  @Prop({ type: [ColumnBoardSchema], autopopulate: true })
-  public columns: ColumnBoardDto[];
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: ColumnBoard.name, autopopulate: true })
+  public columns: ColumnBoard[];
 
 }
 

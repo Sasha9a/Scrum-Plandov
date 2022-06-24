@@ -16,6 +16,7 @@
     <grace-single-select [options]="users"
                          [(selectedItem)]="task.executor"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.executor }"
+                         scrollHeight="150px"
                          optionLabel="login"
                          filterBy="login">
     </grace-single-select>
@@ -26,6 +27,7 @@
     <label class="font-bold">Спринт</label>
     <grace-single-select [options]="sprints"
                          [(selectedItem)]="task.sprint"
+                         scrollHeight="150px"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.sprint }">
     </grace-single-select>
     <p *ngIf="errors?.sprint" class="p-error">{{ errors.sprint | join }}</p>
@@ -37,6 +39,7 @@
                          [(selectedItem)]="task.priority"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.priority }"
                          [isTemplateCombined]="true"
+                         scrollHeight="150px"
                          [filter]="false"
                          dataKey="name">
       <ng-template #itemTemplate let-priority="item">{{ priority.value | taskPriorityName }}</ng-template>
@@ -55,7 +58,7 @@
 <div class="flex flex-wrap justify-content-between mt-5">
   <div>
     <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(task)"></button>
-    <grace-go-back-button [route]="route"></grace-go-back-button>
+    <grace-go-back-button *ngIf="showBack" [route]="route"></grace-go-back-button>
   </div>
   <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(task)"></button>
 </div>

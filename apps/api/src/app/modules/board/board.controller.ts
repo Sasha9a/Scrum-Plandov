@@ -2,8 +2,10 @@ import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Po
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
+import { ColumnBoardService } from "@scrum/api/modules/column-board/column-board.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
+import { ColumnBoardFormDto } from "@scrum/shared/dtos/board/column.board.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
 
@@ -11,7 +13,8 @@ import { Request, Response } from "express";
 export class BoardController extends BaseController {
 
   public constructor(private readonly boardService: BoardService,
-                     private readonly userService: UserService) {
+                     private readonly userService: UserService,
+                     private readonly boardColumnService: ColumnBoardService) {
     super();
   }
 
@@ -21,6 +24,25 @@ export class BoardController extends BaseController {
     const user: UserDto = req.user as UserDto;
 
     const entities = await this.boardService.findByMy(user?._id);
+    return res.status(HttpStatus.OK).json(entities).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('users/:id')
+  public async findAllUsersByBoard(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
+    const user: UserDto = req.user as UserDto;
+
+    const board = await this.boardService.findById(id);
+    if (!board) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      throw new NotFoundException("Нет доступа!");
+    }
+
+    const usersIds = [board.createdUser._id, ...board.users.map((user) => user._id)];
+    const entities = await this.userService.findAll({ _id: { $in: usersIds } });
     return res.status(HttpStatus.OK).json(entities).end();
   }
 
@@ -53,6 +75,10 @@ export class BoardController extends BaseController {
     }
     bodyParams.createdUser = user;
 
+    for (const column of bodyParams.columns) {
+      const entityColumn = await this.boardColumnService.create<ColumnBoardFormDto>(column);
+      column['_id'] = entityColumn._id;
+    }
     const entity = await this.boardService.create<BoardFormDto>(bodyParams);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }
@@ -108,6 +134,21 @@ export class BoardController extends BaseController {
       throw new NotFoundException("Нет прав");
     }
 
+    for (const column of board.columns) {
+      if (bodyParams.columns.findIndex((_column) => _column['_id'] === column.id) === -1) {
+        await this.boardColumnService.delete(column._id);
+      }
+    }
+
+    for (const column of bodyParams.columns) {
+      if (column['_id']) {
+        await this.boardColumnService.update<ColumnBoardFormDto>(column['_id'], column);
+      } else {
+        const entityColumn = await this.boardColumnService.create<ColumnBoardFormDto>(column);
+        column['_id'] = entityColumn._id;
+      }
+    }
+
     const entity = await this.boardService.update<BoardFormDto>(id, bodyParams);
     return res.status(HttpStatus.OK).json(entity).end();
   }
@@ -129,6 +170,10 @@ export class BoardController extends BaseController {
 
     if (board.createdUser?.id !== user._id) {
       throw new NotFoundException("Нет прав");
+    }
+
+    for (const column of board.columns) {
+      await this.boardColumnService.delete(column._id);
     }
 
     const entity = await this.boardService.delete(id);

@@ -51,6 +51,8 @@ export class SingleSelectComponent implements OnInit, OnChanges {
   @Input() public virtualScroll = false;
   @Input() public itemSize: number;
 
+  @Input() public scrollHeight = '400px';
+
   @ContentChild('itemTemplate', { static: false }) public itemTemplate: any;
   @ContentChild('selectedItemTemplate', { static: false }) public selectedItemTemplate: any;
 

@@ -18,4 +18,8 @@ export class BoardService extends BaseService {
     return this.http.post<null>(`${this.baseUrl}/leave/${id}`, body);
   }
 
+  public findAllUsersByBoard(boardId: string): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${this.baseUrl}/users/${boardId}`);
+  }
+
 }

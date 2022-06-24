@@ -4,6 +4,7 @@ import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { SprintWorkUsersInfoComponent } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.component";
+import { TaskAddComponent } from "@scrum/web/modules/task/components/add/task-add.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 
 @Component({
@@ -66,6 +67,18 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
       error: () => {
         this.loading = false;
         this.cdRef.markForCheck();
+      }
+    });
+  }
+
+  public createTask() {
+    this.ref = this.dialogService.open(TaskAddComponent, {
+      header: `Создать задачу`,
+      contentStyle: { 'overflow': 'auto' },
+      styleClass: 'xl:w-4 lg:w-6 md:w-8 sm:w-10 w-full',
+      baseZIndex: 99999,
+      data: {
+        board: this.board
       }
     });
   }
