@@ -43,6 +43,10 @@
         </div>
       </ng-template>
       <ng-template pTemplate="content">
+        <p-card *ngFor="let task of sprint.tasks | orderBy: 'number:number'"
+                styleClass="very-compact-card"
+                [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px 0 5px 0' }">
+        </p-card>
         <button *ngIf="!sprint.sprint"
                 pButton type="button"
                 icon="pi pi-plus"

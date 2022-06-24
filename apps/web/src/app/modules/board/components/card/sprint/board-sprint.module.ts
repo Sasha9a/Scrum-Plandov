@@ -5,8 +5,11 @@ import { SprintWorkUsersInfoModule } from "@scrum/web/modules/sprint/dumbs/sprin
 import { TaskAddModule } from "@scrum/web/modules/task/components/add/task-add.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { FindByKeyPipeModule } from "@scrum/web/shared/pipes/find-by-key/find-by-key-pipe.module";
+import { OrderByPipeModule } from "@scrum/web/shared/pipes/order-by/order-by-pipe.module";
+import { TaskPriorityColorPipeModule } from "@scrum/web/shared/pipes/task-priority-color/task-priority-color-pipe.module";
 import { AccordionModule } from "primeng/accordion";
 import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
 import { DialogService } from "primeng/dynamicdialog";
 import { TagModule } from "primeng/tag";
 import { BoardSprintComponent } from './board-sprint.component';
@@ -22,8 +25,11 @@ import { BoardSprintComponent } from './board-sprint.component';
 		AccordionModule,
 		TagModule,
 		FindByKeyPipeModule,
-    SprintWorkUsersInfoModule,
-    TaskAddModule
+		SprintWorkUsersInfoModule,
+		TaskAddModule,
+		CardModule,
+		OrderByPipeModule,
+		TaskPriorityColorPipeModule
 	],
   providers: [DialogService]
 })

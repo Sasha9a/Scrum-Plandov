@@ -101,3 +101,27 @@ a:hover {
   color: #4a9aff;
   cursor: pointer;
 }
+
+.p-card {
+  box-shadow: 0 0 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%) !important;
+  .p-card-title {
+    font-size: 1.25rem;
+  }
+  &.compact-card,
+  &.very-compact-card {
+    .p-card-body {
+      padding: 0 !important;
+    }
+
+    .p-card-title {
+      padding: 1.25rem 1.25rem 0 1.25rem !important;
+    }
+  }
+
+  &.very-compact-card {
+    .p-card-content {
+      padding: 0 !important;
+    }
+  }
+}
+
