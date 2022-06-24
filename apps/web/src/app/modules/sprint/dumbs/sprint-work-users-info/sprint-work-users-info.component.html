@@ -5,14 +5,16 @@
     <tr *ngIf="toInfo(info) as info">
       <td>
         <ng-container *ngIf="info.user; else noUser">
-          <grace-user-avatar [user]="{ name: info.user?.name, login: info.user?.login, file: info.user?.avatar }"></grace-user-avatar>
-          <p>{{ info.user?.name || info.user?.login }}</p>
+          <div class="flex align-items-center gap-2">
+            <grace-user-avatar [user]="{ name: info.user?.name, login: info.user?.login, file: info.user?.avatar }" size=""></grace-user-avatar>
+            <p class="h-full">{{ info.user?.name || info.user?.login }}</p>
+          </div>
         </ng-container>
         <ng-template #noUser>Не назначен</ng-template>
       </td>
-      <td>{{ info.count | number }}</td>
-      <td>{{ info.grade | number }} ч.</td>
-      <td>{{ info.left | number }} ч.</td>
+      <td>{{ info.count ? (info.count | number) : 0 }}</td>
+      <td>{{ info.grade ? (info.grade | number) : 0 }} ч.</td>
+      <td>{{ info.left ? (info.left | number) : 0 }} ч.</td>
     </tr>
   </ng-template>
   <ng-template #footerTemplate>
@@ -20,9 +22,9 @@
       <td>
         <p class="font-bold">ИТОГО:</p>
       </td>
-      <td>{{ sprint.sumInfo?.count | number }}</td>
-      <td>{{ sprint.sumInfo?.grade | number }} ч.</td>
-      <td>{{ sprint.sumInfo?.left | number }} ч.</td>
+      <td>{{ sprint.sumInfo?.count ? (sprint.sumInfo?.count | number) : 0 }}</td>
+      <td>{{ sprint.sumInfo?.grade ? (sprint.sumInfo?.grade | number) : 0 }} ч.</td>
+      <td>{{ sprint.sumInfo?.left ? (sprint.sumInfo?.left | number) : 0 }} ч.</td>
     </tr>
   </ng-template>
 </grace-table>

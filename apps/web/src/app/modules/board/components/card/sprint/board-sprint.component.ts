@@ -45,7 +45,7 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
   public openSprintUsersInfo(sprint: SprintTasksInfoDto) {
     this.ref = this.dialogService.open(SprintWorkUsersInfoComponent, {
       header: `Рабочая нагрузка по исполнителям - ${sprint.sprint?.name}`,
-      contentStyle: { 'max-width': '700px', 'overflow': 'auto', 'max-height': '500px' },
+      contentStyle: { 'max-width': '750px', 'overflow': 'auto', 'max-height': '500px' },
       baseZIndex: 99999,
       data: {
         sprint: sprint
