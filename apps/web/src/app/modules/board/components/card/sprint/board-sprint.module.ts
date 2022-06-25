@@ -13,24 +13,28 @@ import { CardModule } from "primeng/card";
 import { DialogService } from "primeng/dynamicdialog";
 import { TagModule } from "primeng/tag";
 import { BoardSprintComponent } from './board-sprint.component';
+import { UserAvatarModule } from "@scrum/web/shared/dumbs/user-avatar/user-avatar.module";
+import { TaskPriorityNamePipeModule } from "@scrum/web/shared/pipes/task-priority-name/task-priority-name-pipe.module";
 
 @NgModule({
   declarations: [BoardSprintComponent],
   exports: [BoardSprintComponent],
-	imports: [
-		CommonModule,
-		ButtonModule,
-		RouterModule,
-		SpinnerModule,
-		AccordionModule,
-		TagModule,
-		FindByKeyPipeModule,
-		SprintWorkUsersInfoModule,
-		TaskAddModule,
-		CardModule,
-		OrderByPipeModule,
-		TaskPriorityColorPipeModule
-	],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    RouterModule,
+    SpinnerModule,
+    AccordionModule,
+    TagModule,
+    FindByKeyPipeModule,
+    SprintWorkUsersInfoModule,
+    TaskAddModule,
+    CardModule,
+    OrderByPipeModule,
+    TaskPriorityColorPipeModule,
+    UserAvatarModule,
+    TaskPriorityNamePipeModule
+  ],
   providers: [DialogService]
 })
 export class BoardSprintModule {}

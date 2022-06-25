@@ -29,17 +29,21 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
                      private readonly errorService: ErrorService) {}
 
   public ngOnInit(): void {
-    this.sprintService.findAllByBoard(this.board?._id).subscribe((sprints) => {
-      this.sprints = sprints;
-      this.loading = false;
-      this.cdRef.markForCheck();
-    });
+    this.load();
   }
 
   public ngOnDestroy() {
     if (this.ref) {
       this.ref.close();
     }
+  }
+
+  public load() {
+    this.sprintService.findAllByBoard(this.board?._id).subscribe((sprints) => {
+      this.sprints = sprints;
+      this.loading = false;
+      this.cdRef.markForCheck();
+    });
   }
 
   public openSprintUsersInfo(sprint: SprintTasksInfoDto) {
@@ -80,6 +84,10 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
       data: {
         board: this.board
       }
+    });
+
+    this.ref.onClose.subscribe(() => {
+      this.load();
     });
   }
 
