@@ -51,7 +51,7 @@ export class Task extends Document {
   @Prop()
   public left: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   public spent: number;
 
   @Prop()

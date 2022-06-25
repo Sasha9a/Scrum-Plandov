@@ -125,3 +125,11 @@ a:hover {
   }
 }
 
+.p-chip {
+  padding: 0 0.5rem !important;
+}
+
+.p-chip .p-chip-text {
+  margin: 0 !important;
+  font-size: 0.9rem !important;
+}

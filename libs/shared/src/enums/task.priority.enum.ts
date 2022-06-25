@@ -1,7 +1,7 @@
 export enum TaskPriorityEnum {
-  HIGHEST = 'HIGHEST',
-  HIGH = 'HIGH',
-  AVERAGE = 'AVERAGE',
+  LOWEST = 'LOWEST',
   SHORT = 'SHORT',
-  LOWEST = 'LOWEST'
+  AVERAGE = 'AVERAGE',
+  HIGH = 'HIGH',
+  HIGHEST = 'HIGHEST'
 }

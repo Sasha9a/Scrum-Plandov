@@ -56,6 +56,9 @@ export class TaskController extends BaseController {
 
     bodyParams.createdUser = user;
     bodyParams.status = board.columns.sort((a, b) => a.order < b.order ? -1 : 1)?.[0];
+    if (bodyParams.grade) {
+      bodyParams.left = bodyParams.grade;
+    }
     const entity = await this.taskService.create<TaskFormDto>(bodyParams);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }

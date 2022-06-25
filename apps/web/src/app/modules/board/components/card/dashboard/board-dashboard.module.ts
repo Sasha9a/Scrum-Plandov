@@ -9,10 +9,19 @@ import { CardModule } from "primeng/card";
 import { DragDropModule } from "primeng/dragdrop";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { BoardDashboardComponent } from './board-dashboard.component';
+import { TaskOrderByPipeModule } from "@scrum/web/shared/pipes/task-order-by/task-order-by-pipe.module";
+import {
+  TaskPriorityColorPipeModule
+} from "@scrum/web/shared/pipes/task-priority-color/task-priority-color-pipe.module";
+import { UserAvatarModule } from "@scrum/web/shared/dumbs/user-avatar/user-avatar.module";
+import { TaskPriorityNamePipeModule } from "@scrum/web/shared/pipes/task-priority-name/task-priority-name-pipe.module";
+import { ChipModule } from "primeng/chip";
+import { InplaceModule } from "primeng/inplace";
+import { TooltipModule } from "primeng/tooltip";
 
 @NgModule({
   declarations: [BoardDashboardComponent],
   exports: [BoardDashboardComponent],
-  imports: [CommonModule, ButtonModule, RouterModule, OrderByPipeModule, CardModule, DragDropModule, SpinnerModule, OverlayPanelModule, SingleSelectModule]
+  imports: [CommonModule, ButtonModule, RouterModule, OrderByPipeModule, CardModule, DragDropModule, SpinnerModule, OverlayPanelModule, SingleSelectModule, TaskOrderByPipeModule, TaskPriorityColorPipeModule, UserAvatarModule, TaskPriorityNamePipeModule, ChipModule, InplaceModule, TooltipModule]
 })
 export class BoardDashboardModule {}

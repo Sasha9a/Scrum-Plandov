@@ -16,6 +16,7 @@
     <grace-single-select [options]="users"
                          [(selectedItem)]="task.executor"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.executor }"
+                         [showClear]="true"
                          scrollHeight="150px"
                          optionLabel="login"
                          filterBy="login">
@@ -27,6 +28,7 @@
     <label class="font-bold">Спринт</label>
     <grace-single-select [options]="sprints"
                          [(selectedItem)]="task.sprint"
+                         [showClear]="true"
                          scrollHeight="150px"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.sprint }">
     </grace-single-select>

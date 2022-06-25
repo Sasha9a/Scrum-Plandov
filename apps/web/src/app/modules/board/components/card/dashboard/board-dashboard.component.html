@@ -1,7 +1,38 @@
 <div *ngIf="!loading">
   <div class="flex justify-content-between align-items-center mt-3">
-    <h1 class="my-0">{{ board.name }}</h1>
     <div>
+      <p class="text-gray-500 text-base">{{ board.name }}</p>
+      <div *ngIf="activeSprint" class="flex align-items-center gap-2">
+        <h1 class="my-0">{{ activeSprint.name }}</h1>
+        <p-inplace #inplace *ngIf="board.activeSprints?.length > 1">
+          <ng-template pTemplate="display">
+            <span class="text-blue-400">Переключить спринт</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <grace-single-select [options]="board.activeSprints"
+                                 [(selectedItem)]="activeSprint"
+                                 (selectedItemChange)="changeSprint(); inplace.deactivate()"
+                                 [filter]="false">
+            </grace-single-select>
+          </ng-template>
+        </p-inplace>
+      </div>
+      <h1 *ngIf="!activeSprint" class="my-0 text-red-600">Не выбран спринт</h1>
+    </div>
+    <div class="flex align-items-center gap-2">
+      <div *ngIf="activeSprint?.endDate"
+           [escape]="false"
+           pTooltip="Дата начала: {{ activeSprint?.startDate | date: 'dd.MM.YYYY' }}<br /> Дата завершения: {{ activeSprint?.endDate | date: 'dd.MM.YYYY' }}"
+           tooltipPosition="bottom">
+        <i class="pi pi-clock"></i> <span class="ml-1">Осталось {{ endDate }} дней</span>
+      </div>
+      <button pButton *ngIf="activeSprint"
+              type="button"
+              icon="pi pi-check"
+              label="Завершить спринт"
+              class="p-button-success p-button-text mr-2"
+              (click)="compiledSprint()">
+      </button>
       <button pButton *ngIf="authService.currentUser?._id === board.createdUser?._id"
               type="button"
               icon="pi pi-pencil"
@@ -41,10 +72,19 @@
     <div *ngFor="let column of board.columns | orderBy: 'order:number'">
       <p class="text-gray-600 text-base mb-2 pl-1">{{ column.name }}</p>
       <div class="h-full bg-gray-50 p-1 xl:w-23rem lg:w-18rem md:w-15rem sm:w-13rem w-13rem drop-column" pDroppable="tasks">
-        <p-card header="Simple Card" pDraggable="tasks">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
-            quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!</p>
-        </p-card>
+        <ng-container *ngFor="let task of tasks | taskOrderBy">
+          <div *ngIf="task.status?._id === column?._id" class="shadow-1 p-2 my-1" [ngStyle]="{ 'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px', 'background-color': 'white' }">
+            <div class="flex justify-content-between align-items-center">
+              <a routerLink="/task/card/{{ task._id }}">{{ board.code }}-{{ task.number }}</a>
+              <grace-user-avatar *ngIf="task.executor" [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }" size=""></grace-user-avatar>
+            </div>
+            <p [class.mt-2]="!task.executor">{{ task.name }}</p>
+            <p class="mt-2">{{ task.priority | taskPriorityName }}</p>
+            <p class="mt-1">{{ task.executor?.name || task.executor?.login || 'Не назначен' }}</p>
+            <p *ngIf="task.grade" class="mt-1">{{ (task.spent || 0) /  (task.grade || 0) * 100 }}%</p>
+            <p-chip *ngIf="task.left" [label]="(task.left | number) + ' ч.'" styleClass="mt-1"></p-chip>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

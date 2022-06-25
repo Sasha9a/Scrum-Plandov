@@ -9,6 +9,7 @@ import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.
 import { SprintWorkUserInfoDto } from "@scrum/shared/dtos/sprint/sprint.work.user.info.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
+import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 
 @Controller('sprint')
 export class SprintController extends BaseController {
@@ -126,6 +127,54 @@ export class SprintController extends BaseController {
     board.activeSprints.push(sprint);
     await board.save();
     return res.status(HttpStatus.OK).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed/:id')
+  public async completedSprint(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
+    const user: UserDto = req.user as UserDto;
+
+    const sprint = await this.sprintService.findById(id);
+    if (!sprint) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    const board = await this.boardService.findById(sprint.board._id);
+    if (!board) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      throw new NotFoundException("Нет доступа!");
+    }
+
+    board.activeSprints = board.activeSprints.filter((_sprint) => _sprint.id !== sprint.id);
+    await board.save();
+    await this.sprintService.update<SprintDto>(sprint._id, { isCompleted: true });
+    return res.status(HttpStatus.OK).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id/tasks')
+  public async findByIdAllTasks(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
+    const user: UserDto = req.user as UserDto;
+
+    const sprint = await this.sprintService.findById(id);
+    if (!sprint) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    const board = await this.boardService.findById(sprint.board._id);
+    if (!board) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      throw new NotFoundException("Нет доступа!");
+    }
+
+    const entities = await this.taskService.findAll({ board: board, sprint: sprint });
+    return res.status(HttpStatus.OK).json(entities).end();
   }
 
   @UseGuards(JwtAuthGuard)
