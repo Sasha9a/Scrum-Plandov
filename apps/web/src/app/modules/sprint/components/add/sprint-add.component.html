@@ -3,7 +3,8 @@
     <h1 class="text-center">Создание спринта</h1>
     <grace-sprint-form [board]="board"
                        (save)="create($event)"
-                       route="/board/card/{{ boardId }}">
+                       route="/board/card/{{ boardId }}"
+                       [queryParams]="{ tabId: 'sprint' }">
     </grace-sprint-form>
   </div>
 </div>

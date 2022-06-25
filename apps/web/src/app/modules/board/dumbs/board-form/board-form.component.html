@@ -65,7 +65,7 @@
 <div class="flex flex-wrap justify-content-between mt-5">
   <div>
     <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(board)"></button>
-    <grace-go-back-button [route]="route"></grace-go-back-button>
+    <grace-go-back-button [route]="route" [queryParams]="queryParams"></grace-go-back-button>
   </div>
   <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(board)"></button>
 </div>

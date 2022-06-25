@@ -32,8 +32,8 @@ export class RoutingService {
       });
   }
 
-  public goToPreviousUrl() {
-    this.router.navigateByUrl(this.previousUrl).catch(console.error);
+  public goToPreviousUrl(queryParams?: { [k: string]: string }) {
+    this.router.navigate([this.previousUrl], { queryParams: queryParams }).catch(console.error);
   }
 
 }

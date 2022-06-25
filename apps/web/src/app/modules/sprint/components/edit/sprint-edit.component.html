@@ -5,7 +5,8 @@
                        (save)="edit($event)"
                        [canDelete]="true"
                        (delete)="delete()"
-                       route="/board/card/{{ sprint?._id }}">
+                       route="/board/card/{{ sprint?._id }}"
+                       [queryParams]="{ tabId: 'sprint' }">
     </grace-sprint-form>
   </div>
 </div>

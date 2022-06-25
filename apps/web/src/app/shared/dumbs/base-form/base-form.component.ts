@@ -13,6 +13,7 @@ export abstract class BaseFormComponent<T> {
   @Output() public delete = new EventEmitter<T>();
 
   @Input() public route: string;
+  @Input() public queryParams: { [k: string]: string } = {};
   public errors: Record<keyof T, any[]> | null;
 
   public abstract dto: new () => T;

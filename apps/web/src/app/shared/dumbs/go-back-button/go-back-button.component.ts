@@ -14,6 +14,7 @@ export class GoBackButtonComponent {
   @Input() public buttonClass = 'p-button-secondary p-button-text';
 
   @Input() public route = '/';
+  @Input() public queryParams: { [k: string]: string } = {};
 
   public constructor(private readonly router: Router,
                      public routingService: RoutingService) {
@@ -21,9 +22,9 @@ export class GoBackButtonComponent {
 
   public btnClick() {
     if (this.routingService.previousUrl === '/') {
-      this.router.navigate([this.route]).catch(console.error);
+      this.router.navigate([this.route], { queryParams: this.queryParams }).catch(console.error);
     } else {
-      this.routingService.goToPreviousUrl();
+      this.routingService.goToPreviousUrl(this.queryParams);
     }
   }
 
