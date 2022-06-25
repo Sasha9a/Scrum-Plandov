@@ -91,6 +91,7 @@ export class BoardDashboardComponent implements OnInit {
           this.loadSprint(this.board?.activeSprints[0]);
         } else {
           this.activeSprint = null;
+          this.tasks = null;
         }
         this.cdRef.markForCheck();
       },
