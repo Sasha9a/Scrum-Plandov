@@ -58,7 +58,7 @@ export class SprintController extends BaseController {
       const tasks = await this.taskService.findAll({ board: board, sprint: sprint });
       const usersInfo: SprintWorkUserInfoDto[] = [];
       for (const task of tasks) {
-        let userInfo = usersInfo.find((userInfo) => userInfo.user._id === task.executor?._id);
+        let userInfo = usersInfo.find((userInfo) => userInfo.user?._id === task.executor?._id);
         if (!userInfo) {
           userInfo = {
             user: task.executor,

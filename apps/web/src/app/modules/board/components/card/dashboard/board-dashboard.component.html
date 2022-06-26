@@ -19,11 +19,12 @@
       </div>
       <h1 *ngIf="!activeSprint" class="my-0 text-red-600">Не выбран спринт</h1>
     </div>
-    <div class="flex align-items-center gap-2">
+    <div class="flex align-items-center">
       <div *ngIf="activeSprint?.endDate"
            [escape]="false"
            pTooltip="Дата начала: {{ activeSprint?.startDate | date: 'dd.MM.YYYY' }}<br /> Дата завершения: {{ activeSprint?.endDate | date: 'dd.MM.YYYY' }}"
-           tooltipPosition="bottom">
+           tooltipPosition="bottom"
+           class="mr-3">
         <i class="pi pi-clock"></i> <span class="ml-1">Осталось {{ endDate }} дней</span>
       </div>
       <button pButton *ngIf="activeSprint"
@@ -68,11 +69,16 @@
     </div>
   </div>
 
+  <div class="flex gap-2 align-items-center mt-3">
+    <p class="text-gray-400 font-bold">ФИЛЬТРЫ:</p>
+    <p-selectButton [options]="filterItems" [(ngModel)]="selectedFilterItems" [multiple]="true" optionLabel="name" optionValue="value"></p-selectButton>
+  </div>
+
   <div class="flex flex-nowrap overflow-x-auto overflow-y-hidden gap-2 mt-4" style="min-height: 200px;">
     <div *ngFor="let column of board.columns | orderBy: 'order:number'">
       <p class="text-gray-600 text-base mb-2 pl-1">{{ column.name }}</p>
       <div class="h-full bg-gray-50 p-1 xl:w-23rem lg:w-18rem md:w-15rem sm:w-13rem w-13rem drop-column" pDroppable="tasks">
-        <ng-container *ngFor="let task of tasks | taskOrderBy">
+        <ng-container *ngFor="let task of tasks | taskFilter: selectedFilterItems | taskOrderBy">
           <div *ngIf="task.status?._id === column?._id" class="shadow-1 p-2 my-1" [ngStyle]="{ 'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px', 'background-color': 'white' }">
             <div class="flex justify-content-between align-items-center">
               <a routerLink="/task/card/{{ task._id }}">{{ board.code }}-{{ task.number }}</a>

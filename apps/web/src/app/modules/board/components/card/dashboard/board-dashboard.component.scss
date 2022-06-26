@@ -10,3 +10,11 @@
 .cards-hidden {
   display: none;
 }
+
+.p-buttonset .p-button {
+  padding: 0.4rem !important;
+
+  .p-button-label {
+    font-size: 0.9rem !important;
+  }
+}

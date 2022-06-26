@@ -31,6 +31,9 @@ export class BoardDashboardComponent implements OnInit {
 
   public endDate: number;
 
+  public filterItems: { name: string, value: string }[] = [];
+  public selectedFilterItems: string[] = [];
+
   public constructor(public readonly authService: AuthService,
                      private readonly boardService: BoardService,
                      private readonly sprintService: SprintService,
@@ -43,6 +46,13 @@ export class BoardDashboardComponent implements OnInit {
     if (this.board?.activeSprints?.length) {
       this.loadSprint(this.board?.activeSprints[0]);
     }
+
+    this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
+      return {
+        name: user?.name || user?.login,
+        value: user?._id
+      };
+    });
   }
 
   public loadSprint(sprint: SprintDto) {
