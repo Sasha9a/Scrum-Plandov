@@ -13,4 +13,9 @@ export class TaskShortInfoComponent {
   @Input() public task: TaskDto;
   @Output() public taskChange = new EventEmitter<TaskDto>();
 
+  public closeTask() {
+    this.task = null;
+    this.taskChange.emit(this.task);
+  }
+
 }

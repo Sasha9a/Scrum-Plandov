@@ -21,10 +21,11 @@ import { TooltipModule } from "primeng/tooltip";
 import { SelectButtonModule } from "primeng/selectbutton";
 import { FormsModule } from "@angular/forms";
 import { TaskFilterPipeModule } from "@scrum/web/shared/pipes/task-filter/task-filter-pipe.module";
+import { TaskShortInfoModule } from "@scrum/web/modules/task/dumbs/task-short-info/task-short-info.module";
 
 @NgModule({
   declarations: [BoardDashboardComponent],
   exports: [BoardDashboardComponent],
-    imports: [CommonModule, ButtonModule, RouterModule, OrderByPipeModule, CardModule, DragDropModule, SpinnerModule, OverlayPanelModule, SingleSelectModule, TaskOrderByPipeModule, TaskPriorityColorPipeModule, UserAvatarModule, TaskPriorityNamePipeModule, ChipModule, InplaceModule, TooltipModule, SelectButtonModule, FormsModule, TaskFilterPipeModule]
+    imports: [CommonModule, ButtonModule, RouterModule, OrderByPipeModule, CardModule, DragDropModule, SpinnerModule, OverlayPanelModule, SingleSelectModule, TaskOrderByPipeModule, TaskPriorityColorPipeModule, UserAvatarModule, TaskPriorityNamePipeModule, ChipModule, InplaceModule, TooltipModule, SelectButtonModule, FormsModule, TaskFilterPipeModule, TaskShortInfoModule]
 })
 export class BoardDashboardModule {}

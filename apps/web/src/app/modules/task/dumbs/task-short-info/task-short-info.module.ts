@@ -6,17 +6,19 @@ import { UserAvatarModule } from "@scrum/web/shared/dumbs/user-avatar/user-avata
 import { TaskPriorityNamePipeModule } from "@scrum/web/shared/pipes/task-priority-name/task-priority-name-pipe.module";
 import { ButtonModule } from "primeng/button";
 import { TaskShortInfoComponent } from './task-short-info.component';
+import { CardModule } from "primeng/card";
 
 @NgModule({
   declarations: [TaskShortInfoComponent],
   exports: [TaskShortInfoComponent],
-  imports: [
-    CommonModule,
-    RouterModule,
-    ButtonModule,
-    TaskPriorityNamePipeModule,
-    UserAvatarModule,
-    FileModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule,
+        ButtonModule,
+        TaskPriorityNamePipeModule,
+        UserAvatarModule,
+        FileModule,
+        CardModule
+    ]
 })
 export class TaskShortInfoModule {}

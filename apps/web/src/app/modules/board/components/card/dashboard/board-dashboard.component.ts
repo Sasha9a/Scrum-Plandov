@@ -37,6 +37,8 @@ export class BoardDashboardComponent implements OnInit {
 
   public columnsInfo: Record<string, string> = {};
 
+  public activeTask: TaskDto;
+
   public constructor(public readonly authService: AuthService,
                      private readonly boardService: BoardService,
                      private readonly sprintService: SprintService,
