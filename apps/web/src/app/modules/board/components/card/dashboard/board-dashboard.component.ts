@@ -9,6 +9,7 @@ import { AuthService } from "@scrum/web/core/services/user/auth.service";
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
+import { TaskFilterPipe } from "@scrum/web/shared/pipes/task-filter/task-filter.pipe";
 import moment from "moment-timezone";
 
 @Component({
@@ -34,17 +35,22 @@ export class BoardDashboardComponent implements OnInit {
   public filterItems: { name: string, value: string }[] = [];
   public selectedFilterItems: string[] = [];
 
+  public columnsInfo: Record<string, string> = {};
+
   public constructor(public readonly authService: AuthService,
                      private readonly boardService: BoardService,
                      private readonly sprintService: SprintService,
                      private readonly confirmService: ConfirmDialogService,
                      private readonly cdRef: ChangeDetectorRef,
                      private readonly errorService: ErrorService,
-                     private readonly router: Router) {}
+                     private readonly router: Router,
+                     private readonly taskFilterPipe: TaskFilterPipe) {}
 
   public ngOnInit(): void {
     if (this.board?.activeSprints?.length) {
       this.loadSprint(this.board?.activeSprints[0]);
+    } else {
+      this.updateInfoColumns();
     }
 
     this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
@@ -65,6 +71,7 @@ export class BoardDashboardComponent implements OnInit {
     this.sprintService.findByIdAllTasks(this.activeSprint?._id).subscribe((tasks) => {
       this.tasks = tasks;
       this.endDate = moment(this.activeSprint.endDate).diff(moment().subtract(1, 'day'), 'days');
+      this.updateInfoColumns();
       this.loading = false;
       this.cdRef.markForCheck();
     });
@@ -102,6 +109,7 @@ export class BoardDashboardComponent implements OnInit {
         } else {
           this.activeSprint = null;
           this.tasks = null;
+          this.updateInfoColumns();
         }
         this.cdRef.markForCheck();
       },
@@ -114,6 +122,15 @@ export class BoardDashboardComponent implements OnInit {
 
   public changeSprint() {
     this.loadSprint(this.activeSprint);
+  }
+
+  public updateInfoColumns() {
+    this.board.columns?.forEach((column) => {
+      const tasks = this.tasks?.filter((task) => task.status?._id === column._id);
+      const countTaskAll = tasks?.length || 0;
+      const countTasksWithFilters = this.taskFilterPipe.transform(tasks, this.selectedFilterItems)?.length;
+      this.columnsInfo[column._id] = `${countTasksWithFilters !== countTaskAll ? (countTasksWithFilters + ' из ' + countTaskAll) : countTaskAll}`;
+    });
   }
 
 }

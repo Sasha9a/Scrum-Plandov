@@ -58,19 +58,21 @@ export class SprintController extends BaseController {
       const tasks = await this.taskService.findAll({ board: board, sprint: sprint });
       const usersInfo: SprintWorkUserInfoDto[] = [];
       for (const task of tasks) {
-        let userInfo = usersInfo.find((userInfo) => userInfo.user?._id === task.executor?._id);
-        if (!userInfo) {
-          userInfo = {
-            user: task.executor,
-            count: 1,
-            grade: task.grade,
-            left: task.left
-          };
-          usersInfo.push(userInfo);
-        } else {
-          userInfo.count++;
-          userInfo.grade += task.grade;
-          userInfo.left += task.left;
+        if (task.executor) {
+          let userInfo = usersInfo.find((userInfo) => userInfo.user?._id === task.executor?._id);
+          if (!userInfo) {
+            userInfo = {
+              user: task.executor,
+              count: 1,
+              grade: task.grade,
+              left: task.left || 0
+            };
+            usersInfo.push(userInfo);
+          } else {
+            userInfo.count++;
+            userInfo.grade += task.grade;
+            userInfo.left += (task.left || 0);
+          }
         }
       }
       results.push({
@@ -79,13 +81,13 @@ export class SprintController extends BaseController {
         notAssignedInfo: {
           count: tasks.reduce((sum, task) => !task.executor ? sum + 1 : sum, 0),
           grade: tasks.reduce((sum, task) => !task.executor ? sum + task.grade : sum, 0),
-          left: tasks.reduce((sum, task) => !task.executor ? sum + task.left : sum, 0)
+          left: tasks.reduce((sum, task) => !task.executor ? sum + (task.left || 0) : sum, 0)
         },
         usersInfo: usersInfo,
         sumInfo: {
           count: tasks.length,
           grade: tasks.reduce((sum, task) => sum + task.grade, 0),
-          left: tasks.reduce((sum, task) => sum + task.left, 0)
+          left: tasks.reduce((sum, task) => sum + (task.left || 0), 0)
         }
       });
     }
