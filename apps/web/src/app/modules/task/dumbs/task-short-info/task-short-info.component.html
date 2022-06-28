@@ -1,18 +1,15 @@
-<p-card *ngIf="task">
-  <div class="flex justify-content-between align-items-center">
-    <a routerLink="/task/card/{{ task._id }}" target="_blank">{{ task.board?.code }}-{{ task.number }}</a>
-    <button pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text" (click)="closeTask()"></button>
-  </div>
-  <p class="mt-1">{{ task.name }}</p>
-  <div class="grid mt-3">
+<p-sidebar [(visible)]="visible" [baseZIndex]="10000" position="right" [style]="{ width: '30em' }" (onHide)="closeTask()">
+  <a routerLink="/task/card/{{ task?._id }}" target="_blank">{{ task?.board?.code }}-{{ task?.number }}</a>
+  <p class="mt-2">{{ task?.name }}</p>
+  <div class="grid mt-2">
     <div class="col-5 text-gray-500">Оценка:</div>
-    <div *ngIf="task.grade" class="col-7">{{ task.grade }} ч.</div>
-    <div *ngIf="!task.grade" class="col-7">Неизвестно</div>
+    <div *ngIf="task?.grade" class="col-7">{{ task?.grade }} ч.</div>
+    <div *ngIf="!task?.grade" class="col-7">Неизвестно</div>
   </div>
   <div class="grid">
     <div class="col-5 text-gray-500">Осталось:</div>
-    <div *ngIf="task.left" class="col-7">{{ task.left }} ч.</div>
-    <div *ngIf="!task.left" class="col-7">Неизвестно</div>
+    <div *ngIf="task?.left" class="col-7">{{ task?.left }} ч.</div>
+    <div *ngIf="!task?.left" class="col-7">Неизвестно</div>
   </div>
 
   <div class="mt-2">
@@ -24,12 +21,12 @@
     <div class="grid align-items-center mt-1">
       <div class="col-5 text-gray-500">Статус:</div>
       <div class="col-7">
-        <p class="p-1 font-bold w-min" [ngStyle]="{ 'background-color': task.status?.color, 'border-radius': '5px' }">{{ task.status?.name }}</p>
+        <p class="p-1 font-bold w-min" [ngStyle]="{ 'background-color': task?.status?.color, 'border-radius': '5px' }">{{ task?.status?.name }}</p>
       </div>
     </div>
     <div class="grid">
       <div class="col-5 text-gray-500">Приоритет:</div>
-      <div class="col-7">{{ task.priority | taskPriorityName }}</div>
+      <div class="col-7">{{ task?.priority | taskPriorityName }}</div>
     </div>
   </div>
 
@@ -39,19 +36,19 @@
       <div class="col-5 text-gray-500">Автор:</div>
       <div class="col-7">
         <div class="flex gap-2 align-items-center">
-          <grace-user-avatar [user]="{ name: task.createdUser?.name, login: task.createdUser?.login, file: task.createdUser?.avatar }" size=""></grace-user-avatar>
-          <p>{{ task.createdUser?.name || task.createdUser?.login }}</p>
+          <grace-user-avatar [user]="{ name: task?.createdUser?.name, login: task?.createdUser?.login, file: task?.createdUser?.avatar }" size=""></grace-user-avatar>
+          <p>{{ task?.createdUser?.name || task?.createdUser?.login }}</p>
         </div>
       </div>
     </div>
     <div class="grid align-items-center">
       <div class="col-5 text-gray-500">Исполнитель:</div>
       <div class="col-7">
-        <div *ngIf="task.executor" class="flex gap-2 align-items-center">
-          <grace-user-avatar [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }" size=""></grace-user-avatar>
-          <p>{{ task.executor?.name || task.executor?.login }}</p>
+        <div *ngIf="task?.executor" class="flex gap-2 align-items-center">
+          <grace-user-avatar [user]="{ name: task?.executor?.name, login: task?.executor?.login, file: task?.executor?.avatar }" size=""></grace-user-avatar>
+          <p>{{ task?.executor?.name || task?.executor?.login }}</p>
         </div>
-        <div *ngIf="!task.executor">Не назначен</div>
+        <div *ngIf="!task?.executor">Не назначен</div>
       </div>
     </div>
   </div>
@@ -60,26 +57,26 @@
     <h4 class="my-0">Даты</h4>
     <div class="grid mt-2">
       <div class="col-5 text-gray-500">Создано:</div>
-      <div class="col-7">{{ task.createDate | date: 'dd MMMM yyyy HH:mm' }}</div>
+      <div class="col-7">{{ task?.createDate | date: 'dd MMMM yyyy HH:mm' }}</div>
     </div>
     <div class="grid">
       <div class="col-5 text-gray-500">Обновлено:</div>
-      <div class="col-7">{{ task.updateDate | date: 'dd MMMM yyyy HH:mm' }}</div>
+      <div class="col-7">{{ task?.updateDate | date: 'dd MMMM yyyy HH:mm' }}</div>
     </div>
   </div>
 
   <div class="mt-3">
     <h4 class="mt-0 mb-2">Описание</h4>
-    <div>{{ task.description || 'Нет описания' }}</div>
+    <div>{{ task?.description || 'Нет описания' }}</div>
   </div>
 
   <div class="mt-3">
     <h4 class="mt-0 mb-2">Вложенные файлы</h4>
     <div class="flex gap-2">
-      <p *ngIf="!task.files?.length">Нет файлов</p>
-      <ng-container *ngFor="let file of task.files">
+      <p *ngIf="!task?.files?.length">Нет файлов</p>
+      <ng-container *ngFor="let file of task?.files">
         <grace-file *ngIf="file" [file]="file"></grace-file>
       </ng-container>
     </div>
   </div>
-</p-card>
+</p-sidebar>

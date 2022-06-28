@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 
 @Component({
@@ -8,10 +8,24 @@ import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TaskShortInfoComponent {
+export class TaskShortInfoComponent implements OnInit, OnChanges {
 
   @Input() public task: TaskDto;
   @Output() public taskChange = new EventEmitter<TaskDto>();
+
+  public visible = false;
+
+  public ngOnInit() {
+    if (this.task) {
+      this.visible = true;
+    }
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.task?.currentValue) {
+      this.visible = true;
+    }
+  }
 
   public closeTask() {
     this.task = null;
