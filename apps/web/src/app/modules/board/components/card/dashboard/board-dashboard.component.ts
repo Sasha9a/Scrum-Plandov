@@ -13,6 +13,8 @@ import { TaskFilterPipe } from "@scrum/web/shared/pipes/task-filter/task-filter.
 import moment from "moment-timezone";
 import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
+import { TaskAddComponent } from "@scrum/web/modules/task/components/add/task-add.component";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 
 @Component({
   selector: 'grace-board-dashboard',
@@ -42,6 +44,8 @@ export class BoardDashboardComponent implements OnInit {
   public activeTask: TaskDto;
   public draggedTask: TaskDto;
 
+  public ref: DynamicDialogRef;
+
   public constructor(public readonly authService: AuthService,
                      private readonly boardService: BoardService,
                      private readonly taskService: TaskService,
@@ -50,14 +54,11 @@ export class BoardDashboardComponent implements OnInit {
                      private readonly cdRef: ChangeDetectorRef,
                      private readonly errorService: ErrorService,
                      private readonly router: Router,
-                     private readonly taskFilterPipe: TaskFilterPipe) {}
+                     private readonly taskFilterPipe: TaskFilterPipe,
+                     private readonly dialogService: DialogService) {}
 
   public ngOnInit(): void {
-    if (this.board?.activeSprints?.length) {
-      this.loadSprint(this.board?.activeSprints[0]);
-    } else {
-      this.updateInfoColumns();
-    }
+    this.load();
 
     this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
       return {
@@ -65,6 +66,14 @@ export class BoardDashboardComponent implements OnInit {
         value: user?._id
       };
     });
+  }
+
+  public load() {
+    if (this.board?.activeSprints?.length) {
+      this.loadSprint(this.board?.activeSprints[0]);
+    } else {
+      this.updateInfoColumns();
+    }
   }
 
   public loadSprint(sprint: SprintDto) {
@@ -162,6 +171,25 @@ export class BoardDashboardComponent implements OnInit {
       error: () => {
         this.loading = false;
         this.cdRef.markForCheck();
+      }
+    });
+  }
+
+  public createTask() {
+    this.ref = this.dialogService.open(TaskAddComponent, {
+      header: `Создать задачу`,
+      contentStyle: { 'overflow': 'auto' },
+      styleClass: 'xl:w-4 lg:w-6 md:w-8 sm:w-10 w-full',
+      baseZIndex: 99999,
+      data: {
+        board: this.board,
+        sprint: this.activeSprint
+      }
+    });
+
+    this.ref.onClose.subscribe((task) => {
+      if (task) {
+        this.load();
       }
     });
   }

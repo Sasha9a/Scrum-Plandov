@@ -27,18 +27,24 @@
            class="mr-3">
         <i class="pi pi-clock"></i> <span class="ml-1">Осталось {{ endDate }} дней</span>
       </div>
+      <button pButton type="button"
+              icon="pi pi-plus"
+              label="Создать задачу"
+              class="p-button-text mr-1"
+              (click)="createTask()">
+      </button>
       <button pButton *ngIf="activeSprint"
               type="button"
               icon="pi pi-check"
               label="Завершить спринт"
-              class="p-button-success p-button-text mr-2"
+              class="p-button-success p-button-text mr-1"
               (click)="compiledSprint()">
       </button>
       <button pButton *ngIf="authService.currentUser?._id === board.createdUser?._id"
               type="button"
               icon="pi pi-pencil"
               label="Редактировать"
-              class="p-button-secondary p-button-text mr-2"
+              class="p-button-secondary p-button-text mr-1"
               routerLink="/board/edit/{{ board._id }}">
       </button>
       <button pButton type="button"

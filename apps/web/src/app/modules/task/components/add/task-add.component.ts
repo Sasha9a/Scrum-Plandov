@@ -19,6 +19,7 @@ import { forkJoin } from "rxjs";
 export class TaskAddComponent implements OnInit {
 
   public board: BoardDto;
+  public sprint: SprintDto;
   public saving = false;
 
   public users: UserDto[];
@@ -32,6 +33,7 @@ export class TaskAddComponent implements OnInit {
                      private readonly errorService: ErrorService,
                      private readonly ref: DynamicDialogRef) {
     this.board = config.data.board;
+    this.sprint = config.data.sprint;
   }
 
   public ngOnInit(): void {
