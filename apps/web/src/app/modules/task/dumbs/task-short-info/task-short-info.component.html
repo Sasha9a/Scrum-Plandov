@@ -21,7 +21,10 @@
     <div class="grid align-items-center mt-1">
       <div class="col-5 text-gray-500">Статус:</div>
       <div class="col-7">
-        <p class="p-1 font-bold w-min" [ngStyle]="{ 'background-color': task?.status?.color, 'border-radius': '5px' }">{{ task?.status?.name }}</p>
+        <p class="p-1 font-bold w-min"
+           [ngStyle]="{ 'background-color': task?.status?.backgroundColor, 'color': task?.status?.color, 'border-radius': '5px' }">
+          {{ task?.status?.name }}
+        </p>
       </div>
     </div>
     <div class="grid">

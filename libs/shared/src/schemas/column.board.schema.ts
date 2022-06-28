@@ -13,6 +13,9 @@ export class ColumnBoard extends Document {
   @Prop()
   public color: string;
 
+  @Prop()
+  public backgroundColor: string;
+
 }
 
 export const ColumnBoardSchema = SchemaFactory.createForClass(ColumnBoard);

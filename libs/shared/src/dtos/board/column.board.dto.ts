@@ -13,4 +13,7 @@ export class ColumnBoardDto extends BaseDto {
   @Expose()
   public color: string;
 
+  @Expose()
+  public backgroundColor: string;
+
 }

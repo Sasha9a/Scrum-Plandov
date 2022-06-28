@@ -23,6 +23,7 @@ export class BoardFormComponent extends BaseFormComponent<BoardFormDto> {
     { class: 'w-3rem' },
     { label: 'Название' },
     { label: 'Цвет' },
+    { label: 'Фоновый цвет' },
     { class: 'w-6rem' }
   ];
 

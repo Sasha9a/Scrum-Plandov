@@ -17,4 +17,8 @@ export class ColumnBoardFormDto {
   @IsString({ message: "Выберите цвет" })
   public color: string;
 
+  @Expose()
+  @IsString({ message: "Выберите фоновый цвет" })
+  public backgroundColor: string;
+
 }
