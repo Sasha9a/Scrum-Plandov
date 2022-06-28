@@ -44,7 +44,9 @@
       </ng-template>
       <ng-template pTemplate="content">
         <div *ngFor="let task of sprint.tasks | taskOrderBy"
-             class="shadow-1 p-2 my-1" [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }"
+             class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-pointer"
+             [class.bg-blue-100]="activeTask?._id === task?._id"
+             [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }"
              (click)="activeTask = task">
           <div class="flex justify-content-between align-items-center">
             <div class="flex gap-2">
