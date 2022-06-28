@@ -1,14 +1,8 @@
-.drop-column {
-  border: 1px dotted transparent;
-  transition: border-color .2s;
-
+.drop-task {
   &.p-draggable-enter {
-    border-color: var(--primary-color);
+    border-color: var(--green-300) !important;
+    background-color: var(--green-50) !important;
   }
-}
-
-.cards-hidden {
-  display: none;
 }
 
 .p-buttonset .p-button {

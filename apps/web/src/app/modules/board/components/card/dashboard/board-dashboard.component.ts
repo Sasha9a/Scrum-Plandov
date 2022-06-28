@@ -11,6 +11,8 @@ import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { TaskFilterPipe } from "@scrum/web/shared/pipes/task-filter/task-filter.pipe";
 import moment from "moment-timezone";
+import { TaskService } from "@scrum/web/core/services/task/task.service";
+import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
 
 @Component({
   selector: 'grace-board-dashboard',
@@ -38,9 +40,11 @@ export class BoardDashboardComponent implements OnInit {
   public columnsInfo: Record<string, string> = {};
 
   public activeTask: TaskDto;
+  public draggedTask: TaskDto;
 
   public constructor(public readonly authService: AuthService,
                      private readonly boardService: BoardService,
+                     private readonly taskService: TaskService,
                      private readonly sprintService: SprintService,
                      private readonly confirmService: ConfirmDialogService,
                      private readonly cdRef: ChangeDetectorRef,
@@ -132,6 +136,33 @@ export class BoardDashboardComponent implements OnInit {
       const countTaskAll = tasks?.length || 0;
       const countTasksWithFilters = this.taskFilterPipe.transform(tasks, this.selectedFilterItems)?.length;
       this.columnsInfo[column._id] = `${countTasksWithFilters !== countTaskAll ? (countTasksWithFilters + ' из ' + countTaskAll) : countTaskAll}`;
+    });
+  }
+
+  public dragStartTask(task: TaskDto) {
+    this.draggedTask = task;
+  }
+
+  public dragEndTask() {
+    this.draggedTask = null;
+  }
+
+  public dropTask(column: ColumnBoardDto) {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
+    this.taskService.update<Partial<TaskDto>, TaskDto>(this.draggedTask?._id, { ...this.draggedTask, status: column }).subscribe({
+      next: (task) => {
+        this.tasks = this.tasks.filter((_task) => _task?._id !== this.draggedTask?._id);
+        this.tasks.push({ ...task });
+        this.draggedTask = null;
+        this.loading = false;
+        this.cdRef.markForCheck();
+      },
+      error: () => {
+        this.loading = false;
+        this.cdRef.markForCheck();
+      }
     });
   }
 

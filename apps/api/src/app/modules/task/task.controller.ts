@@ -6,6 +6,7 @@ import { TaskService } from "@scrum/api/modules/task/task.service";
 import { TaskFormDto } from "@scrum/shared/dtos/task/task.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
+import moment from "moment-timezone";
 
 @Controller('task')
 export class TaskController extends BaseController {
@@ -78,6 +79,7 @@ export class TaskController extends BaseController {
       throw new NotFoundException("Нет доступа!");
     }
 
+    bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(id, bodyParams);
     return res.status(HttpStatus.OK).json(entity).end();
   }
