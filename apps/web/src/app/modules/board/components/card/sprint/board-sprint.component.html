@@ -43,14 +43,19 @@
         </div>
       </ng-template>
       <ng-template pTemplate="content">
-        <div *ngFor="let task of sprint.tasks | taskOrderBy" class="shadow-1 p-2 my-1" [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }">
+        <div *ngFor="let task of sprint.tasks | taskOrderBy"
+             class="shadow-1 p-2 my-1" [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }"
+             (click)="activeTask = task">
           <div class="flex justify-content-between align-items-center">
             <div class="flex gap-2">
               <a routerLink="/task/card/{{ task._id }}">{{ board.code }}-{{ task.number }}</a>
               <p>{{ task.name }}</p>
             </div>
             <div>
-              <grace-user-avatar *ngIf="task.executor" [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }" size=""></grace-user-avatar>
+              <grace-user-avatar *ngIf="task.executor"
+                                 [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }"
+                                 size="">
+              </grace-user-avatar>
             </div>
           </div>
           <div class="flex gap-1" [class.mt-1]="!task.executor">
@@ -75,3 +80,5 @@
 </div>
 
 <grace-spinner *ngIf="loading"></grace-spinner>
+
+<grace-task-short-info [(task)]="activeTask"></grace-task-short-info>

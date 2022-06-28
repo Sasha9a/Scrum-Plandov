@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
+import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { SprintWorkUsersInfoComponent } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.component";
@@ -22,6 +23,8 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
   public sprints: SprintTasksInfoDto[];
 
   public ref: DynamicDialogRef;
+
+  public activeTask: TaskDto;
 
   public constructor(private readonly sprintService: SprintService,
                      private readonly cdRef: ChangeDetectorRef,

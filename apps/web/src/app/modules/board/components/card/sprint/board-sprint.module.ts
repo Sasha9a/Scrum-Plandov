@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from "@angular/router";
 import { SprintWorkUsersInfoModule } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.module";
 import { TaskAddModule } from "@scrum/web/modules/task/components/add/task-add.module";
+import { TaskShortInfoModule } from "@scrum/web/modules/task/dumbs/task-short-info/task-short-info.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { FindByKeyPipeModule } from "@scrum/web/shared/pipes/find-by-key/find-by-key-pipe.module";
 import { OrderByPipeModule } from "@scrum/web/shared/pipes/order-by/order-by-pipe.module";
@@ -20,23 +21,24 @@ import { TaskOrderByPipeModule } from "@scrum/web/shared/pipes/task-order-by/tas
 @NgModule({
   declarations: [BoardSprintComponent],
   exports: [BoardSprintComponent],
-    imports: [
-        CommonModule,
-        ButtonModule,
-        RouterModule,
-        SpinnerModule,
-        AccordionModule,
-        TagModule,
-        FindByKeyPipeModule,
-        SprintWorkUsersInfoModule,
-        TaskAddModule,
-        CardModule,
-        OrderByPipeModule,
-        TaskPriorityColorPipeModule,
-        UserAvatarModule,
-        TaskPriorityNamePipeModule,
-        TaskOrderByPipeModule
-    ],
+	imports: [
+		CommonModule,
+		ButtonModule,
+		RouterModule,
+		SpinnerModule,
+		AccordionModule,
+		TagModule,
+		FindByKeyPipeModule,
+		SprintWorkUsersInfoModule,
+		TaskAddModule,
+		CardModule,
+		OrderByPipeModule,
+		TaskPriorityColorPipeModule,
+		UserAvatarModule,
+		TaskPriorityNamePipeModule,
+		TaskOrderByPipeModule,
+		TaskShortInfoModule
+	],
   providers: [DialogService]
 })
 export class BoardSprintModule {}
