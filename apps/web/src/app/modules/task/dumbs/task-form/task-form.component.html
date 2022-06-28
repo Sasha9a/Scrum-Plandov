@@ -7,7 +7,7 @@
 
   <div class="field">
     <label class="font-bold">Описание</label>
-    <textarea rows="5" cols="30" pInputTextarea [autoResize]="true" [(ngModel)]="task.description" [ngClass]="{ 'ng-invalid ng-dirty': errors?.description }"></textarea>
+    <p-editor [(ngModel)]="task.description" [style]="{ 'height': '250px' }" [ngClass]="{ 'ng-invalid ng-dirty': errors?.description }"></p-editor>
     <p *ngIf="errors?.description" class="p-error">{{ errors.description | join }}</p>
   </div>
 

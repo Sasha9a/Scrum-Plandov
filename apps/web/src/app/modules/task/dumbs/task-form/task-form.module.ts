@@ -10,21 +10,23 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { SingleSelectModule } from "@scrum/web/shared/dumbs/dropdowns/single-select/single-select.module";
 import { TaskPriorityNamePipeModule } from "@scrum/web/shared/pipes/task-priority-name/task-priority-name-pipe.module";
 import { InputNumberModule } from "primeng/inputnumber";
+import { EditorModule } from "primeng/editor";
 
 @NgModule({
   declarations: [TaskFormComponent],
   exports: [TaskFormComponent],
-  imports: [
-    CommonModule,
-    InputTextModule,
-    JoinPipeModule,
-    FormsModule,
-    GoBackButtonModule,
-    ButtonModule,
-    InputTextareaModule,
-    SingleSelectModule,
-    TaskPriorityNamePipeModule,
-    InputNumberModule
-  ]
+    imports: [
+        CommonModule,
+        InputTextModule,
+        JoinPipeModule,
+        FormsModule,
+        GoBackButtonModule,
+        ButtonModule,
+        InputTextareaModule,
+        SingleSelectModule,
+        TaskPriorityNamePipeModule,
+        InputNumberModule,
+        EditorModule
+    ]
 })
 export class TaskFormModule {}
