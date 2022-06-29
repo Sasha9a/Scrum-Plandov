@@ -18,7 +18,7 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 export class BoardSprintComponent implements OnInit, OnDestroy {
 
   @Input() public board: BoardDto;
-  public loading = true;
+  public loading = false;
 
   public sprints: SprintTasksInfoDto[];
 
@@ -42,6 +42,9 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
   }
 
   public load() {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
     this.sprintService.findAllByBoard(this.board?._id).subscribe((sprints) => {
       this.sprints = sprints;
       this.loading = false;

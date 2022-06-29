@@ -83,4 +83,4 @@
 
 <grace-spinner *ngIf="loading"></grace-spinner>
 
-<grace-task-short-info [(task)]="activeTask"></grace-task-short-info>
+<grace-task-short-info [(task)]="activeTask" (updateTasks)="load()"></grace-task-short-info>

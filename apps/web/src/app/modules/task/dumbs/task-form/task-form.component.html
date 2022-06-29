@@ -55,6 +55,17 @@
     <p *ngIf="errors?.grade" class="p-error">{{ errors.grade | join }}</p>
   </div>
 
+  <div class="field">
+    <label class="font-bold">Вложенные файлы</label>
+    <div *ngIf="task.files?.length" class="flex gap-4 mb-1">
+      <ng-container *ngFor="let file of task.files">
+        <grace-file *ngIf="file" [file]="file" [canDelete]="true" (delete)="deleteFile(file)"></grace-file>
+      </ng-container>
+    </div>
+    <grace-file-uploader [multiple]="true" [maxFileSize]="52428800" (filesUploaded)="filesUploaded($event)"></grace-file-uploader>
+    <p *ngIf="errors?.files" class="p-error">{{ errors.files | join }}</p>
+  </div>
+
 </div>
 
 <div class="flex flex-wrap justify-content-between mt-5">

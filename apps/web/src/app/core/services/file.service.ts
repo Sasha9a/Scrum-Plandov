@@ -35,4 +35,8 @@ export class FileService {
       : of([]);
   }
 
+  public deleteFile(path: string): Observable<null> {
+    return this.http.delete<null>(`/file/${path}`);
+  }
+
 }

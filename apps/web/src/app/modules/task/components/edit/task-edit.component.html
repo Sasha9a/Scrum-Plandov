@@ -1,0 +1,11 @@
+<grace-task-form *ngIf="!loading && task"
+                 [task]="task"
+                 [users]="users"
+                 [sprints]="sprints"
+                 (save)="edit($event)"
+                 (delete)="delete()"
+                 [canDelete]="true"
+                 [showBack]="false">
+</grace-task-form>
+
+<grace-spinner *ngIf="loading || !task"></grace-spinner>

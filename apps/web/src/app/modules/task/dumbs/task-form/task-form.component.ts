@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FileDto } from "@scrum/shared/dtos/file.dto";
 import { BaseFormComponent } from "@scrum/web/shared/dumbs/base-form/base-form.component";
 import { TaskFormDto } from "@scrum/shared/dtos/task/task.form.dto";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
@@ -31,7 +32,21 @@ export class TaskFormComponent extends BaseFormComponent<TaskFormDto> implements
   }
 
   public override onSave(entity: TaskFormDto) {
-    entity.board = this.board;
+    if (this.board) {
+      entity.board = this.board;
+    }
     super.onSave(entity);
   }
+
+  public filesUploaded(files: FileDto[]) {
+    if (!this.task.files) {
+      this.task.files = [];
+    }
+    this.task.files.push(...files);
+  }
+
+  public deleteFile(file: FileDto) {
+    this.task.files = this.task.files.filter((_file) => _file._id !== file._id);
+  }
+
 }

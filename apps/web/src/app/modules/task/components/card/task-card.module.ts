@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
+import { TaskEditModule } from "@scrum/web/modules/task/components/edit/task-edit.module";
 import { FileModule } from "@scrum/web/shared/dumbs/file/file.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { UserAvatarModule } from "@scrum/web/shared/dumbs/user-avatar/user-avatar.module";
 import { SafeHtmlPipeModule } from "@scrum/web/shared/pipes/safe-html/safe-html-pipe.module";
 import { TaskPriorityNamePipeModule } from "@scrum/web/shared/pipes/task-priority-name/task-priority-name-pipe.module";
 import { ButtonModule } from "primeng/button";
+import { DialogService } from "primeng/dynamicdialog";
 import { TaskCardComponent } from './task-card.component';
 
 const routes: Routes = [
@@ -28,7 +30,9 @@ const routes: Routes = [
     TaskPriorityNamePipeModule,
     SafeHtmlPipeModule,
     FileModule,
-    UserAvatarModule
-  ]
+    UserAvatarModule,
+    TaskEditModule
+  ],
+  providers: [DialogService]
 })
 export class TaskCardModule {}
