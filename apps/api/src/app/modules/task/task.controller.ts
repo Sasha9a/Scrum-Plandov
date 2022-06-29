@@ -2,17 +2,20 @@ import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Po
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
+import { FileService } from "@scrum/api/modules/file/file.service";
 import { TaskService } from "@scrum/api/modules/task/task.service";
 import { TaskFormDto } from "@scrum/shared/dtos/task/task.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
+import fs from "fs";
 import moment from "moment-timezone";
 
 @Controller('task')
 export class TaskController extends BaseController {
 
   public constructor(private readonly taskService: TaskService,
-                     private readonly boardService: BoardService) {
+                     private readonly boardService: BoardService,
+                     private readonly fileService: FileService) {
     super();
   }
 
@@ -79,6 +82,16 @@ export class TaskController extends BaseController {
       throw new NotFoundException("Нет доступа!");
     }
 
+    const oldTask = await this.taskService.findById(id);
+    for (const file of oldTask.files) {
+      if (bodyParams.files?.findIndex((_file) => _file._id === file.id) === -1) {
+        await this.fileService.deleteFile(file?.path);
+        if (fs.existsSync('./public/' + file?.path)) {
+          fs.unlinkSync('./public/' + file?.path);
+        }
+      }
+    }
+
     bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(id, bodyParams);
     return res.status(HttpStatus.OK).json(entity).end();
@@ -96,6 +109,13 @@ export class TaskController extends BaseController {
 
     if (task.board.createdUser?.id !== user._id && task.board.users.findIndex((_user) => _user.id === user._id) === -1) {
       throw new NotFoundException("Нет доступа!");
+    }
+
+    for (const file of task.files) {
+      await this.fileService.deleteFile(file?.path);
+      if (fs.existsSync('./public/' + file?.path)) {
+        fs.unlinkSync('./public/' + file?.path);
+      }
     }
 
     await this.taskService.delete(id);
