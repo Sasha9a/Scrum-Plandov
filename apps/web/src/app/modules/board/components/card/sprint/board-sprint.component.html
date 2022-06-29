@@ -50,7 +50,7 @@
              (click)="activeTask = task">
           <div class="flex justify-content-between align-items-center">
             <div class="flex gap-2">
-              <a routerLink="/task/card/{{ task._id }}">{{ board.code }}-{{ task.number }}</a>
+              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board.code }}-{{ task.number }}</a>
               <p>{{ task.name }}</p>
             </div>
             <div>

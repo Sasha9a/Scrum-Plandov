@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from "@angular/router";
 
 const routes: Routes = [
-
+  {
+    path: 'card/:id',
+    loadChildren: () => import('./components/card/task-card.module').then(m => m.TaskCardModule)
+  }
 ];
 
 @NgModule({

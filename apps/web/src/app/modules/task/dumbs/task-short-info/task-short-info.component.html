@@ -40,7 +40,7 @@
       <div class="col-7">
         <div class="flex gap-2 align-items-center">
           <grace-user-avatar [user]="{ name: task?.createdUser?.name, login: task?.createdUser?.login, file: task?.createdUser?.avatar }" size=""></grace-user-avatar>
-          <p>{{ task?.createdUser?.name || task?.createdUser?.login }}</p>
+          <a routerLink="/user/card/{{ task?.createdUser?._id }}" target="_blank">{{ task?.createdUser?.name || task?.createdUser?.login }}</a>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
       <div class="col-7">
         <div *ngIf="task?.executor" class="flex gap-2 align-items-center">
           <grace-user-avatar [user]="{ name: task?.executor?.name, login: task?.executor?.login, file: task?.executor?.avatar }" size=""></grace-user-avatar>
-          <p>{{ task?.executor?.name || task?.executor?.login }}</p>
+          <a routerLink="/user/card/{{ task?.executor?._id }}" target="_blank">{{ task?.executor?.name || task?.executor?.login }}</a>
         </div>
         <div *ngIf="!task?.executor">Не назначен</div>
       </div>

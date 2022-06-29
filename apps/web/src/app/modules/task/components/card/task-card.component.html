@@ -1,0 +1,115 @@
+<div *ngIf="!loading">
+  <div class="flex gap-2">
+    <p>{{ task?.board?.name }}</p>
+    <p>/</p>
+    <p>{{ task?.board?.code }}-{{ task?.number }}</p>
+  </div>
+  <h1 class="my-0">{{ task?.name }}</h1>
+  <button pButton
+          type="button"
+          icon="pi pi-pencil"
+          label="Редактировать"
+          class="p-button-secondary p-button-text mt-1"
+          routerLink="/task/edit/{{ task?._id }}">
+  </button>
+
+  <div class="grid">
+    <div class="lg:col-8 col-12">
+      <div class="grid">
+        <div class="col-12">
+          <h4 class="mb-2">Детали задачи</h4>
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-2 md:mb-0">Статус:</label>
+            <div class="col-12 md:col-10">
+              <p class="p-1 font-bold w-min"
+                 [ngStyle]="{ 'background-color': task?.status?.backgroundColor, 'color': task?.status?.color, 'border-radius': '5px' }">
+                {{ task?.status?.name }}
+              </p>
+            </div>
+          </div>
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-2 md:mb-0">Приоритет:</label>
+            <div class="col-12 md:col-10">{{ task?.priority | taskPriorityName }}</div>
+          </div>
+          <div class="field grid">
+            <label class="col-12 mb-2 md:col-2 md:mb-0">Спринт:</label>
+            <div class="col-12 md:col-10">{{ task?.sprint?.name || 'Не назначено' }}</div>
+          </div>
+        </div>
+        <div class="col-12">
+          <h4 class="mt-0 mb-2">Описание</h4>
+          <div *ngIf="task?.description" [innerHtml]="task.description | safeHtml"></div>
+          <div *ngIf="!task?.description">Нет описания</div>
+        </div>
+        <div class="col-12">
+          <h4 class="mt-0 mb-2">Вложенные файлы</h4>
+          <div class="flex gap-2">
+            <p *ngIf="!task?.files?.length">Нет файлов</p>
+            <ng-container *ngFor="let file of task?.files">
+              <grace-file *ngIf="file" [file]="file"></grace-file>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lg:col-4 col-12">
+
+      <h4 class="mb-2">Люди</h4>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Исполнитель:</label>
+        <div class="col-12 md:col-8">
+          <div *ngIf="task?.executor" class="flex gap-2 align-items-center">
+            <grace-user-avatar [user]="{ name: task?.executor?.name, login: task?.executor?.login, file: task?.executor?.avatar }" size=""></grace-user-avatar>
+            <a routerLink="/user/card/{{ task?.executor?._id }}" target="_blank">{{ task?.executor?.name || task?.executor?.login }}</a>
+          </div>
+          <div *ngIf="!task?.executor">Не назначен</div>
+        </div>
+      </div>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Автор:</label>
+        <div class="col-12 md:col-8">
+          <div class="flex gap-2 align-items-center">
+            <grace-user-avatar [user]="{ name: task?.createdUser?.name, login: task?.createdUser?.login, file: task?.createdUser?.avatar }" size=""></grace-user-avatar>
+            <a routerLink="/user/card/{{ task?.createdUser?._id }}" target="_blank">{{ task?.createdUser?.name || task?.createdUser?.login }}</a>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mb-2">Даты</h4>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Создано:</label>
+        <div class="col-12 md:col-8">{{ task?.createDate | date: 'dd MMMM yyyy HH:mm' }}</div>
+      </div>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Обновлено:</label>
+        <div class="col-12 md:col-8">{{ task?.updateDate | date: 'dd MMMM yyyy HH:mm' }}</div>
+      </div>
+
+      <h4 class="mb-2">Учет времени</h4>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Оценка:</label>
+        <div class="col-12 md:col-8">
+          <div *ngIf="task?.grade">{{ task?.grade }} ч.</div>
+          <div *ngIf="!task?.grade">Неизвестно</div>
+        </div>
+      </div>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Осталось:</label>
+        <div class="col-12 md:col-8">
+          <div *ngIf="task?.left">{{ task?.left }} ч.</div>
+          <div *ngIf="!task?.left">Неизвестно</div>
+        </div>
+      </div>
+      <div class="field grid">
+        <label class="col-12 mb-2 md:col-4 md:mb-0">Затрачено:</label>
+        <div class="col-12 md:col-8">
+          <div *ngIf="task?.spent">{{ task?.spent }} ч.</div>
+          <div *ngIf="!task?.spent">Неизвестно</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<grace-spinner *ngIf="loading"></grace-spinner>
