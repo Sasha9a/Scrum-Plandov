@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
-import { TaskEditComponent } from "@scrum/web/modules/task/components/edit/task-edit.component";
+import { TaskEditComponent } from "@scrum/web/modules/task/components/task/edit/task-edit.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { JobRecordAddComponent } from "@scrum/web/modules/task/components/job-record/add/job-record-add.component";
+import { JobRecordDto } from "@scrum/shared/dtos/job-record/job.record.dto";
 
 @Component({
   selector: 'grace-task-short-info',
@@ -64,6 +66,25 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
         this.task = res.task;
       }
       if (res) {
+        this.updateTasks.emit();
+      }
+    });
+  }
+
+  public jobRecord() {
+    this.ref = this.dialogService.open(JobRecordAddComponent, {
+      header: `Вести журнал работы: ${this.task?.board?.code}-${this.task?.number}`,
+      contentStyle: { 'overflow': 'auto' },
+      styleClass: 'xl:w-3 lg:w-6 md:w-7 sm:w-9 w-full',
+      baseZIndex: 99999,
+      data: {
+        task: this.task
+      }
+    });
+
+    this.ref.onClose.subscribe((jobRecord: JobRecordDto) => {
+      if (jobRecord) {
+        this.task = jobRecord.task;
         this.updateTasks.emit();
       }
     });

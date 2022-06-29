@@ -1,0 +1,15 @@
+<div class="p-fluid">
+  <div class="field">
+    <label class="font-bold required-field">Затраченное время (ч.)</label>
+    <p-inputNumber [(ngModel)]="jobRecord.timeWork" [inputStyleClass]="errors?.timeWork ? 'ng-invalid ng-dirty' : ''"></p-inputNumber>
+    <p *ngIf="errors?.timeWork" class="p-error">{{ errors.timeWork | join }}</p>
+  </div>
+</div>
+
+<div class="flex flex-wrap justify-content-between mt-5">
+  <div>
+    <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(jobRecord)"></button>
+    <grace-go-back-button *ngIf="showBack" [route]="route" [queryParams]="queryParams"></grace-go-back-button>
+  </div>
+  <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(jobRecord)"></button>
+</div>

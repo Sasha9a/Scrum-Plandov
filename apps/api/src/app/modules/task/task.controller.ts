@@ -92,6 +92,13 @@ export class TaskController extends BaseController {
       }
     }
 
+    if (oldTask.grade !== bodyParams.grade) {
+      bodyParams.left = bodyParams.grade - oldTask.spent;
+      if (bodyParams.left < 0) {
+        bodyParams.left = 0;
+      }
+    }
+
     bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(id, bodyParams);
     return res.status(HttpStatus.OK).json(entity).end();

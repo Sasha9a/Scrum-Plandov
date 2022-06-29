@@ -22,7 +22,7 @@ import { SelectButtonModule } from "primeng/selectbutton";
 import { FormsModule } from "@angular/forms";
 import { TaskFilterPipeModule } from "@scrum/web/shared/pipes/task-filter/task-filter-pipe.module";
 import { TaskShortInfoModule } from "@scrum/web/modules/task/dumbs/task-short-info/task-short-info.module";
-import { TaskAddModule } from "@scrum/web/modules/task/components/add/task-add.module";
+import { TaskAddModule } from "@scrum/web/modules/task/components/task/add/task-add.module";
 
 @NgModule({
   declarations: [BoardDashboardComponent],

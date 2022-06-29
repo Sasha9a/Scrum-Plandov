@@ -5,7 +5,7 @@ import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { SprintWorkUsersInfoComponent } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.component";
-import { TaskAddComponent } from "@scrum/web/modules/task/components/add/task-add.component";
+import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 
 @Component({

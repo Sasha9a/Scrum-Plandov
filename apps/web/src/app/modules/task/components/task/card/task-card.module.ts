@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
-import { TaskEditModule } from "@scrum/web/modules/task/components/edit/task-edit.module";
+import { TaskEditModule } from "@scrum/web/modules/task/components/task/edit/task-edit.module";
 import { FileModule } from "@scrum/web/shared/dumbs/file/file.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { UserAvatarModule } from "@scrum/web/shared/dumbs/user-avatar/user-avatar.module";

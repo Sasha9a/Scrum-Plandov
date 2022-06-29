@@ -13,7 +13,7 @@ import { TaskFilterPipe } from "@scrum/web/shared/pipes/task-filter/task-filter.
 import moment from "moment-timezone";
 import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
-import { TaskAddComponent } from "@scrum/web/modules/task/components/add/task-add.component";
+import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 
 @Component({

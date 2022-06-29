@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from "@angular/router";
 import { SprintWorkUsersInfoModule } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.module";
-import { TaskAddModule } from "@scrum/web/modules/task/components/add/task-add.module";
+import { TaskAddModule } from "@scrum/web/modules/task/components/task/add/task-add.module";
 import { TaskShortInfoModule } from "@scrum/web/modules/task/dumbs/task-short-info/task-short-info.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { FindByKeyPipeModule } from "@scrum/web/shared/pipes/find-by-key/find-by-key-pipe.module";

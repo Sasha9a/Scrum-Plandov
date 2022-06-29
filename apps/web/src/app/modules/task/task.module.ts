@@ -5,7 +5,7 @@ import {RouterModule, Routes} from "@angular/router";
 const routes: Routes = [
   {
     path: 'card/:id',
-    loadChildren: () => import('./components/card/task-card.module').then(m => m.TaskCardModule)
+    loadChildren: () => import('./components/task/card/task-card.module').then(m => m.TaskCardModule)
   }
 ];
 

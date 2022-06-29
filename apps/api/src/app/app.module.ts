@@ -9,6 +9,7 @@ import { TaskModule } from "@scrum/api/modules/task/task.module";
 import { UserModule } from "@scrum/api/modules/user/user.module";
 import { VerifyModule } from "@scrum/api/modules/verify/verify.module";
 import { environment } from "../environments/environment";
+import { JobRecordModule } from "@scrum/api/modules/job-record/job.record.module";
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { environment } from "../environments/environment";
     BoardModule,
     SprintModule,
     TaskModule,
-    ColumnBoardModule
+    ColumnBoardModule,
+    JobRecordModule
   ]
 })
 export class AppModule implements NestModule {

@@ -89,15 +89,15 @@
       <div class="field grid">
         <label class="col-12 mb-2 md:col-4 md:mb-0">Оценка:</label>
         <div class="col-12 md:col-8">
-          <div *ngIf="task?.grade">{{ task?.grade }} ч.</div>
-          <div *ngIf="!task?.grade">Неизвестно</div>
+          <div *ngIf="task?.grade || task?.grade === 0">{{ task?.grade }} ч.</div>
+          <div *ngIf="!task?.grade && task?.grade !== 0">Неизвестно</div>
         </div>
       </div>
       <div class="field grid">
         <label class="col-12 mb-2 md:col-4 md:mb-0">Осталось:</label>
         <div class="col-12 md:col-8">
-          <div *ngIf="task?.left">{{ task?.left }} ч.</div>
-          <div *ngIf="!task?.left">Неизвестно</div>
+          <div *ngIf="task?.left || task?.left === 0">{{ task?.left }} ч.</div>
+          <div *ngIf="!task?.left && task?.left !== 0">Неизвестно</div>
         </div>
       </div>
       <div class="field grid">

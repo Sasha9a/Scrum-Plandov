@@ -106,7 +106,7 @@
             <p [class.mt-2]="!task.executor">{{ task.name }}</p>
             <p class="mt-2">{{ task.priority | taskPriorityName }}</p>
             <p class="mt-1">{{ task.executor?.name || task.executor?.login || 'Не назначен' }}</p>
-            <p *ngIf="task.grade" class="mt-1">{{ (task.spent || 0) /  (task.grade || 0) * 100 }}%</p>
+            <p *ngIf="task.grade" class="mt-1">{{ ((task.spent || 0) /  (task.grade || 0) * 100) | number: '.0-0' }}%</p>
             <p-chip *ngIf="task.left" [label]="(task.left | number) + ' ч.'" styleClass="mt-1"></p-chip>
           </div>
         </ng-container>

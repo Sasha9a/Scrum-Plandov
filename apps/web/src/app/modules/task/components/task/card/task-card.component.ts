@@ -4,7 +4,7 @@ import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { TitleService } from "@scrum/web/core/services/title.service";
-import { TaskEditComponent } from "@scrum/web/modules/task/components/edit/task-edit.component";
+import { TaskEditComponent } from "@scrum/web/modules/task/components/task/edit/task-edit.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 
 @Component({

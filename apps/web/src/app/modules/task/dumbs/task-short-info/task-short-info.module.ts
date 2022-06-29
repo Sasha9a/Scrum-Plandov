@@ -9,6 +9,7 @@ import { MenuModule } from "primeng/menu";
 import { SidebarModule } from "primeng/sidebar";
 import { TaskShortInfoComponent } from './task-short-info.component';
 import { SafeHtmlPipeModule } from "@scrum/web/shared/pipes/safe-html/safe-html-pipe.module";
+import { JobRecordAddModule } from "@scrum/web/modules/task/components/job-record/add/job-record-add.module";
 
 @NgModule({
   declarations: [TaskShortInfoComponent],
@@ -22,7 +23,8 @@ import { SafeHtmlPipeModule } from "@scrum/web/shared/pipes/safe-html/safe-html-
 		FileModule,
 		SidebarModule,
 		SafeHtmlPipeModule,
-		MenuModule
+		MenuModule,
+    JobRecordAddModule
 	]
 })
 export class TaskShortInfoModule {}

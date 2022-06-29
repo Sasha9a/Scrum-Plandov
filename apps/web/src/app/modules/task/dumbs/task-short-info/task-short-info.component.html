@@ -3,20 +3,21 @@
   <p class="mt-2">{{ task?.name }}</p>
   <div class="grid mt-2">
     <div class="col-5 text-gray-500">Оценка:</div>
-    <div *ngIf="task?.grade" class="col-7">{{ task?.grade }} ч.</div>
-    <div *ngIf="!task?.grade" class="col-7">Неизвестно</div>
+    <div *ngIf="task?.grade || task?.grade === 0" class="col-7">{{ task?.grade }} ч.</div>
+    <div *ngIf="!task?.grade && task?.grade !== 0" class="col-7">Неизвестно</div>
   </div>
   <div class="grid">
     <div class="col-5 text-gray-500">Осталось:</div>
-    <div *ngIf="task?.left" class="col-7">{{ task?.left }} ч.</div>
-    <div *ngIf="!task?.left" class="col-7">Неизвестно</div>
+    <div *ngIf="task?.left || task?.left === 0" class="col-7">{{ task?.left }} ч.</div>
+    <div *ngIf="!task?.left && task?.left !== 0" class="col-7">Неизвестно</div>
   </div>
 
   <div class="mt-2">
     <button pButton type="button"
             icon="pi pi-check-square"
             class="p-button-rounded p-button-info p-button-text"
-            pTooltip="Запись о работе" tooltipPosition="top">
+            pTooltip="Запись о работе" tooltipPosition="top"
+            (click)="jobRecord()">
     </button>
     <button pButton type="button"
             icon="pi pi-pencil"
