@@ -24,10 +24,10 @@ export class Task extends Document {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: ColumnBoard.name, autopopulate: true })
   public status: ColumnBoard;
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: { select: '_id login name avatar' } })
   public createdUser: User;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: { select: '_id login name avatar' } })
   public executor: User;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Sprint.name, autopopulate: true })

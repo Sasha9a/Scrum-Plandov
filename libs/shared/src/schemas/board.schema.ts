@@ -24,10 +24,10 @@ export class Board extends Document {
   @Prop({ default: moment().toDate() })
   public createDate: Date;
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: true })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: User.name, autopopulate: { select: '_id login name avatar' } })
   public createdUser: User;
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: User.name, autopopulate: true })
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: User.name, autopopulate: { select: '_id login name avatar' } })
   public users: User[];
 
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: ColumnBoard.name, autopopulate: true })
