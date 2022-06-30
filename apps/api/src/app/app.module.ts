@@ -4,6 +4,7 @@ import { LoggerMiddleware } from "@scrum/api/core/middlewares/logger.middleware"
 import { BoardModule } from "@scrum/api/modules/board/board.module";
 import { ColumnBoardModule } from "@scrum/api/modules/column-board/column-board.module";
 import { FileModule } from "@scrum/api/modules/file/file.module";
+import { ReportModule } from "@scrum/api/modules/report/report.module";
 import { SprintModule } from "@scrum/api/modules/sprint/sprint.module";
 import { TaskModule } from "@scrum/api/modules/task/task.module";
 import { UserModule } from "@scrum/api/modules/user/user.module";
@@ -26,7 +27,8 @@ import { JobRecordModule } from "@scrum/api/modules/job-record/job.record.module
     SprintModule,
     TaskModule,
     ColumnBoardModule,
-    JobRecordModule
+    JobRecordModule,
+    ReportModule
   ]
 })
 export class AppModule implements NestModule {
