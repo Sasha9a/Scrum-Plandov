@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { plainToClass } from "class-transformer";
+import { Location } from "@angular/common";
 
 const paramsMap = {
   'userIds': 'users:array:_id',
@@ -13,9 +14,9 @@ const paramsMap = {
 })
 export class QueryParamsService {
 
-  public constructor(private route: ActivatedRoute,
-                     private location: Location,
-                     private router: Router) {
+  public constructor(private readonly route: ActivatedRoute,
+                     private readonly location: Location,
+                     private readonly router: Router) {
   }
 
   public getFilteredQueryParams<T>(dto: new () => T, currentParams: Record<string, any> = {}): T {

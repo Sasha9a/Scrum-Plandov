@@ -35,9 +35,13 @@ export class ReportController extends BaseController {
         $gte: moment(params.from, 'YYYY-MM-DD').subtract(3, 'hour').toISOString(),
         $lte: moment(params.to, 'YYYY-MM-DD').toISOString()
       },
-      'task.board._id': params.board
+      'task.board.id': params.board
     };
 
+    const jobRecords = await this.jobRecordService.findAll(filter);
+    jobRecords.forEach((j) => {
+      console.log(j.task?.board);
+    });
 
     const board = await this.boardService.findById(params.board);
     if (!board) {
