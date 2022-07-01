@@ -5,11 +5,15 @@ import { ReportBoardSpentItemDto } from "@scrum/shared/dtos/report/report.board.
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
+import { BoardService } from "@scrum/web/core/services/board/board.service";
 import { FiltersService } from "@scrum/web/core/services/filters.service";
 import { QueryParamsService } from "@scrum/web/core/services/query-params.service";
 import { ReportService } from "@scrum/web/core/services/report/report.service";
+import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
+import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { KeysOfType } from "@scrum/web/core/types/keys-of.type";
 import moment from "moment-timezone";
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: 'grace-board-report',
@@ -38,6 +42,9 @@ export class BoardReportComponent implements OnInit {
   };
 
   public constructor(private readonly reportService: ReportService,
+                     private readonly boardService: BoardService,
+                     private readonly sprintService: SprintService,
+                     private readonly taskService: TaskService,
                      private readonly queryParamsService: QueryParamsService,
                      private readonly filtersService: FiltersService,
                      private readonly cdRef: ChangeDetectorRef) {}
@@ -49,7 +56,18 @@ export class BoardReportComponent implements OnInit {
       board: this.board?._id
     });
 
-    this.loadReport();
+    forkJoin([
+      this.boardService.findAllUsersByBoard(this.board?._id),
+      this.sprintService.findAllByBoardDropdown(this.board?._id),
+      this.taskService.findAllByBoard(this.board?._id)
+    ]).subscribe(([users, sprints, tasks]) => {
+      this.filters = {
+        users: users,
+        sprints: sprints,
+        tasks: tasks
+      };
+      this.loadReport();
+    });
   }
 
   public loadReport() {

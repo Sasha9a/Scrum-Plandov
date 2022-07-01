@@ -1,0 +1,16 @@
+<grace-multi-select [options]="tasks"
+                    [(selectedItems)]="selectedTasks"
+                    (selectedItemsChange)="selectedTasksChange.emit($event)"
+                    filterBy="name,number"
+                    sort="number:number"
+                    [label]="labelInput ? 'Задача' : ''">
+  <ng-template #selectedItemsTemplate let-tasks="items">
+    <ng-container *ngFor="let task of tasks; last as isLast">{{ toTask(task)?.board?.code }}-{{ toTask(task).number }}{{ isLast ? '' : ', ' }}</ng-container>
+  </ng-template>
+  <ng-template #itemTemplate let-task="item">
+    <div *ngIf="toTask(task) as task">
+      <div>{{ task?.board?.code }}-{{ task.number }}</div>
+      <div class="text-gray-500">{{ task.name | truncate }}</div>
+    </div>
+  </ng-template>
+</grace-multi-select>

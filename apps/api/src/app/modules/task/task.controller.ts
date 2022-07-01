@@ -20,6 +20,24 @@ export class TaskController extends BaseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('board/:id')
+  public async findAllByBoard(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
+    const user: UserDto = req.user as UserDto;
+
+    const board = await this.boardService.findById(id);
+    if (!board) {
+      throw new NotFoundException("Нет такого объекта!");
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      throw new NotFoundException("Нет доступа!");
+    }
+
+    const entities = await this.taskService.findAll({ board: board });
+    return res.status(HttpStatus.OK).json(entities).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   public async findById(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
     const user: UserDto = req.user as UserDto;

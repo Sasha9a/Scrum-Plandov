@@ -1,4 +1,4 @@
-<div class="grid mb-4 block xl:flex">
+<div class="grid mb-4">
   <div class="col">
     <div class="grid">
       <div class="col-12 md:col-6 xl:col-3 pb-0">
@@ -20,11 +20,11 @@
       </div>
 
       <div class="col-12 md:col-6 xl:col-3 pb-0">
-        <grace-multi-select [options]="filters.tasks"
-                          [(selectedItems)]="selectedFilters.tasks"
-                          (selectedItemsChange)="setEntityFilters('taskIds', $event)"
-                          [label]="'Задача'">
-        </grace-multi-select>
+        <grace-task-multi-select [tasks]="filters.tasks"
+                                 [(selectedTasks)]="selectedFilters.tasks"
+                                 (selectedTasksChange)="setEntityFilters('taskIds', $any($event))"
+                                 [labelInput]="true">
+        </grace-task-multi-select>
       </div>
     </div>
   </div>
