@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { plainToClass } from "class-transformer";
 
 const paramsMap = {
-
+  'userIds': 'users:array:_id',
+  'sprintIds': 'sprints:array:_id',
+  'taskIds': 'tasks:array:_id'
 };
 
 @Injectable({

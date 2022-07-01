@@ -10,5 +10,10 @@
     <grace-board-sprint [board]="board"></grace-board-sprint>
   </div>
 </div>
+<div *ngIf="activeItemMenu.id === 'report'">
+  <div *ngIf="!loading && board">
+    <grace-board-report [board]="board"></grace-board-report>
+  </div>
+</div>
 
 <grace-spinner *ngIf="loading"></grace-spinner>

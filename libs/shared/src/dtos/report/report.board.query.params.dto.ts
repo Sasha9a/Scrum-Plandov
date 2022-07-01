@@ -18,14 +18,14 @@ export class ReportBoardQueryParamsDto {
 
   @Expose()
   @IsOptional()
-  public users?: string[];
+  public userIds?: string[];
 
   @Expose()
   @IsOptional()
-  public sprints?: string[];
+  public sprintIds?: string[];
 
   @Expose()
   @IsOptional()
-  public tasks?: string[];
+  public taskIds?: string[];
 
 }

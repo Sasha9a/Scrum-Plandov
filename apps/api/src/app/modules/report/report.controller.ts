@@ -37,9 +37,7 @@ export class ReportController extends BaseController {
       },
       'task.board._id': params.board
     };
-    if (!params.users || !params.users?.length) {
 
-    }
 
     const board = await this.boardService.findById(params.board);
     if (!board) {
