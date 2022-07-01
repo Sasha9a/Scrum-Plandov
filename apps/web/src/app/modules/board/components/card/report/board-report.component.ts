@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { ReportBoardQueryParamsDto } from "@scrum/shared/dtos/report/report.board.query.params.dto";
+import { ReportBoardSpentDto } from "@scrum/shared/dtos/report/report.board.spent.dto";
 import { ReportBoardSpentItemDto } from "@scrum/shared/dtos/report/report.board.spent.item.dto";
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
+import { CrmTableColumn } from "@scrum/web/core/models/crm-table-column";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
 import { FiltersService } from "@scrum/web/core/services/filters.service";
 import { QueryParamsService } from "@scrum/web/core/services/query-params.service";
@@ -26,6 +28,15 @@ export class BoardReportComponent implements OnInit {
   public loading = false;
 
   public storageName = 'report.spent';
+  public data: ReportBoardSpentDto;
+
+  public columns: CrmTableColumn[] = [
+    { label: 'Дата', name: 'date', sort: 'date:date' },
+    { label: 'Пользователь', name: 'user', sort: 'user.name:string' },
+    { label: 'Задача', name: 'task', sort: 'task.number:number' },
+    { label: 'Спринт', name: 'sprint', sort: 'sprint.name:string' },
+    { label: 'Потраченное время (ч.)', name: 'spent', sort: 'spent:number' }
+  ];
 
   public queryParams: ReportBoardQueryParamsDto;
 
@@ -76,6 +87,7 @@ export class BoardReportComponent implements OnInit {
 
     this.queryParamsService.setQueryParams(this.queryParams);
     this.reportService.spent(this.queryParams).subscribe((res) => {
+      this.data = res;
       this.selectedFilters = this.queryParamsService.getFilteredEntities(this.filters, this.queryParams);
       this.loading = false;
       this.cdRef.markForCheck();

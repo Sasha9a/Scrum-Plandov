@@ -33,3 +33,22 @@
     <p-button label="Найти" icon="pi pi-search" styleClass="h-full" [loading]="loading" (onClick)="loadReport()"></p-button>
   </div>
 </div>
+
+<grace-table name="report.spent"
+             [columns]="columns"
+             [values]="data.items"
+             [loading]="loading">
+  <ng-template #rowTemplate let-item="item">
+    <tr *ngIf="toSpentInfo(item) as item">
+      <td>{{ item.date | date: 'dd MMMM yyyy HH:mm' }}</td>
+      <td>
+        <a routerLink="/user/card/{{ item.user?._id }}" target="_blank">{{ item.user?.name || item.user?.login }}</a>
+      </td>
+      <td>
+        <a routerLink="/task/card/{{ item.task?._id }}" target="_blank">{{ board?.code }}-{{ item.task?.number }}</a>
+      </td>
+      <td>{{ item.sprint?.name }}</td>
+      <td>{{ item.spent | number }}</td>
+    </tr>
+  </ng-template>
+</grace-table>
