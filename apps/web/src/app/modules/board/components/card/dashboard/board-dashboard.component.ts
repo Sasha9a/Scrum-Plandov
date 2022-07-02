@@ -165,6 +165,7 @@ export class BoardDashboardComponent implements OnInit {
         this.tasks = this.tasks.filter((_task) => _task?._id !== this.draggedTask?._id);
         this.tasks.push({ ...task });
         this.draggedTask = null;
+        this.updateInfoColumns();
         this.loading = false;
         this.cdRef.markForCheck();
       },
