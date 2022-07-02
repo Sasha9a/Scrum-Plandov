@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { BoardModule } from "@scrum/api/modules/board/board.module";
 import { FileModule } from "@scrum/api/modules/file/file.module";
@@ -9,7 +9,7 @@ import { TaskSchema } from "@scrum/shared/schemas/task.schema";
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: "Task", schema: TaskSchema }]),
-    BoardModule,
+    forwardRef(() => BoardModule),
     FileModule
   ],
   controllers: [TaskController],

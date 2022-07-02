@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Post, Put, Req, Res, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete, forwardRef,
+  Get,
+  HttpStatus,
+  Inject,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Req,
+  Res,
+  UseGuards
+} from "@nestjs/common";
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
@@ -15,7 +29,7 @@ import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 export class SprintController extends BaseController {
 
   public constructor(private readonly sprintService: SprintService,
-                     private readonly boardService: BoardService,
+                     @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
                      private readonly taskService: TaskService) {
     super();
   }
@@ -254,6 +268,12 @@ export class SprintController extends BaseController {
 
     if (sprint.board.createdUser?.id !== user._id && sprint.board.users.findIndex((_user) => _user.id === user._id) === -1) {
       throw new NotFoundException("Нет доступа!");
+    }
+
+    const tasks = await this.taskService.findAll({ sprint: sprint, board: sprint.board });
+    for (const task of tasks) {
+      task.sprint = null;
+      await task.save();
     }
 
     await this.sprintService.delete(id);

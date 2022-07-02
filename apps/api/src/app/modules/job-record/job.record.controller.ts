@@ -1,4 +1,15 @@
-import { Body, Controller, HttpStatus, NotFoundException, Post, Req, Res, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  forwardRef,
+  HttpStatus,
+  Inject,
+  NotFoundException,
+  Post,
+  Req,
+  Res,
+  UseGuards
+} from "@nestjs/common";
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JobRecordService } from "@scrum/api/modules/job-record/job.record.service";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
@@ -13,7 +24,7 @@ export class JobRecordController extends BaseController {
 
   public constructor(private readonly jobRecordService: JobRecordService,
                      private readonly taskService: TaskService,
-                     private readonly boardService: BoardService) {
+                     @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService) {
     super();
   }
 

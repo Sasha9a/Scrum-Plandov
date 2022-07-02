@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Post, Put, Req, Res, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete, forwardRef,
+  Get,
+  HttpStatus,
+  Inject,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Req,
+  Res,
+  UseGuards
+} from "@nestjs/common";
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
@@ -14,7 +28,7 @@ import moment from "moment-timezone";
 export class TaskController extends BaseController {
 
   public constructor(private readonly taskService: TaskService,
-                     private readonly boardService: BoardService,
+                     @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
                      private readonly fileService: FileService) {
     super();
   }
