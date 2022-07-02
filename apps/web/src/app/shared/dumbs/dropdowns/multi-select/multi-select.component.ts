@@ -12,7 +12,7 @@ export class MultiSelectComponent implements OnChanges {
   @Input() public options: any[];
   @Input() public selectedItems: any[];
   @Output() public selectedItemsChange = new EventEmitter<any>();
-  @Input() public dataKey = 'id';
+  @Input() public dataKey = '_id';
   @Input() public placeholder = '\u00A0';
   @Input() public inputId = `${Math.random()}`;
   @Input() public label: string;

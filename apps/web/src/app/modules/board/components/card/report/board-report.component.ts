@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { ReportBoardQueryParamsDto } from "@scrum/shared/dtos/report/report.board.query.params.dto";
 import { ReportBoardSpentDto } from "@scrum/shared/dtos/report/report.board.spent.dto";
@@ -16,6 +16,7 @@ import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { KeysOfType } from "@scrum/web/core/types/keys-of.type";
 import moment from "moment-timezone";
 import { forkJoin } from "rxjs";
+import { UIChart } from "primeng/chart";
 
 @Component({
   selector: 'grace-board-report',
@@ -51,6 +52,47 @@ export class BoardReportComponent implements OnInit {
     sprints: [],
     tasks: []
   };
+
+  public chartDataSpent = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Отработанные часы',
+        backgroundColor: '#42A5F5',
+        data: []
+      }
+    ]
+  };
+
+  public basicOptions = {
+    plugins: {
+      legend: {
+        labels: {
+          color: '#495057'
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#495057'
+        },
+        grid: {
+          color: '#ebedef'
+        }
+      },
+      y: {
+        ticks: {
+          color: '#495057'
+        },
+        grid: {
+          color: '#ebedef'
+        }
+      }
+    }
+  };
+
+  @ViewChild('chartSpent') public chartSpent: UIChart;
 
   public constructor(private readonly reportService: ReportService,
                      private readonly boardService: BoardService,
@@ -88,6 +130,9 @@ export class BoardReportComponent implements OnInit {
     this.queryParamsService.setQueryParams(this.queryParams);
     this.reportService.spent(this.queryParams).subscribe((res) => {
       this.data = res;
+      this.chartDataSpent.labels = res.sums.usersInfo.map((userInfo) => userInfo.user?.name ? userInfo.user?.name : userInfo.user?.login);
+      this.chartDataSpent.datasets[0].data = res.sums.usersInfo.map((userInfo) => userInfo.spent);
+      this.chartSpent?.refresh();
       this.selectedFilters = this.queryParamsService.getFilteredEntities(this.filters, this.queryParams);
       this.loading = false;
       this.cdRef.markForCheck();

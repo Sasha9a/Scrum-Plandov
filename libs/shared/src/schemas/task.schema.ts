@@ -5,7 +5,6 @@ import { ColumnBoard } from "@scrum/shared/schemas/column.board.schema";
 import { File } from "@scrum/shared/schemas/file.schema";
 import { Sprint } from "@scrum/shared/schemas/sprint.schema";
 import { User } from "@scrum/shared/schemas/user.schema";
-import moment from "moment-timezone";
 import mongoose from "mongoose";
 import { Document } from "mongoose";
 
@@ -33,10 +32,10 @@ export class Task extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Sprint.name, autopopulate: true })
   public sprint: Sprint;
 
-  @Prop({ default: moment().toDate() })
+  @Prop({ default: new Date() })
   public createDate: Date;
 
-  @Prop({ default: moment().toDate() })
+  @Prop({ default: new Date() })
   public updateDate: Date;
 
   @Prop({ required: true, type: String })

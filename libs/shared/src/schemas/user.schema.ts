@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { RoleEnum } from "@scrum/shared/enums/role.enum";
 import { File } from "@scrum/shared/schemas/file.schema";
-import moment from "moment-timezone";
 import * as mongoose from "mongoose";
 import { Document } from "mongoose";
 
@@ -11,7 +10,7 @@ export class User extends Document {
   @Prop({ required: true })
   public email: string;
 
-  @Prop({ default: moment().toDate() })
+  @Prop({ default: new Date() })
   public registerDate: Date;
 
   @Prop()

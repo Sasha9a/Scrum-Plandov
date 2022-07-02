@@ -7,18 +7,24 @@ import { TaskMultiSelectModule } from "@scrum/web/shared/dumbs/dropdowns/task-mu
 import { TableComponentModule } from "@scrum/web/shared/dumbs/table/table-component.module";
 import { ButtonModule } from "primeng/button";
 import { BoardReportComponent } from './board-report.component';
+import { UserMultiSelectModule } from "@scrum/web/shared/dumbs/dropdowns/user-multi-select/user-multi-select.module";
+import { ChartModule } from "primeng/chart";
+import { SkeletonModule } from "primeng/skeleton";
 
 @NgModule({
   declarations: [BoardReportComponent],
   exports: [BoardReportComponent],
-  imports: [
-    CommonModule,
-    DaterangepickerModule,
-    MultiSelectComponentModule,
-    ButtonModule,
-    TaskMultiSelectModule,
-    TableComponentModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        DaterangepickerModule,
+        MultiSelectComponentModule,
+        ButtonModule,
+        TaskMultiSelectModule,
+        TableComponentModule,
+        RouterModule,
+        UserMultiSelectModule,
+        ChartModule,
+        SkeletonModule
+    ]
 })
 export class BoardReportModule {}

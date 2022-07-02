@@ -1,0 +1,16 @@
+<grace-multi-select [options]="users"
+                    [(selectedItems)]="selectedUsers"
+                    (selectedItemsChange)="selectedUsersChange.emit($event)"
+                    filterBy="name,login"
+                    sort="login:string"
+                    optionLabel="login"
+                    [label]="labelInput ? 'Пользователь' : ''">
+  <ng-template #selectedItemsTemplate let-users="items">
+    <ng-container *ngFor="let user of users; last as isLast">{{ toUser(user).name ? toUser(user).name : toUser(user).login }}{{ isLast ? '' : ', ' }}</ng-container>
+  </ng-template>
+  <ng-template #itemTemplate let-user="item">
+    <div *ngIf="toUser(user) as user">
+      <div>{{ user.name || user.login }}</div>
+    </div>
+  </ng-template>
+</grace-multi-select>

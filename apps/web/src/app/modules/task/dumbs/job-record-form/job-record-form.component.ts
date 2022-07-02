@@ -18,6 +18,8 @@ export class JobRecordFormComponent extends BaseFormComponent<JobRecordFormDto> 
   public override onSave(entity: JobRecordFormDto) {
     if (this.task) {
       entity.task = this.task;
+      entity.board = this.task?.board;
+      entity.sprint = this.task?.sprint;
     }
     super.onSave(entity);
   }

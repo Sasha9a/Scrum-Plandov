@@ -8,6 +8,7 @@ import { ReportBoardSpentDto } from "@scrum/shared/dtos/report/report.board.spen
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
 import moment from "moment-timezone";
+import { ReportBoardSpentItemDto } from "@scrum/shared/dtos/report/report.board.spent.item.dto";
 
 @Controller('report')
 export class ReportController extends BaseController {
@@ -25,23 +26,31 @@ export class ReportController extends BaseController {
     const result: ReportBoardSpentDto = {
       items: [],
       sums: {
-        days: {},
-        weeks: {},
-        months: {}
+        usersInfo: []
       }
     };
     const filter = {
       date: {
-        $gte: moment(params.from, 'YYYY-MM-DD').subtract(3, 'hour').toISOString(),
-        $lte: moment(params.to, 'YYYY-MM-DD').toISOString()
+        $gte: moment(params.from, 'YYYY-MM-DD').startOf('day').toDate(),
+        $lte: moment(params.to, 'YYYY-MM-DD').endOf('day').toDate()
       },
-      'task.board.id': params.board
+      board: params.board
     };
-
-    const jobRecords = await this.jobRecordService.findAll(filter);
-    jobRecords.forEach((j) => {
-      console.log(j.task?.board);
-    });
+    if (String(params.userIds) !== 'undefined') {
+      filter['user'] = {
+        $in: params.userIds
+      };
+    }
+    if (String(params.sprintIds) !== 'undefined') {
+      filter['sprint'] = {
+        $in: params.sprintIds
+      };
+    }
+    if (String(params.taskIds) !== 'undefined') {
+      filter['task'] = {
+        $in: params.taskIds
+      };
+    }
 
     const board = await this.boardService.findById(params.board);
     if (!board) {
@@ -51,6 +60,26 @@ export class ReportController extends BaseController {
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
       throw new NotFoundException("Нет доступа!");
     }
+
+    const jobRecords = await this.jobRecordService.findAll(filter);
+    result.items = jobRecords.map((job) => {
+      return <ReportBoardSpentItemDto>{
+        date: job.date,
+        user: job.user,
+        task: job.task,
+        sprint: job.sprint,
+        spent: job.timeWork
+      };
+    });
+
+    jobRecords.forEach((job) => {
+      const userInfo = result.sums.usersInfo.find((userInfo) => userInfo.user?._id === job.user?._id);
+      if (!userInfo) {
+        result.sums.usersInfo.push({ user: job.user, spent: job.timeWork });
+      } else {
+        userInfo.spent += job.timeWork;
+      }
+    });
 
     return res.status(HttpStatus.OK).json(result).end();
   }

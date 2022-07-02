@@ -38,9 +38,11 @@ export class JobRecordController extends BaseController {
     }
 
     task.spent += bodyParams.timeWork;
-    task.left -= bodyParams.timeWork;
-    if (task.left < 0) {
-      task.left = 0;
+    if (task.left) {
+      task.left -= bodyParams.timeWork;
+      if (task.left < 0) {
+        task.left = 0;
+      }
     }
     await task.save();
 
