@@ -15,5 +15,5 @@ export const environment: ConfigInterface = {
       pass: 'nbvpvchtwgyfiire'
     }
   },
-  url: 'https://grace-scrum.ru'
+  url: 'https://scrum-nash.ru'
 };
