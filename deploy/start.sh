@@ -15,7 +15,7 @@ echo 'Connect to Server...'
 # echo 'vm.vfs_cache_pressure=50' | sudo tee -a /etc/sysctl.conf
 
 umask 777
-ssh -tt -i ~/.ssh/id_rsa root@62.113.109.25 << EOF
+ssh -tt -i ~/.ssh/id_rsa root@85.193.86.74 << EOF
 sudo apt -y update
 sudo curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
 sudo apt -y install nodejs
@@ -35,17 +35,17 @@ sudo ufw allow 'Nginx Full'
 sudo ufw delete allow 'Nginx HTTP'
 sudo ufw enable
 ufw allow ssh
-git clone https://github.com/Sasha9a/CRM-Bookstore.git
-cd CRM-Bookstore
+git clone https://github.com/Sasha9a/Grace-Scrum.git
+cd Grace-Scrum
 sudo npm install
 nx affected:build --all
-sudo mkdir -p /var/www/raskniga.ru/html
-sudo chown -R $USER:$USER /var/www/raskniga.ru/html
-sudo chmod -R 755 /var/www/raskniga.ru
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/raskniga.ru
-sudo ln -s /etc/nginx/sites-available/raskniga.ru /etc/nginx/sites-enabled/
-sudo cp -r ~/CRM-Bookstore/dist/apps/web/* /var/www/raskniga.ru/html
-sudo certbot --nginx --reinstall --redirect -d raskniga.ru -d www.raskniga.ru
+sudo mkdir -p /var/www/scrum-nash.ru/html
+sudo chown -R $USER:$USER /var/www/scrum-nash.ru/html
+sudo chmod -R 755 /var/www/scrum-nash.ru
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum-nash.ru
+sudo ln -s /etc/nginx/sites-available/scrum-nash.ru /etc/nginx/sites-enabled/
+sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum-nash.ru/html
+sudo certbot --nginx --reinstall --redirect -d scrum-nash.ru -d www.scrum-nash.ru
 sudo systemctl enable mongodb
 sudo pm2 start dist/apps/api/main.js
 sudo pm2 save
