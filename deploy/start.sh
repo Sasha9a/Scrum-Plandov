@@ -38,7 +38,7 @@ ufw allow ssh
 git clone https://github.com/Sasha9a/Grace-Scrum.git
 cd Grace-Scrum
 sudo npm install
-nx affected:build --all
+nx affected:build --all --prod
 sudo mkdir -p /var/www/scrum-nash.ru/html
 sudo chown -R $USER:$USER /var/www/scrum-nash.ru/html
 sudo chmod -R 755 /var/www/scrum-nash.ru
