@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { ReportBoardQueryParamsDto } from "@scrum/shared/dtos/report/report.board.query.params.dto";
 import { ReportBoardSpentDto } from "@scrum/shared/dtos/report/report.board.spent.dto";
@@ -8,11 +9,13 @@ import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { CrmTableColumn } from "@scrum/web/core/models/crm-table-column";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
+import { ErrorService } from "@scrum/web/core/services/error.service";
 import { FiltersService } from "@scrum/web/core/services/filters.service";
 import { QueryParamsService } from "@scrum/web/core/services/query-params.service";
 import { ReportService } from "@scrum/web/core/services/report/report.service";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { TaskService } from "@scrum/web/core/services/task/task.service";
+import { TitleService } from "@scrum/web/core/services/title.service";
 import { KeysOfType } from "@scrum/web/core/types/keys-of.type";
 import moment from "moment-timezone";
 import { forkJoin } from "rxjs";
@@ -25,7 +28,8 @@ import { UIChart } from "primeng/chart";
 })
 export class BoardReportComponent implements OnInit {
 
-  @Input() public board: BoardDto;
+  public boardId: string;
+  public board: BoardDto;
   public loading = false;
 
   public storageName = 'report.spent';
@@ -98,28 +102,48 @@ export class BoardReportComponent implements OnInit {
                      private readonly boardService: BoardService,
                      private readonly sprintService: SprintService,
                      private readonly taskService: TaskService,
+                     private readonly route: ActivatedRoute,
                      private readonly queryParamsService: QueryParamsService,
                      private readonly filtersService: FiltersService,
-                     private readonly cdRef: ChangeDetectorRef) {}
+                     private readonly errorService: ErrorService,
+                     private readonly cdRef: ChangeDetectorRef,
+                     private readonly titleService: TitleService) {}
 
   public ngOnInit(): void {
-    this.queryParams = this.queryParamsService.getFilteredQueryParams(ReportBoardQueryParamsDto, <ReportBoardQueryParamsDto>{
-      from: (localStorage.getItem(`${this.storageName}.from`) || moment().startOf('month').format('YYYY-MM-DD')) as unknown as Date,
-      to: (localStorage.getItem(`${this.storageName}.to`) || moment().endOf('month').format('YYYY-MM-DD')) as unknown as Date,
-      board: this.board?._id
-    });
+    this.boardId = this.route.snapshot.params.id;
 
-    forkJoin([
-      this.boardService.findAllUsersByBoard(this.board?._id),
-      this.sprintService.findAllByBoardDropdown(this.board?._id),
-      this.taskService.findAllByBoard(this.board?._id)
-    ]).subscribe(([users, sprints, tasks]) => {
-      this.filters = {
-        users: users,
-        sprints: sprints,
-        tasks: tasks
-      };
-      this.loadReport();
+    if (!this.boardId) {
+      return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
+    }
+
+    this.loadBoard();
+  }
+
+  public loadBoard() {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
+    this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
+      this.board = board;
+      this.titleService.setTitle(`${this.board?.name}`);
+      this.queryParams = this.queryParamsService.getFilteredQueryParams(ReportBoardQueryParamsDto, <ReportBoardQueryParamsDto>{
+        from: (localStorage.getItem(`${this.storageName}.from`) || moment().startOf('month').format('YYYY-MM-DD')) as unknown as Date,
+        to: (localStorage.getItem(`${this.storageName}.to`) || moment().endOf('month').format('YYYY-MM-DD')) as unknown as Date,
+        board: this.board?._id
+      });
+
+      forkJoin([
+        this.boardService.findAllUsersByBoard(this.board?._id),
+        this.sprintService.findAllByBoardDropdown(this.board?._id),
+        this.taskService.findAllByBoard(this.board?._id)
+      ]).subscribe(([users, sprints, tasks]) => {
+        this.filters = {
+          users: users,
+          sprints: sprints,
+          tasks: tasks
+        };
+        this.loadReport();
+      });
     });
   }
 

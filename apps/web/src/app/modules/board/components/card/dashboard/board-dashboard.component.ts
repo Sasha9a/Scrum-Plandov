@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from "@angular/router";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
 import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
 import { ErrorService } from "@scrum/web/core/services/error.service";
+import { TitleService } from "@scrum/web/core/services/title.service";
 import { AuthService } from "@scrum/web/core/services/user/auth.service";
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
@@ -25,7 +26,8 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 })
 export class BoardDashboardComponent implements OnInit {
 
-  @Input() public board: BoardDto;
+  public boardId: string;
+  public board: BoardDto;
   public loading = false;
 
   public userSelect: UserDto;
@@ -54,17 +56,37 @@ export class BoardDashboardComponent implements OnInit {
                      private readonly cdRef: ChangeDetectorRef,
                      private readonly errorService: ErrorService,
                      private readonly router: Router,
+                     private readonly route: ActivatedRoute,
                      private readonly taskFilterPipe: TaskFilterPipe,
-                     private readonly dialogService: DialogService) {}
+                     private readonly dialogService: DialogService,
+                     private readonly titleService: TitleService) {}
 
   public ngOnInit(): void {
-    this.load();
+    this.boardId = this.route.snapshot.params.id;
 
-    this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
-      return {
-        name: user?.name || user?.login,
-        value: user?._id
-      };
+    if (!this.boardId) {
+      return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
+    }
+
+    this.loadBoard();
+  }
+
+  public loadBoard() {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
+    this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
+      this.board = board;
+      this.titleService.setTitle(`${this.board?.name}`);
+      this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
+        return {
+          name: user?.name || user?.login,
+          value: user?._id
+        };
+      });
+      this.loading = false;
+      this.cdRef.markForCheck();
+      this.load();
     });
   }
 

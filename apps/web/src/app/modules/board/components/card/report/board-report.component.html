@@ -2,7 +2,7 @@
   <div class="col">
     <div class="grid">
       <div class="col-12 md:col-6 xl:col-3 pb-0">
-        <grace-daterangepicker [value]="[queryParams.from, queryParams.to]" (changeValue)="setDateFilters($event)"></grace-daterangepicker>
+        <grace-daterangepicker [value]="[queryParams?.from, queryParams?.to]" (changeValue)="setDateFilters($event)"></grace-daterangepicker>
       </div>
       <div class="col-12 md:col-6 xl:col-3 pb-0">
         <grace-user-multi-select [users]="filters.users"

@@ -6,7 +6,7 @@
           <div class="flex gap-2 align-items-center">
             <h4 class="my-2">{{ sprint.sprint?.name || 'Список задач' }}</h4>
             <small class="text-gray-600">{{ sprint.tasks?.length }} проблем(ы)</small>
-            <p-tag *ngIf="sprint.sprint && (board.activeSprints | findByKey: '_id': sprint.sprint?._id)" severity="success" value="АКТИВНО"></p-tag>
+            <p-tag *ngIf="sprint.sprint && (board?.activeSprints | findByKey: '_id': sprint.sprint?._id)" severity="success" value="АКТИВНО"></p-tag>
             <small *ngIf="sprint.sprint" class="text-gray-600">
               {{ sprint.sprint?.startDate ? (sprint.sprint?.startDate | date) : 'Неизвестно' }} - {{ sprint.sprint?.endDate ? (sprint.sprint?.endDate | date) : 'Неизвестно' }}
             </small>
@@ -20,7 +20,7 @@
                     [queryParams]="{ boardId: board?._id }"
                     (click)="$event.stopPropagation()">
             </button>
-            <button *ngIf="sprint.sprint && !(board.activeSprints | findByKey: '_id': sprint.sprint?._id)"
+            <button *ngIf="sprint.sprint && !(board?.activeSprints | findByKey: '_id': sprint.sprint?._id)"
                     pButton type="button"
                     label="Запустить спринт"
                     class="p-button-success p-button-text"
@@ -52,7 +52,7 @@
              (click)="activeTask = task">
           <div class="flex justify-content-between align-items-center">
             <div class="flex gap-2">
-              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board.code }}-{{ task.number }}</a>
+              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board?.code }}-{{ task.number }}</a>
               <p>{{ task.name }}</p>
             </div>
             <div>

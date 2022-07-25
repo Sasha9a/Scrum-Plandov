@@ -1,15 +1,15 @@
 <div *ngIf="!loading">
   <div class="flex justify-content-between align-items-center mt-3">
     <div>
-      <p class="text-gray-500 text-base">{{ board.name }}</p>
+      <p class="text-gray-500 text-base">{{ board?.name }}</p>
       <div *ngIf="activeSprint" class="flex align-items-center gap-2">
         <h1 class="my-0">{{ activeSprint.name }}</h1>
-        <p-inplace #inplace *ngIf="board.activeSprints?.length > 1">
+        <p-inplace #inplace *ngIf="board?.activeSprints?.length > 1">
           <ng-template pTemplate="display">
             <span class="text-blue-400">Переключить спринт</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <grace-single-select [options]="board.activeSprints"
+            <grace-single-select [options]="board?.activeSprints"
                                  [(selectedItem)]="activeSprint"
                                  (selectedItemChange)="changeSprint(); inplace.deactivate()"
                                  [filter]="false">
@@ -40,12 +40,12 @@
               class="p-button-success p-button-text mr-1"
               (click)="compiledSprint()">
       </button>
-      <button pButton *ngIf="authService.currentUser?._id === board.createdUser?._id"
+      <button pButton *ngIf="authService.currentUser?._id === board?.createdUser?._id"
               type="button"
               icon="pi pi-pencil"
               label="Редактировать"
               class="p-button-secondary p-button-text mr-1"
-              routerLink="/board/edit/{{ board._id }}">
+              routerLink="/board/edit/{{ board?._id }}">
       </button>
       <button pButton type="button"
               icon="pi pi-times"
@@ -57,9 +57,9 @@
         <ng-template pTemplate="">
           <ng-container *ngIf="!loadingLeave">
             <p>Вы действительно хотите покинуть доску?</p>
-            <div *ngIf="authService.currentUser?._id === board.createdUser?._id" class="mt-3">
+            <div *ngIf="authService.currentUser?._id === board?.createdUser?._id" class="mt-3">
               <p>Так как вы являетесь владельцем доски, выберите пользователя которому передадите свои права</p>
-              <grace-single-select [options]="board.users"
+              <grace-single-select [options]="board?.users"
                                    [(selectedItem)]="userSelect"
                                    optionLabel="login"
                                    styleClass="mt-2"
@@ -87,7 +87,7 @@
   </div>
 
   <div class="flex flex-nowrap overflow-x-auto overflow-y-hidden gap-2 mt-4" style="min-height: 200px;">
-    <div *ngFor="let column of board.columns | orderBy: 'order:number'">
+    <div *ngFor="let column of board?.columns | orderBy: 'order:number'">
       <p class="text-gray-600 text-base mb-2 pl-1">{{ column.name }} {{ columnsInfo[column._id] }}</p>
       <div class="relative h-full bg-gray-50 p-1 xl:w-23rem lg:w-18rem md:w-15rem sm:w-13rem w-13rem drop-column">
         <ng-container *ngFor="let task of tasks | taskFilter: selectedFilterItems | taskOrderBy">
@@ -102,7 +102,7 @@
                (onDragStart)="dragStartTask(task)"
                (onDragEnd)="dragEndTask()">
             <div class="flex justify-content-between align-items-center">
-              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board.code }}-{{ task.number }}</a>
+              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board?.code }}-{{ task.number }}</a>
               <grace-user-avatar *ngIf="task.executor" [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }" size=""></grace-user-avatar>
             </div>
             <p [class.mt-2]="!task.executor">{{ task.name }}</p>

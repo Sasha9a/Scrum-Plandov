@@ -49,7 +49,7 @@ export class SprintEditComponent implements OnInit {
         this.loading = false;
         this.cdRef.markForCheck();
         this.errorService.addSuccessMessage(`Спринт "${body.name}" обновлен`);
-        this.router.navigate(['/board/card', this.sprint.board?._id], { queryParams: { tabId: 'sprint' } }).catch(console.error);
+        this.router.navigate(['/board/card', this.sprint.board?._id, 'sprint']).catch(console.error);
       },
       error: () => {
         this.loading = false;
@@ -69,7 +69,7 @@ export class SprintEditComponent implements OnInit {
           this.loading = false;
           this.cdRef.markForCheck();
           this.errorService.addSuccessMessage(`Спринт "${this.sprint.name}" удален`);
-          this.router.navigate(['/board/card', this.sprint.board?._id], { queryParams: { tabId: 'sprint' } }).catch(console.error);
+          this.router.navigate(['/board/card', this.sprint.board?._id, 'sprint']).catch(console.error);
         });
       }
     });

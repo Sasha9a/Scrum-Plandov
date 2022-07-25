@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from "@angular/router";
+import { RouterModule, Routes } from "@angular/router";
+import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
 import { SingleSelectModule } from "@scrum/web/shared/dumbs/dropdowns/single-select/single-select.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { OrderByPipeModule } from "@scrum/web/shared/pipes/order-by/order-by-pipe.module";
@@ -8,6 +9,7 @@ import { TimeFromNowPipeModule } from "@scrum/web/shared/pipes/time-from-now/tim
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DragDropModule } from "primeng/dragdrop";
+import { DialogService } from "primeng/dynamicdialog";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { BoardDashboardComponent } from './board-dashboard.component';
 import { TaskOrderByPipeModule } from "@scrum/web/shared/pipes/task-order-by/task-order-by-pipe.module";
@@ -25,13 +27,21 @@ import { TaskFilterPipeModule } from "@scrum/web/shared/pipes/task-filter/task-f
 import { TaskShortInfoModule } from "@scrum/web/modules/task/dumbs/task-short-info/task-short-info.module";
 import { TaskAddModule } from "@scrum/web/modules/task/components/task/add/task-add.module";
 
+const routes: Routes = [
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    component: BoardDashboardComponent
+  }
+];
+
 @NgModule({
   declarations: [BoardDashboardComponent],
   exports: [BoardDashboardComponent],
 	imports: [
 		CommonModule,
 		ButtonModule,
-		RouterModule,
+		RouterModule.forChild(routes),
 		OrderByPipeModule,
 		CardModule,
 		DragDropModule,
@@ -51,6 +61,7 @@ import { TaskAddModule } from "@scrum/web/modules/task/components/task/add/task-
 		TaskShortInfoModule,
 		TaskAddModule,
 		TimeFromNowPipeModule
-	]
+	],
+  providers: [DialogService]
 })
 export class BoardDashboardModule {}

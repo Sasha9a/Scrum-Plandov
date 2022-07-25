@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
+import { BoardService } from "@scrum/web/core/services/board/board.service";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
+import { TitleService } from "@scrum/web/core/services/title.service";
 import { SprintWorkUsersInfoComponent } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.component";
 import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
@@ -17,7 +20,8 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 })
 export class BoardSprintComponent implements OnInit, OnDestroy {
 
-  @Input() public board: BoardDto;
+  public boardId: string;
+  public board: BoardDto;
   public loading = false;
 
   public sprints: SprintTasksInfoDto[];
@@ -27,18 +31,40 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
   public activeTask: TaskDto;
 
   public constructor(private readonly sprintService: SprintService,
+                     private readonly boardService: BoardService,
                      private readonly cdRef: ChangeDetectorRef,
                      private readonly dialogService: DialogService,
-                     private readonly errorService: ErrorService) {}
+                     private readonly route: ActivatedRoute,
+                     private readonly errorService: ErrorService,
+                     private readonly titleService: TitleService) {}
 
   public ngOnInit(): void {
-    this.load();
+    this.boardId = this.route.snapshot.params.id;
+
+    if (!this.boardId) {
+      return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
+    }
+
+    this.loadBoard();
   }
 
   public ngOnDestroy() {
     if (this.ref) {
       this.ref.close();
     }
+  }
+
+  public loadBoard() {
+    this.loading = true;
+    this.cdRef.markForCheck();
+
+    this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
+      this.board = board;
+      this.titleService.setTitle(`${this.board?.name}`);
+      this.loading = false;
+      this.cdRef.markForCheck();
+      this.load();
+    });
   }
 
   public load() {

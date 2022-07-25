@@ -49,7 +49,8 @@ const routes: Routes = [
     CommonLayoutModule,
     RouterModule.forRoot(routes, {
       onSameUrlNavigation: 'ignore',
-      scrollPositionRestoration: 'enabled'
+      scrollPositionRestoration: 'enabled',
+      paramsInheritanceStrategy: 'always'
     })
   ],
   providers: [

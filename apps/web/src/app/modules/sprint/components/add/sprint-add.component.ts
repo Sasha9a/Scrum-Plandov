@@ -48,7 +48,7 @@ export class SprintAddComponent implements OnInit {
         this.saving = false;
         this.cdRef.markForCheck();
         this.errorService.addSuccessMessage('Спринт создан');
-        this.router.navigate(['/board/card', this.boardId], { queryParams: { tabId: 'sprint' } }).catch(console.error);
+        this.router.navigate(['/board/card', this.boardId, 'sprint']).catch(console.error);
       },
       error: () => {
         this.saving = false;

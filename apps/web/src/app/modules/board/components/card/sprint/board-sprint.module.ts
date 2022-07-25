@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from "@angular/router";
+import { RouterModule, Routes } from "@angular/router";
+import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
 import { SprintWorkUsersInfoModule } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.module";
 import { TaskAddModule } from "@scrum/web/modules/task/components/task/add/task-add.module";
 import { TaskShortInfoModule } from "@scrum/web/modules/task/dumbs/task-short-info/task-short-info.module";
@@ -19,13 +20,21 @@ import { UserAvatarModule } from "@scrum/web/shared/dumbs/user-avatar/user-avata
 import { TaskPriorityNamePipeModule } from "@scrum/web/shared/pipes/task-priority-name/task-priority-name-pipe.module";
 import { TaskOrderByPipeModule } from "@scrum/web/shared/pipes/task-order-by/task-order-by-pipe.module";
 
+const routes: Routes = [
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    component: BoardSprintComponent
+  }
+];
+
 @NgModule({
   declarations: [BoardSprintComponent],
   exports: [BoardSprintComponent],
 	imports: [
 		CommonModule,
 		ButtonModule,
-		RouterModule,
+		RouterModule.forChild(routes),
 		SpinnerModule,
 		AccordionModule,
 		TagModule,
