@@ -54,7 +54,7 @@ const routes: Routes = [
       paramsInheritanceStrategy: 'always'
     }),
     SocketIoModule.forRoot({
-      url: 'http://localhost:3333'
+      url: 'http://localhost:3333/api'
     })
   ],
   providers: [

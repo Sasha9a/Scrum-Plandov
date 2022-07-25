@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
+import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
 import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { TitleService } from "@scrum/web/core/services/title.service";
@@ -49,6 +50,7 @@ export class BoardDashboardComponent implements OnInit {
   public ref: DynamicDialogRef;
 
   public constructor(public readonly authService: AuthService,
+                     private readonly websocketBoardService: WebsocketBoardService,
                      private readonly boardService: BoardService,
                      private readonly taskService: TaskService,
                      private readonly sprintService: SprintService,
@@ -67,6 +69,8 @@ export class BoardDashboardComponent implements OnInit {
     if (!this.boardId) {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
+
+    this.websocketBoardService.test();
 
     this.loadBoard();
   }

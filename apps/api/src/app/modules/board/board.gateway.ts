@@ -1,6 +1,6 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 
-@WebSocketGateway(80, { namespace: 'board' })
+@WebSocketGateway()
 export class BoardGateway {
 
   @SubscribeMessage('board')
