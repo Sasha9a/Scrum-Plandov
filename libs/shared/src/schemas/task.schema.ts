@@ -56,6 +56,9 @@ export class Task extends Document {
   @Prop()
   public description: string;
 
+  @Prop()
+  public deadline: Date;
+
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);

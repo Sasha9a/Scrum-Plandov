@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DatepickerModule } from "@scrum/web/shared/dumbs/datepicker/datepicker.module";
 import { FileUploaderModule } from "@scrum/web/shared/dumbs/file-uploader/file-uploader.module";
 import { FileModule } from "@scrum/web/shared/dumbs/file/file.module";
 import { TaskFormComponent } from './task-form.component';
@@ -17,20 +18,21 @@ import { EditorModule } from "primeng/editor";
 @NgModule({
   declarations: [TaskFormComponent],
   exports: [TaskFormComponent],
-  imports: [
-    CommonModule,
-    InputTextModule,
-    JoinPipeModule,
-    FormsModule,
-    GoBackButtonModule,
-    ButtonModule,
-    InputTextareaModule,
-    SingleSelectModule,
-    TaskPriorityNamePipeModule,
-    InputNumberModule,
-    EditorModule,
-    FileModule,
-    FileUploaderModule
-  ]
+	imports: [
+		CommonModule,
+		InputTextModule,
+		JoinPipeModule,
+		FormsModule,
+		GoBackButtonModule,
+		ButtonModule,
+		InputTextareaModule,
+		SingleSelectModule,
+		TaskPriorityNamePipeModule,
+		InputNumberModule,
+		EditorModule,
+		FileModule,
+		FileUploaderModule,
+		DatepickerModule
+	]
 })
 export class TaskFormModule {}

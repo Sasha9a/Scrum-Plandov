@@ -42,6 +42,10 @@
       <div class="col-5 text-gray-500">Приоритет:</div>
       <div class="col-7">{{ task?.priority | taskPriorityName }}</div>
     </div>
+    <div class="grid">
+      <div class="col-5 text-gray-500">Дедлайн:</div>
+      <div class="col-7">{{ task?.deadline ? (task?.deadline | date: 'dd.MM.YYYY') : 'Не назначен' }}</div>
+    </div>
   </div>
 
   <div class="mt-3">

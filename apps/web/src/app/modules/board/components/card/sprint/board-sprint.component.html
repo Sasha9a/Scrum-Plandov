@@ -45,6 +45,8 @@
       <ng-template pTemplate="content">
         <div *ngFor="let task of sprint.tasks | taskOrderBy"
              class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-pointer"
+             [class.bg-red-50]="task.deadline ? (task.deadline | timeFromNow) < 0 && activeTask?._id !== task?._id : false"
+             [class.bg-yellow-50]="task.deadline ? (task.deadline | timeFromNow) < 3 && (task.deadline | timeFromNow) >= 0 && activeTask?._id !== task?._id : false"
              [class.bg-blue-100]="activeTask?._id === task?._id"
              [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }"
              (click)="activeTask = task">
@@ -64,6 +66,8 @@
             <p>{{ task.priority | taskPriorityName }}</p>
             <p>·</p>
             <p>{{ task.executor?.name || task.executor?.login || 'Не назначен' }}</p>
+            <p>·</p>
+            <p>{{ task.deadline ? ('до ' + (task.deadline | date: 'dd.MM.YYYY')): 'Не назначен' }}</p>
             <p>·</p>
             <p>{{ task.grade ? (task.grade | number) + ' ч.' : 'Нет' }}</p>
           </div>

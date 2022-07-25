@@ -4,6 +4,7 @@ import { RouterModule } from "@angular/router";
 import { SingleSelectModule } from "@scrum/web/shared/dumbs/dropdowns/single-select/single-select.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { OrderByPipeModule } from "@scrum/web/shared/pipes/order-by/order-by-pipe.module";
+import { TimeFromNowPipeModule } from "@scrum/web/shared/pipes/time-from-now/time-from-now-pipe.module";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DragDropModule } from "primeng/dragdrop";
@@ -27,28 +28,29 @@ import { TaskAddModule } from "@scrum/web/modules/task/components/task/add/task-
 @NgModule({
   declarations: [BoardDashboardComponent],
   exports: [BoardDashboardComponent],
-    imports: [
-      CommonModule,
-      ButtonModule,
-      RouterModule,
-      OrderByPipeModule,
-      CardModule,
-      DragDropModule,
-      SpinnerModule,
-      OverlayPanelModule,
-      SingleSelectModule,
-      TaskOrderByPipeModule,
-      TaskPriorityColorPipeModule,
-      UserAvatarModule,
-      TaskPriorityNamePipeModule,
-      ChipModule,
-      InplaceModule,
-      TooltipModule,
-      SelectButtonModule,
-      FormsModule,
-      TaskFilterPipeModule,
-      TaskShortInfoModule,
-      TaskAddModule
-    ]
+	imports: [
+		CommonModule,
+		ButtonModule,
+		RouterModule,
+		OrderByPipeModule,
+		CardModule,
+		DragDropModule,
+		SpinnerModule,
+		OverlayPanelModule,
+		SingleSelectModule,
+		TaskOrderByPipeModule,
+		TaskPriorityColorPipeModule,
+		UserAvatarModule,
+		TaskPriorityNamePipeModule,
+		ChipModule,
+		InplaceModule,
+		TooltipModule,
+		SelectButtonModule,
+		FormsModule,
+		TaskFilterPipeModule,
+		TaskShortInfoModule,
+		TaskAddModule,
+		TimeFromNowPipeModule
+	]
 })
 export class BoardDashboardModule {}

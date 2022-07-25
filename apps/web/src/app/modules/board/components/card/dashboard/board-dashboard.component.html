@@ -93,6 +93,8 @@
         <ng-container *ngFor="let task of tasks | taskFilter: selectedFilterItems | taskOrderBy">
           <div *ngIf="task.status?._id === column?._id"
                class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-move"
+               [class.bg-red-50]="task.deadline ? (task.deadline | timeFromNow) < 0 && activeTask?._id !== task?._id : false"
+               [class.bg-yellow-50]="task.deadline ? (task.deadline | timeFromNow) < 3 && (task.deadline | timeFromNow) >= 0 && activeTask?._id !== task?._id : false"
                [class.bg-blue-100]="activeTask?._id === task?._id"
                [ngStyle]="{ 'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px', 'background-color': 'white' }"
                (click)="activeTask = task"
@@ -106,6 +108,7 @@
             <p [class.mt-2]="!task.executor">{{ task.name }}</p>
             <p class="mt-2">{{ task.priority | taskPriorityName }}</p>
             <p class="mt-1">{{ task.executor?.name || task.executor?.login || 'Не назначен' }}</p>
+            <p *ngIf="task.deadline" class="mt-1">до {{ task.deadline | date: 'dd.MM.YYYY' }}</p>
             <p *ngIf="task.grade" class="mt-1">{{ ((task.spent || 0) /  (task.grade || 0) * 100) | number: '.0-0' }}%</p>
             <p-chip *ngIf="task.left" [label]="(task.left | number) + ' ч.'" styleClass="mt-1"></p-chip>
           </div>

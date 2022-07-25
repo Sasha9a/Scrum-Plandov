@@ -61,4 +61,7 @@ export class TaskDto extends BaseDto {
   @Expose()
   public description: string;
 
+  @Expose()
+  public deadline: Date;
+
 }

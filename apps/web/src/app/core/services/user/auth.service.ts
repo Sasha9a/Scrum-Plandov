@@ -49,7 +49,7 @@ export class AuthService {
     localStorage.removeItem('JWT_USER');
 
     this.loggedInUser = undefined;
-    this.router.navigate(['user/login'], { queryParams: { url } }).catch(console.error);
+    this.router.navigate(['/user/login'], { queryParams: { url } }).catch(console.error);
     this.loginUser$.next(this.loggedInUser);
     this.errorService.addSuccessMessage("Вы успешно вышли!");
   }

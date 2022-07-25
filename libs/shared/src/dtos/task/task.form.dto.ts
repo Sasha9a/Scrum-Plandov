@@ -73,4 +73,8 @@ export class TaskFormDto {
   @IsOptional()
   public description?: string;
 
+  @Expose()
+  @IsOptional()
+  public deadline?: Date;
+
 }

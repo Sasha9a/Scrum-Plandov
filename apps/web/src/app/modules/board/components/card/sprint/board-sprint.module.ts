@@ -8,6 +8,7 @@ import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { FindByKeyPipeModule } from "@scrum/web/shared/pipes/find-by-key/find-by-key-pipe.module";
 import { OrderByPipeModule } from "@scrum/web/shared/pipes/order-by/order-by-pipe.module";
 import { TaskPriorityColorPipeModule } from "@scrum/web/shared/pipes/task-priority-color/task-priority-color-pipe.module";
+import { TimeFromNowPipeModule } from "@scrum/web/shared/pipes/time-from-now/time-from-now-pipe.module";
 import { AccordionModule } from "primeng/accordion";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
@@ -37,7 +38,8 @@ import { TaskOrderByPipeModule } from "@scrum/web/shared/pipes/task-order-by/tas
 		UserAvatarModule,
 		TaskPriorityNamePipeModule,
 		TaskOrderByPipeModule,
-		TaskShortInfoModule
+		TaskShortInfoModule,
+		TimeFromNowPipeModule
 	],
   providers: [DialogService]
 })
