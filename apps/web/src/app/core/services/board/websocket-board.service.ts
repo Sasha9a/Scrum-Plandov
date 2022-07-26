@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from "rxjs";
 import { io, Socket } from 'socket.io-client';
 
 @Injectable({
@@ -23,14 +24,14 @@ export class WebsocketBoardService {
         this.socket.connect();
       }
     });
+
+    this.socket.on('board_to_client', (data) => {
+      console.log(data);
+    });
   }
 
   public test() {
-    this.socket.on('board', (data) => {
-      console.log(data);
-    });
-
-    this.socket.emit('board', "test");
+    this.socket.emit('board_to_server', "test");
   }
 
 }
