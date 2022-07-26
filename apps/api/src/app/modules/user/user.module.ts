@@ -3,6 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { PassportModule } from "@nestjs/passport";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { RoleGuard } from "@scrum/api/core/guards/role.guard";
+import { WsGuard } from "@scrum/api/core/guards/ws.guard";
 import { AuthService } from "@scrum/api/modules/user/auth.service";
 import { JwtStrategy } from "@scrum/api/modules/user/jwt.strategy";
 import { UserController } from "@scrum/api/modules/user/user.controller";
@@ -29,7 +30,7 @@ import { Module } from "@nestjs/common";
     VerifyModule
   ],
   controllers: [UserController],
-  providers: [UserService, AuthService, JwtStrategy, JwtAuthGuard, RoleGuard],
+  providers: [UserService, AuthService, JwtStrategy, JwtAuthGuard, RoleGuard, WsGuard],
   exports: [UserService, AuthService]
 })
 export class UserModule {}

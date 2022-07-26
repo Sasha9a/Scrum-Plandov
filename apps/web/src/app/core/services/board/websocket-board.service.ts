@@ -11,8 +11,12 @@ export class WebsocketBoardService {
   public createWSConnection(token: string) {
     this.socket = io('/board', {
       path: '/api/socket/connect',
-      auth: {
-        token: token
+      transportOptions: {
+        polling: {
+          extraHeaders: {
+            Authorization: token
+          }
+        }
       },
       withCredentials: true
     });

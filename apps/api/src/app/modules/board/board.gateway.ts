@@ -1,4 +1,6 @@
+import { UseGuards } from "@nestjs/common";
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { WsGuard } from "@scrum/api/core/guards/ws.guard";
 import { Server } from "socket.io";
 
 @WebSocketGateway({
@@ -14,6 +16,7 @@ export class BoardGateway {
 
   @WebSocketServer() public server: Server;
 
+  @UseGuards(WsGuard)
   @SubscribeMessage('board_to_server')
   public test(@MessageBody() data: string) {
     console.log(data);
