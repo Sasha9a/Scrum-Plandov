@@ -9,7 +9,7 @@ export class WebsocketBoardService {
   public socket: Socket;
 
   public createWSConnection(token: string) {
-    this.socket = io('ws://localhost:3333', {
+    this.socket = io('/board', {
       path: '/api/socket/connect',
       auth: {
         token: token
