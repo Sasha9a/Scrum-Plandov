@@ -70,6 +70,7 @@ export class BoardDashboardComponent implements OnInit {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
+    this.websocketBoardService.createWSConnection(this.authService.getToken());
     this.websocketBoardService.test();
 
     this.loadBoard();
