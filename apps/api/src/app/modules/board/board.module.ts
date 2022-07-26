@@ -1,7 +1,7 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { BoardController } from "@scrum/api/modules/board/board.controller";
-import { BoardGateway } from "@scrum/api/modules/board/board.gateway";
+import { BoardDashboardGateway } from "@scrum/api/modules/board/board_dashboard.gateway";
 import { BoardService } from "@scrum/api/modules/board/board.service";
 import { ColumnBoardModule } from "@scrum/api/modules/column-board/column-board.module";
 import { UserModule } from "@scrum/api/modules/user/user.module";
@@ -22,7 +22,7 @@ import { JobRecordModule } from "@scrum/api/modules/job-record/job.record.module
     forwardRef(() => JobRecordModule)
   ],
   controllers: [BoardController],
-  providers: [BoardService, BoardGateway],
+  providers: [BoardService, BoardDashboardGateway],
   exports: [BoardService]
 })
 export class BoardModule {}

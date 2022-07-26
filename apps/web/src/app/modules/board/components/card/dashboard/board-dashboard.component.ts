@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
-import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
+import { WebsocketBoardDashboardService } from "@scrum/web/core/services/board/websocket-board-dashboard.service";
 import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { TitleService } from "@scrum/web/core/services/title.service";
@@ -25,7 +25,7 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BoardDashboardComponent implements OnInit {
+export class BoardDashboardComponent implements OnInit, OnDestroy {
 
   public boardId: string;
   public board: BoardDto;
@@ -50,7 +50,7 @@ export class BoardDashboardComponent implements OnInit {
   public ref: DynamicDialogRef;
 
   public constructor(public readonly authService: AuthService,
-                     private readonly websocketBoardService: WebsocketBoardService,
+                     private readonly websocketBoardDashboardService: WebsocketBoardDashboardService,
                      private readonly boardService: BoardService,
                      private readonly taskService: TaskService,
                      private readonly sprintService: SprintService,
@@ -70,10 +70,11 @@ export class BoardDashboardComponent implements OnInit {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.websocketBoardService.createWSConnection(this.authService.getToken());
-    this.websocketBoardService.test();
-
     this.loadBoard();
+  }
+
+  public ngOnDestroy() {
+    this.websocketBoardDashboardService.socket?.disconnect();
   }
 
   public loadBoard() {
@@ -91,6 +92,7 @@ export class BoardDashboardComponent implements OnInit {
       });
       this.loading = false;
       this.cdRef.markForCheck();
+      this.websocketBoardDashboardService.createWSConnection(this.authService.getToken(), this.boardId);
       this.load();
     });
   }

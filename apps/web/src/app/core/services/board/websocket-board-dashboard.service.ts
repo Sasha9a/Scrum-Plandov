@@ -4,12 +4,12 @@ import { io, Socket } from 'socket.io-client';
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketBoardService {
+export class WebsocketBoardDashboardService {
 
   public socket: Socket;
 
-  public createWSConnection(token: string) {
-    this.socket = io('/board', {
+  public createWSConnection(token: string, boardId: string) {
+    this.socket = io('/board_dashboard', {
       path: '/api/socket/connect',
       transportOptions: {
         polling: {
@@ -17,6 +17,9 @@ export class WebsocketBoardService {
             Authorization: token
           }
         }
+      },
+      query: {
+        room: boardId
       },
       withCredentials: true
     });
@@ -27,14 +30,6 @@ export class WebsocketBoardService {
         this.socket.connect();
       }
     });
-
-    this.socket.on('board_to_client', (data) => {
-      console.log(data);
-    });
-  }
-
-  public test() {
-    this.socket.emit('board_to_server', "test");
   }
 
 }
