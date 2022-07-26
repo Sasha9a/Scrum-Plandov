@@ -52,9 +52,6 @@ const routes: Routes = [
       onSameUrlNavigation: 'ignore',
       scrollPositionRestoration: 'enabled',
       paramsInheritanceStrategy: 'always'
-    }),
-    SocketIoModule.forRoot({
-      url: 'http://localhost:3333/api'
     })
   ],
   providers: [
