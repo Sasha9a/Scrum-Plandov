@@ -1,11 +1,22 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { Server } from "socket.io";
 
-@WebSocketGateway()
+@WebSocketGateway(3333, {
+  path: '/api/socket/connect',
+  cors:
+  {
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+})
 export class BoardGateway {
 
-  @SubscribeMessage('board')
+  @WebSocketServer() public server: Server;
+
+  @SubscribeMessage('board_to_server')
   public test(@MessageBody() data: string) {
-    return data;
+    console.log(data);
+    this.server.emit('board_to_client', data);
   }
 
 }

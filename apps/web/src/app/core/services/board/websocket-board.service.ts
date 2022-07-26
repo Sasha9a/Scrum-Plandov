@@ -1,12 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Socket } from "ngx-socket-io";
+import { io, Socket } from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketBoardService {
 
-  public constructor(private readonly socket: Socket) {
+  public socket: Socket;
+
+  public createWSConnection(token: string) {
+    this.socket = io('ws://localhost:3333', {
+      path: '/api/socket/connect',
+      auth: {
+        token: token
+      },
+      withCredentials: true
+    });
+
+    this.socket.on('disconnect', (reason) => {
+      console.error('ws отключение', reason);
+      if (reason === 'io server disconnect') {
+        this.socket.connect();
+      }
+    });
   }
 
   public test() {
