@@ -1,8 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { BaseService } from "@scrum/api/core/services/base.service";
+import { RoleEnum } from "@scrum/shared/enums/role.enum";
 import { User } from "@scrum/shared/schemas/user.schema";
+import jwt from "jsonwebtoken";
 import { Model } from "mongoose";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -29,6 +32,11 @@ export class UserService extends BaseService<User> {
 
   public async logout(id: string): Promise<any> {
     return await this.userModel.updateOne({ _id: id }, { $unset: { token: '' } }).exec();
+  }
+
+  public async getUserByAuthorization(authorization: string): Promise<User> {
+    const decoded = jwt.verify(authorization, environment.secret) as { user: { _id: string, email: string, roles: RoleEnum[] } };
+    return await this.findByEmail(decoded.user.email);
   }
 
 }

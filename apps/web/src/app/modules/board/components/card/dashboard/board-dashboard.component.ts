@@ -17,6 +17,7 @@ import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
 import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'grace-board-dashboard',
@@ -49,6 +50,8 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
 
   public ref: DynamicDialogRef;
 
+  private updateBoardSubscription$: Subscription;
+
   public constructor(public readonly authService: AuthService,
                      private readonly websocketBoardDashboardService: WebsocketBoardDashboardService,
                      private readonly boardService: BoardService,
@@ -70,10 +73,17 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
+    this.websocketBoardDashboardService.createWSConnection(this.authService.getToken(), this.boardId);
+
+    this.updateBoardSubscription$ = this.websocketBoardDashboardService.updatedInfo$.subscribe((info) => {
+      console.log(info);
+    });
+
     this.loadBoard();
   }
 
   public ngOnDestroy() {
+    this.updateBoardSubscription$?.unsubscribe();
     this.websocketBoardDashboardService.socket?.disconnect();
   }
 
@@ -81,7 +91,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.cdRef.markForCheck();
 
-    this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
+    this.websocketBoardDashboardService.getBoard({ boardId: this.boardId }).subscribe((board) => {
       this.board = board;
       this.titleService.setTitle(`${this.board?.name}`);
       this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
@@ -92,7 +102,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       });
       this.loading = false;
       this.cdRef.markForCheck();
-      this.websocketBoardDashboardService.createWSConnection(this.authService.getToken(), this.boardId);
       this.load();
     });
   }
