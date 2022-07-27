@@ -37,13 +37,13 @@ export class BoardGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsGuard)
   public handleConnection(client: Socket) {
-    client.join(client.handshake.query.room);
+    client.join(client.handshake.query.boardId);
     this.clients.push(client);
   }
 
   public handleDisconnect(client: Socket) {
-    client.leave(client.handshake.query.room as string);
-    this.clients.slice(this.clients.indexOf(client), 1);
+    client.leave(client.handshake.query.boardId as string);
+    this.clients = this.clients.filter((cl) => cl.id !== client.id);
   }
 
   @UseGuards(WsGuard)

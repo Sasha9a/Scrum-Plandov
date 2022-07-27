@@ -17,6 +17,7 @@ import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
 import { FileService } from "@scrum/api/modules/file/file.service";
+import { SprintDashboardGateway } from "@scrum/api/modules/sprint/sprint-dashboard.gateway";
 import { TaskService } from "@scrum/api/modules/task/task.service";
 import { TaskFormDto } from "@scrum/shared/dtos/task/task.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
@@ -29,6 +30,7 @@ export class TaskController extends BaseController {
 
   public constructor(private readonly taskService: TaskService,
                      @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
+                     @Inject(forwardRef(() => SprintDashboardGateway)) private readonly sprintDashboardGateway: SprintDashboardGateway,
                      private readonly fileService: FileService) {
     super();
   }
@@ -133,6 +135,8 @@ export class TaskController extends BaseController {
 
     bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(id, bodyParams);
+    console.log(entity.sprint.id);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
     return res.status(HttpStatus.OK).json(entity).end();
   }
 

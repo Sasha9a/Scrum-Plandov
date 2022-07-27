@@ -6,6 +6,7 @@ import { BoardService } from "@scrum/web/core/services/board/board.service";
 import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
 import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
 import { ErrorService } from "@scrum/web/core/services/error.service";
+import { WebsocketSprintService } from "@scrum/web/core/services/sprint/websocket-sprint.service";
 import { TitleService } from "@scrum/web/core/services/title.service";
 import { AuthService } from "@scrum/web/core/services/user/auth.service";
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
@@ -51,9 +52,11 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public ref: DynamicDialogRef;
 
   private updateBoardSubscription$: Subscription;
+  private updateSprintSubscription$: Subscription;
 
   public constructor(public readonly authService: AuthService,
                      private readonly websocketBoardService: WebsocketBoardService,
+                     private readonly websocketSprintService: WebsocketSprintService,
                      private readonly boardService: BoardService,
                      private readonly taskService: TaskService,
                      private readonly sprintService: SprintService,
@@ -85,6 +88,8 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this.updateBoardSubscription$?.unsubscribe();
     this.websocketBoardService.socket?.disconnect();
+    this.updateSprintSubscription$?.unsubscribe();
+    this.websocketSprintService.socket?.disconnect();
   }
 
   public loadBoard() {
@@ -119,9 +124,15 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
 
     if (this.activeSprint !== sprint) {
+      this.updateSprintSubscription$?.unsubscribe();
+      this.websocketSprintService.socket?.disconnect();
       this.activeSprint = sprint;
+      this.websocketSprintService.createWSConnection(this.authService.getToken(), this.activeSprint?._id);
+      this.updateSprintSubscription$ = this.websocketSprintService.updatedSprintDashboardInfo$.subscribe(() => {
+        this.loadBoard();
+      });
     }
-    this.sprintService.findByIdAllTasks(this.activeSprint?._id).subscribe((tasks) => {
+    this.websocketSprintService.findByIdAllTasks({ sprintId: this.activeSprint?._id }).subscribe((tasks) => {
       this.tasks = tasks;
       this.endDate = moment(this.activeSprint.endDate).diff(moment().subtract(1, 'day'), 'days');
       this.updateInfoColumns();

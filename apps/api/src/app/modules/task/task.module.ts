@@ -2,6 +2,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { BoardModule } from "@scrum/api/modules/board/board.module";
 import { FileModule } from "@scrum/api/modules/file/file.module";
+import { SprintModule } from "@scrum/api/modules/sprint/sprint.module";
 import { TaskController } from "@scrum/api/modules/task/task.controller";
 import { TaskService } from "@scrum/api/modules/task/task.service";
 import { TaskSchema } from "@scrum/shared/schemas/task.schema";
@@ -10,6 +11,7 @@ import { TaskSchema } from "@scrum/shared/schemas/task.schema";
   imports: [
     MongooseModule.forFeature([{ name: "Task", schema: TaskSchema }]),
     forwardRef(() => BoardModule),
+    forwardRef(() => SprintModule),
     FileModule
   ],
   controllers: [TaskController],
