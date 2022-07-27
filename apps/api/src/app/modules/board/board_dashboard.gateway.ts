@@ -29,6 +29,8 @@ export class BoardDashboardGateway implements OnGatewayConnection, OnGatewayDisc
 
   @WebSocketServer() public server: Server;
 
+  private clients: Socket[] = [];
+
   public constructor(private readonly userService: UserService,
                      private readonly boardService: BoardService) {
   }
@@ -36,10 +38,12 @@ export class BoardDashboardGateway implements OnGatewayConnection, OnGatewayDisc
   @UseGuards(WsGuard)
   public handleConnection(client: Socket) {
     client.join(client.handshake.query.room);
+    this.clients.push(client);
   }
 
   public handleDisconnect(client: Socket) {
     client.leave(client.handshake.query.room as string);
+    this.clients.slice(this.clients.indexOf(client), 1);
   }
 
   @UseGuards(WsGuard)
@@ -56,6 +60,12 @@ export class BoardDashboardGateway implements OnGatewayConnection, OnGatewayDisc
       throw new WsException("Нет доступа!");
     }
     return { success: true, error: '', result: entity };
+  }
+
+  public sendUpdatedBoard(boardId: string) {
+    this.clients.forEach((c) => {
+      c.to(boardId).emit('updatedBoard');
+    });
   }
 
 }

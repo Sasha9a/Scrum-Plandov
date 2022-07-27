@@ -11,7 +11,7 @@ export class WebsocketBoardDashboardService {
 
   public socket: Socket;
 
-  public updatedInfo$: Subject<any> = new Subject();
+  public updatedBoardInfo$: Subject<BoardDto> = new Subject();
 
   public createWSConnection(token: string, boardId: string) {
     this.socket = io('/board_dashboard', {
@@ -36,9 +36,9 @@ export class WebsocketBoardDashboardService {
       }
     });
 
-    this.socket.on('updatedBoardInfo', (info) => {
-      this.updatedInfo$.next(info);
-      console.log(info);
+    this.socket.on('updatedBoard', () => {
+      console.log('updatedBoard');
+      this.updatedBoardInfo$.next(null);
     });
   }
 

@@ -16,6 +16,7 @@ import {
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
+import { BoardDashboardGateway } from "@scrum/api/modules/board/board_dashboard.gateway";
 import { ColumnBoardService } from "@scrum/api/modules/column-board/column-board.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
@@ -37,7 +38,8 @@ export class BoardController extends BaseController {
                      @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
                      @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
                      @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService,
-                     private readonly fileService: FileService) {
+                     private readonly fileService: FileService,
+                     private readonly boardDashboardGateway: BoardDashboardGateway) {
     super();
   }
 
@@ -186,6 +188,7 @@ export class BoardController extends BaseController {
     }
 
     const entity = await this.boardService.update<BoardFormDto>(id, bodyParams);
+    this.boardDashboardGateway.sendUpdatedBoard(id);
     return res.status(HttpStatus.OK).json(entity).end();
   }
 
@@ -234,6 +237,7 @@ export class BoardController extends BaseController {
     }
 
     await this.boardService.delete(id);
+    this.boardDashboardGateway.sendUpdatedBoard(id);
     return res.status(HttpStatus.OK).end();
   }
 

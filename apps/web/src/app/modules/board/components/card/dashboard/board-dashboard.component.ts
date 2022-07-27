@@ -75,8 +75,8 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
 
     this.websocketBoardDashboardService.createWSConnection(this.authService.getToken(), this.boardId);
 
-    this.updateBoardSubscription$ = this.websocketBoardDashboardService.updatedInfo$.subscribe((info) => {
-      console.log(info);
+    this.updateBoardSubscription$ = this.websocketBoardDashboardService.updatedBoardInfo$.subscribe(() => {
+      this.loadBoard();
     });
 
     this.loadBoard();
