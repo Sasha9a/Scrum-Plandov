@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
-import { WebsocketBoardDashboardService } from "@scrum/web/core/services/board/websocket-board-dashboard.service";
+import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
 import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { TitleService } from "@scrum/web/core/services/title.service";
@@ -53,7 +53,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   private updateBoardSubscription$: Subscription;
 
   public constructor(public readonly authService: AuthService,
-                     private readonly websocketBoardDashboardService: WebsocketBoardDashboardService,
+                     private readonly websocketBoardService: WebsocketBoardService,
                      private readonly boardService: BoardService,
                      private readonly taskService: TaskService,
                      private readonly sprintService: SprintService,
@@ -73,9 +73,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.websocketBoardDashboardService.createWSConnection(this.authService.getToken(), this.boardId);
+    this.websocketBoardService.createWSConnection(this.authService.getToken(), this.boardId);
 
-    this.updateBoardSubscription$ = this.websocketBoardDashboardService.updatedBoardInfo$.subscribe(() => {
+    this.updateBoardSubscription$ = this.websocketBoardService.updatedBoardInfo$.subscribe(() => {
       this.loadBoard();
     });
 
@@ -84,14 +84,14 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.updateBoardSubscription$?.unsubscribe();
-    this.websocketBoardDashboardService.socket?.disconnect();
+    this.websocketBoardService.socket?.disconnect();
   }
 
   public loadBoard() {
     this.loading = true;
     this.cdRef.markForCheck();
 
-    this.websocketBoardDashboardService.getBoard({ boardId: this.boardId }).subscribe((board) => {
+    this.websocketBoardService.getBoard({ boardId: this.boardId }).subscribe((board) => {
       this.board = board;
       this.titleService.setTitle(`${this.board?.name}`);
       this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {

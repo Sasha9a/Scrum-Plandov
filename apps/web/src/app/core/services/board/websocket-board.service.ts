@@ -7,14 +7,14 @@ import { io, Socket } from 'socket.io-client';
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketBoardDashboardService {
+export class WebsocketBoardService {
 
   public socket: Socket;
 
   public updatedBoardInfo$: Subject<BoardDto> = new Subject();
 
   public createWSConnection(token: string, boardId: string) {
-    this.socket = io('/board_dashboard', {
+    this.socket = io('/board', {
       path: '/api/socket/connect',
       transportOptions: {
         polling: {

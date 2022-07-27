@@ -17,7 +17,7 @@ import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.resul
 import { Server, Socket } from "socket.io";
 
 @WebSocketGateway({
-  namespace: 'board_dashboard',
+  namespace: 'board',
   path: '/api/socket/connect',
   cors:
   {
@@ -25,7 +25,7 @@ import { Server, Socket } from "socket.io";
     credentials: true
   }
 })
-export class BoardDashboardGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class BoardGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() public server: Server;
 
