@@ -160,26 +160,31 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   }
 
   public compiledSprint() {
-    this.loading = true;
-    this.cdRef.markForCheck();
+    this.confirmService.confirm({
+      message: `Вы действительно хотите завершить спринт "${this.activeSprint?.name}"?`,
+      accept: () => {
+        this.loading = true;
+        this.cdRef.markForCheck();
 
-    this.sprintService.completedSprint(this.activeSprint?._id).subscribe({
-      next: () => {
-        this.loading = false;
-        this.board.activeSprints = this.board.activeSprints.filter((sprint) => sprint._id !== this.activeSprint?._id);
-        this.errorService.addSuccessMessage(`Вы успешно завершили спринт "${this.activeSprint?.name}"`);
-        if (this.board.activeSprints?.length) {
-          this.loadSprint(this.board?.activeSprints[0]);
-        } else {
-          this.activeSprint = null;
-          this.tasks = null;
-          this.updateInfoColumns();
-        }
-        this.cdRef.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.cdRef.markForCheck();
+        this.sprintService.completedSprint(this.activeSprint?._id).subscribe({
+          next: () => {
+            this.loading = false;
+            this.board.activeSprints = this.board.activeSprints.filter((sprint) => sprint._id !== this.activeSprint?._id);
+            this.errorService.addSuccessMessage(`Вы успешно завершили спринт "${this.activeSprint?.name}"`);
+            if (this.board.activeSprints?.length) {
+              this.loadSprint(this.board?.activeSprints[0]);
+            } else {
+              this.activeSprint = null;
+              this.tasks = null;
+              this.updateInfoColumns();
+            }
+            this.cdRef.markForCheck();
+          },
+          error: () => {
+            this.loading = false;
+            this.cdRef.markForCheck();
+          }
+        });
       }
     });
   }

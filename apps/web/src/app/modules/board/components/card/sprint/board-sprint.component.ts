@@ -14,6 +14,7 @@ import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-
 import { WebsocketSprintService } from "@scrum/web/core/services/sprint/websocket-sprint.service";
 import { Subscription } from "rxjs";
 import { AuthService } from "@scrum/web/core/services/user/auth.service";
+import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
 
 @Component({
   selector: 'grace-board-sprint',
@@ -46,7 +47,8 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
                      private readonly dialogService: DialogService,
                      private readonly route: ActivatedRoute,
                      private readonly errorService: ErrorService,
-                     private readonly titleService: TitleService) {}
+                     private readonly titleService: TitleService,
+                     private readonly confirmService: ConfirmDialogService) {}
 
   public ngOnInit(): void {
     this.boardId = this.route.snapshot.params.id;
@@ -114,19 +116,24 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
   }
 
   public startSprint(sprint: SprintTasksInfoDto) {
-    this.loading = true;
-    this.cdRef.markForCheck();
+    this.confirmService.confirm({
+      message: `Вы действительно хотите запустить спринт "${sprint?.sprint?.name}"?`,
+      accept: () => {
+        this.loading = true;
+        this.cdRef.markForCheck();
 
-    this.sprintService.startSprint(sprint.sprint?._id).subscribe({
-      next: () => {
-        this.loading = false;
-        this.board.activeSprints.push(sprint.sprint);
-        this.errorService.addSuccessMessage('Спринт запущен');
-        this.cdRef.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.cdRef.markForCheck();
+        this.sprintService.startSprint(sprint.sprint?._id).subscribe({
+          next: () => {
+            this.loading = false;
+            this.board.activeSprints.push(sprint.sprint);
+            this.errorService.addSuccessMessage('Спринт запущен');
+            this.cdRef.markForCheck();
+          },
+          error: () => {
+            this.loading = false;
+            this.cdRef.markForCheck();
+          }
+        });
       }
     });
   }
