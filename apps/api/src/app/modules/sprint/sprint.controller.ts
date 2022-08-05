@@ -24,13 +24,17 @@ import { SprintWorkUserInfoDto } from "@scrum/shared/dtos/sprint/sprint.work.use
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
+import { SprintGateway } from "@scrum/api/modules/sprint/sprint.gateway";
+import { SprintDashboardGateway } from "@scrum/api/modules/sprint/sprint-dashboard.gateway";
 
 @Controller('sprint')
 export class SprintController extends BaseController {
 
   public constructor(private readonly sprintService: SprintService,
                      @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
-                     private readonly taskService: TaskService) {
+                     private readonly taskService: TaskService,
+                     private readonly sprintGateway: SprintGateway,
+                     private readonly sprintDashboardGateway: SprintDashboardGateway) {
     super();
   }
 
@@ -231,6 +235,8 @@ export class SprintController extends BaseController {
     }
 
     const entity = await this.sprintService.create<SprintFormDto>(bodyParams);
+    this.sprintGateway.sendUpdated(entity.board?.id);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity?.id);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }
 
@@ -253,6 +259,8 @@ export class SprintController extends BaseController {
     if (!entity) {
       throw new NotFoundException("Произошла ошибка!");
     }
+    this.sprintGateway.sendUpdated(entity.board?.id);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity?.id);
     return res.status(HttpStatus.OK).json(entity).end();
   }
 
@@ -276,7 +284,9 @@ export class SprintController extends BaseController {
       await task.save();
     }
 
-    await this.sprintService.delete(id);
+    const entity = await this.sprintService.delete(id);
+    this.sprintGateway.sendUpdated(entity.board?.id);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity?.id);
     return res.status(HttpStatus.OK).end();
   }
 

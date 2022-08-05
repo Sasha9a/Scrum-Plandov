@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
-import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.result.dto";
-import { Observable, Subject } from "rxjs";
 import { io, Socket } from "socket.io-client";
+import { Observable, Subject } from "rxjs";
+import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.result.dto";
+import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,11 @@ export class WebsocketSprintService {
 
   public socket: Socket;
 
-  public updatedSprintDashboardInfo$: Subject<TaskDto[]> = new Subject();
+  public updated$: Subject<SprintTasksInfoDto[]> = new Subject();
 
-  public createWSConnection(token: string, sprintId: string) {
-    this.socket = io('/sprint_dashboard', {
-      path: '/api/socket/sprint_dashboard',
+  public createWSConnection(token: string, boardId: string) {
+    this.socket = io('/sprint', {
+      path: '/api/socket/sprint',
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -24,7 +24,7 @@ export class WebsocketSprintService {
         }
       },
       query: {
-        sprintId: sprintId
+        boardId: boardId
       },
       withCredentials: true
     });
@@ -44,14 +44,14 @@ export class WebsocketSprintService {
       }
     });
 
-    this.socket.on('updatedSprint', () => {
-      console.log('updatedSprint');
-      this.updatedSprintDashboardInfo$.next(null);
+    this.socket.on('updated', () => {
+      console.log('updated');
+      this.updated$.next(null);
     });
   }
 
-  public findByIdAllTasks(payload: { sprintId: string }): Observable<TaskDto[]> {
-    return this.emitAsObservable('findByIdAllTasks', payload);
+  public findAllByBoard(payload: { boardId: string }): Observable<SprintTasksInfoDto[]> {
+    return this.emitAsObservable('findAllByBoard', payload);
   }
 
   private emitAsObservable<T>(event: string, payload: any): Observable<T> {

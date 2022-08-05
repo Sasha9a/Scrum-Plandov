@@ -24,6 +24,7 @@ import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { Request, Response } from "express";
 import fs from "fs";
 import moment from "moment-timezone";
+import { SprintGateway } from "@scrum/api/modules/sprint/sprint.gateway";
 
 @Controller('task')
 export class TaskController extends BaseController {
@@ -31,6 +32,7 @@ export class TaskController extends BaseController {
   public constructor(private readonly taskService: TaskService,
                      @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
                      @Inject(forwardRef(() => SprintDashboardGateway)) private readonly sprintDashboardGateway: SprintDashboardGateway,
+                     @Inject(forwardRef(() => SprintGateway)) private readonly sprintGateway: SprintGateway,
                      private readonly fileService: FileService) {
     super();
   }
@@ -98,6 +100,8 @@ export class TaskController extends BaseController {
       bodyParams.left = bodyParams.grade;
     }
     const entity = await this.taskService.create<TaskFormDto>(bodyParams);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
+    this.sprintGateway.sendUpdated(entity.board?.id);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }
 
@@ -135,8 +139,8 @@ export class TaskController extends BaseController {
 
     bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(id, bodyParams);
-    console.log(entity.sprint.id);
     this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
+    this.sprintGateway.sendUpdated(entity.board?.id);
     return res.status(HttpStatus.OK).json(entity).end();
   }
 
@@ -161,7 +165,9 @@ export class TaskController extends BaseController {
       }
     }
 
-    await this.taskService.delete(id);
+    const entity = await this.taskService.delete(id);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
+    this.sprintGateway.sendUpdated(entity.board?.id);
     return res.status(HttpStatus.OK).end();
   }
 

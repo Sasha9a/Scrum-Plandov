@@ -18,13 +18,17 @@ import { JobRecordFormDto } from "@scrum/shared/dtos/job-record/job.record.form.
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { TaskService } from "@scrum/api/modules/task/task.service";
 import { BoardService } from "@scrum/api/modules/board/board.service";
+import { SprintDashboardGateway } from "@scrum/api/modules/sprint/sprint-dashboard.gateway";
+import { SprintGateway } from "@scrum/api/modules/sprint/sprint.gateway";
 
 @Controller('job-record')
 export class JobRecordController extends BaseController {
 
   public constructor(private readonly jobRecordService: JobRecordService,
                      private readonly taskService: TaskService,
-                     @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService) {
+                     @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
+                     private readonly sprintDashboardGateway: SprintDashboardGateway,
+                     private readonly sprintGateway: SprintGateway) {
     super();
   }
 
@@ -59,6 +63,8 @@ export class JobRecordController extends BaseController {
 
     bodyParams.user = user;
     const entity = await this.jobRecordService.create<JobRecordFormDto>(bodyParams);
+    this.sprintDashboardGateway.sendUpdatedSprint(entity.task.sprint?.id);
+    this.sprintGateway.sendUpdated(entity.task.board?.id);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }
 

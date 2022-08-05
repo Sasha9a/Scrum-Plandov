@@ -10,6 +10,10 @@ import { TitleService } from "@scrum/web/core/services/title.service";
 import { SprintWorkUsersInfoComponent } from "@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.component";
 import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
+import { WebsocketSprintService } from "@scrum/web/core/services/sprint/websocket-sprint.service";
+import { Subscription } from "rxjs";
+import { AuthService } from "@scrum/web/core/services/user/auth.service";
 
 @Component({
   selector: 'grace-board-sprint',
@@ -30,7 +34,13 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
 
   public activeTask: TaskDto;
 
+  private updateBoardSubscription$: Subscription;
+  private updateSubscription$: Subscription;
+
   public constructor(private readonly sprintService: SprintService,
+                     private readonly authService: AuthService,
+                     private readonly websocketBoardService: WebsocketBoardService,
+                     private readonly websocketSprintService: WebsocketSprintService,
                      private readonly boardService: BoardService,
                      private readonly cdRef: ChangeDetectorRef,
                      private readonly dialogService: DialogService,
@@ -45,10 +55,24 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
+    this.websocketBoardService.createWSConnection(this.authService.getToken(), this.boardId);
+    this.websocketSprintService.createWSConnection(this.authService.getToken(), this.boardId);
+
+    this.updateBoardSubscription$ = this.websocketBoardService.updatedBoardInfo$.subscribe(() => {
+      this.loadBoard();
+    });
+    this.updateSubscription$ = this.websocketSprintService.updated$.subscribe(() => {
+      this.load();
+    });
+
     this.loadBoard();
   }
 
   public ngOnDestroy() {
+    this.updateBoardSubscription$?.unsubscribe();
+    this.websocketBoardService.socket?.disconnect();
+    this.updateSubscription$?.unsubscribe();
+    this.websocketSprintService.socket?.disconnect();
     if (this.ref) {
       this.ref.close();
     }
@@ -58,7 +82,7 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.cdRef.markForCheck();
 
-    this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
+    this.websocketBoardService.getBoard({ boardId: this.boardId }).subscribe((board) => {
       this.board = board;
       this.titleService.setTitle(`${this.board?.name}`);
       this.loading = false;
@@ -71,7 +95,7 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.cdRef.markForCheck();
 
-    this.sprintService.findAllByBoard(this.board?._id).subscribe((sprints) => {
+    this.websocketSprintService.findAllByBoard({ boardId: this.boardId }).subscribe((sprints) => {
       this.sprints = sprints;
       this.loading = false;
       this.cdRef.markForCheck();
