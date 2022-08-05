@@ -38,10 +38,12 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   public handleConnection(@ConnectedSocket() client: Socket) {
     client.join(client.handshake.query.boardId);
+    client.send('Ok');
   }
 
   public handleDisconnect(@ConnectedSocket() client: Socket) {
     client.leave(client.handshake.query.boardId as string);
+    client.send('Ok');
   }
 
   @UseGuards(WsGuard)
