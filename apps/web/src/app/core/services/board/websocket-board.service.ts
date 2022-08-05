@@ -15,7 +15,7 @@ export class WebsocketBoardService {
 
   public createWSConnection(token: string, boardId: string) {
     this.socket = io('/board', {
-      path: '/api/socket/connect',
+      path: '/api/socket/board',
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -26,8 +26,15 @@ export class WebsocketBoardService {
       query: {
         boardId: boardId
       },
-      withCredentials: true,
-      forceNew: true
+      withCredentials: true
+    });
+
+    this.socket.on('connect', () => {
+      console.log('Connect');
+    });
+
+    this.socket.on('connect_error', (err) => {
+      console.log(err);
     });
 
     this.socket.on('disconnect', (reason) => {

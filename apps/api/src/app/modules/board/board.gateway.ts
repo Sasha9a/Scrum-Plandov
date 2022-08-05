@@ -18,7 +18,7 @@ import { Server, Socket } from "socket.io";
 
 @WebSocketGateway({
   namespace: 'board',
-  path: '/api/socket/connect',
+  path: '/api/socket/board',
   cors:
   {
     methods: ['GET', 'POST'],
@@ -29,21 +29,17 @@ export class BoardGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() public server: Server;
 
-  private clients: Socket[] = [];
-
   public constructor(private readonly userService: UserService,
                      private readonly boardService: BoardService) {
   }
 
   @UseGuards(WsGuard)
-  public handleConnection(client: Socket) {
+  public handleConnection(@ConnectedSocket() client: Socket) {
     client.join(client.handshake.query.boardId);
-    this.clients.push(client);
   }
 
-  public handleDisconnect(client: Socket) {
+  public handleDisconnect(@ConnectedSocket() client: Socket) {
     client.leave(client.handshake.query.boardId as string);
-    this.clients = this.clients.filter((cl) => cl.id !== client.id);
   }
 
   @UseGuards(WsGuard)
@@ -63,9 +59,7 @@ export class BoardGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public sendUpdatedBoard(boardId: string) {
-    this.clients.forEach((c) => {
-      c.to(boardId).emit('updatedBoard');
-    });
+    this.server.in(boardId).emit('updatedBoard');
   }
 
 }

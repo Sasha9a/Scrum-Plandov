@@ -15,7 +15,7 @@ export class WebsocketSprintService {
 
   public createWSConnection(token: string, sprintId: string) {
     this.socket = io('/sprint_dashboard', {
-      path: '/api/socket/connect',
+      path: '/api/socket/sprint_dashboard',
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -26,8 +26,15 @@ export class WebsocketSprintService {
       query: {
         sprintId: sprintId
       },
-      withCredentials: true,
-      forceNew: true
+      withCredentials: true
+    });
+
+    this.socket.on('connect', () => {
+      console.log('Connect');
+    });
+
+    this.socket.on('connect_error', (err) => {
+      console.log(err);
     });
 
     this.socket.on('disconnect', (reason) => {

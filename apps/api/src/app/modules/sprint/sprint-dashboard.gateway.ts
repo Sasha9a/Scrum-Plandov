@@ -19,7 +19,7 @@ import { Server, Socket } from "socket.io";
 
 @WebSocketGateway({
   namespace: 'sprint_dashboard',
-  path: '/api/socket/connect',
+  path: '/api/socket/sprint_dashboard',
   cors:
     {
       methods: ['GET', 'POST'],
@@ -30,8 +30,6 @@ export class SprintDashboardGateway implements OnGatewayConnection, OnGatewayDis
 
   @WebSocketServer() public server: Server;
 
-  private clients: Socket[] = [];
-
   public constructor(private readonly userService: UserService,
                      private readonly sprintService: SprintService,
                      private readonly boardService: BoardService,
@@ -39,15 +37,12 @@ export class SprintDashboardGateway implements OnGatewayConnection, OnGatewayDis
   }
 
   @UseGuards(WsGuard)
-  public handleConnection(client: Socket) {
-    console.log(client.handshake.query);
+  public handleConnection(@ConnectedSocket() client: Socket) {
     client.join(client.handshake.query.sprintId);
-    this.clients.push(client);
   }
 
-  public handleDisconnect(client: Socket) {
+  public handleDisconnect(@ConnectedSocket() client: Socket) {
     client.leave(client.handshake.query.sprintId as string);
-    this.clients = this.clients.filter((cl) => cl.id !== client.id);
   }
 
   @UseGuards(WsGuard)
@@ -74,10 +69,7 @@ export class SprintDashboardGateway implements OnGatewayConnection, OnGatewayDis
   }
 
   public sendUpdatedSprint(sprintId: string) {
-    console.log(this.clients.length);
-    this.clients.forEach((c) => {
-      c.to(sprintId).emit('updatedSprint');
-    });
+    this.server.in(sprintId).emit('updatedSprint');
   }
 
 }
