@@ -111,34 +111,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
         };
       });
 
-      this.buttonItems = [
-        {
-          label: 'Завершить спринт',
-          icon: 'pi pi-check',
-          visible: !!this.activeSprint,
-          command: () => {
-            this.compiledSprint();
-          }
-        },
-        {
-          label: 'Редактировать',
-          icon: 'pi pi-pencil',
-          visible: this.authService.currentUser?._id === this.board?.createdUser?._id,
-          routerLink: `/board/edit/${this.boardId}`
-        },
-        {
-          separator: true,
-          visible: this.authService.currentUser?._id === this.board?.createdUser?._id || !!this.activeSprint
-        },
-        {
-          label: 'Покинуть',
-          icon: 'pi pi-times',
-          command: () => {
-            this.showDialogLeave();
-          }
-        }
-      ];
-
       this.loading = false;
       this.cdRef.markForCheck();
       this.load();
@@ -151,6 +123,36 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.updateInfoColumns();
     }
+
+    this.buttonItems = [
+      {
+        label: 'Завершить спринт',
+        icon: 'pi pi-check',
+        visible: !!this.activeSprint,
+        iconStyle: { color: 'green' },
+        command: () => {
+          this.compiledSprint();
+        }
+      },
+      {
+        label: 'Редактировать',
+        icon: 'pi pi-pencil',
+        visible: this.authService.currentUser?._id === this.board?.createdUser?._id,
+        routerLink: `/board/edit/${this.boardId}`
+      },
+      {
+        separator: true,
+        visible: this.authService.currentUser?._id === this.board?.createdUser?._id || !!this.activeSprint
+      },
+      {
+        label: 'Покинуть',
+        icon: 'pi pi-times',
+        iconStyle: { color: 'red' },
+        command: () => {
+          this.showDialogLeave();
+        }
+      }
+    ];
   }
 
   public loadSprint(sprint: SprintDto) {

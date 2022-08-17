@@ -1,8 +1,8 @@
 <div *ngIf="!loading">
-  <div class="flex justify-content-between align-items-center mt-3">
-    <div>
+  <div class="flex justify-content-between align-items-center flex-wrap mt-3">
+    <div class="mb-2">
       <p class="text-gray-500 text-base">{{ board?.name }}</p>
-      <div *ngIf="activeSprint" class="flex align-items-center gap-2">
+      <div *ngIf="activeSprint" class="flex align-items-center gap-2 mt-1">
         <h1 class="my-0">{{ activeSprint.name }}</h1>
         <p-inplace #inplace *ngIf="board?.activeSprints?.length > 1">
           <ng-template pTemplate="display">
@@ -33,32 +33,6 @@
                      [model]="buttonItems"
                      styleClass="p-button-outlined">
       </p-splitButton>
-<!--      <button pButton type="button"-->
-<!--              icon="pi pi-plus"-->
-<!--              label="Создать задачу"-->
-<!--              class="p-button-text mr-1"-->
-<!--              (click)="createTask()">-->
-<!--      </button>-->
-<!--      <button pButton *ngIf="activeSprint"-->
-<!--              type="button"-->
-<!--              icon="pi pi-check"-->
-<!--              label="Завершить спринт"-->
-<!--              class="p-button-success p-button-text mr-1"-->
-<!--              (click)="compiledSprint()">-->
-<!--      </button>-->
-<!--      <button pButton *ngIf="authService.currentUser?._id === board?.createdUser?._id"-->
-<!--              type="button"-->
-<!--              icon="pi pi-pencil"-->
-<!--              label="Редактировать"-->
-<!--              class="p-button-secondary p-button-text mr-1"-->
-<!--              routerLink="/board/edit/{{ board?._id }}">-->
-<!--      </button>-->
-<!--      <button pButton type="button"-->
-<!--              icon="pi pi-times"-->
-<!--              label="Покинуть"-->
-<!--              class="p-button-danger p-button-text"-->
-<!--              (click)="overlayPanelKick.toggle($event)">-->
-<!--      </button>-->
     </div>
   </div>
 
