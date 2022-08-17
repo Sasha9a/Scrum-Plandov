@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
 import { BoardService } from "@scrum/web/core/services/board/board.service";
 import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
 import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
@@ -12,11 +11,13 @@ import { AuthService } from "@scrum/web/core/services/user/auth.service";
 import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
 import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
+import { BoardLeaveDialogComponent } from "@scrum/web/modules/board/dumbs/board-leave-dialog/board-leave-dialog.component";
 import { TaskFilterPipe } from "@scrum/web/shared/pipes/task-filter/task-filter.pipe";
 import moment from "moment-timezone";
 import { TaskService } from "@scrum/web/core/services/task/task.service";
 import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
 import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
+import { MenuItem } from "primeng/api";
 import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { Subscription } from "rxjs";
 
@@ -33,9 +34,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public board: BoardDto;
   public loading = false;
 
-  public userSelect: UserDto;
-  public loadingLeave = false;
-
   public activeSprint: SprintDto;
   public tasks: TaskDto[];
 
@@ -45,6 +43,8 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public selectedFilterItems: string[] = [];
 
   public columnsInfo: Record<string, string> = {};
+
+  public buttonItems: MenuItem[];
 
   public activeTask: TaskDto;
   public draggedTask: TaskDto;
@@ -110,6 +110,35 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
           value: user?._id
         };
       });
+
+      this.buttonItems = [
+        {
+          label: 'Завершить спринт',
+          icon: 'pi pi-check',
+          visible: !!this.activeSprint,
+          command: () => {
+            this.compiledSprint();
+          }
+        },
+        {
+          label: 'Редактировать',
+          icon: 'pi pi-pencil',
+          visible: this.authService.currentUser?._id === this.board?.createdUser?._id,
+          routerLink: `/board/edit/${this.boardId}`
+        },
+        {
+          separator: true,
+          visible: this.authService.currentUser?._id === this.board?.createdUser?._id || !!this.activeSprint
+        },
+        {
+          label: 'Покинуть',
+          icon: 'pi pi-times',
+          command: () => {
+            this.showDialogLeave();
+          }
+        }
+      ];
+
       this.loading = false;
       this.cdRef.markForCheck();
       this.load();
@@ -143,24 +172,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       this.updateInfoColumns();
       this.loading = false;
       this.cdRef.markForCheck();
-    });
-  }
-
-  public leaveBoard() {
-    this.loadingLeave = true;
-    this.cdRef.markForCheck();
-
-    this.boardService.leave(this.board._id, { user: this.userSelect }).subscribe({
-      next: () => {
-        this.loadingLeave = false;
-        this.cdRef.markForCheck();
-        this.errorService.addSuccessMessage(`Вы успешно покинули доску "${this.board?.name}"`);
-        this.router.navigate(['/board']).catch(console.error);
-      },
-      error: () => {
-        this.loadingLeave = false;
-        this.cdRef.markForCheck();
-      }
     });
   }
 
@@ -257,6 +268,18 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public selectedFilters() {
     localStorage.setItem(`board.filters.${this.board?._id}`, JSON.stringify(this.selectedFilterItems));
     this.updateInfoColumns();
+  }
+
+  public showDialogLeave() {
+    this.ref = this.dialogService.open(BoardLeaveDialogComponent, {
+      header: `Исключение`,
+      contentStyle: { 'overflow': 'auto' },
+      styleClass: 'xl:w-4 lg:w-6 md:w-8 sm:w-10 w-full',
+      baseZIndex: 99999,
+      data: {
+        board: this.board
+      }
+    });
   }
 
 }

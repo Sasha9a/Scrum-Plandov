@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "@scrum/web/core/guards/auth.guard";
+import { BoardLeaveDialogModule } from "@scrum/web/modules/board/dumbs/board-leave-dialog/board-leave-dialog.module";
 import { SingleSelectModule } from "@scrum/web/shared/dumbs/dropdowns/single-select/single-select.module";
 import { SpinnerModule } from "@scrum/web/shared/dumbs/spinner/spinner.module";
 import { OrderByPipeModule } from "@scrum/web/shared/pipes/order-by/order-by-pipe.module";
@@ -10,7 +11,7 @@ import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DragDropModule } from "primeng/dragdrop";
 import { DialogService } from "primeng/dynamicdialog";
-import { OverlayPanelModule } from "primeng/overlaypanel";
+import { SplitButtonModule } from "primeng/splitbutton";
 import { BoardDashboardComponent } from './board-dashboard.component';
 import { TaskOrderByPipeModule } from "@scrum/web/shared/pipes/task-order-by/task-order-by-pipe.module";
 import {
@@ -38,30 +39,31 @@ const routes: Routes = [
 @NgModule({
   declarations: [BoardDashboardComponent],
   exports: [BoardDashboardComponent],
-	imports: [
-		CommonModule,
-		ButtonModule,
-		RouterModule.forChild(routes),
-		OrderByPipeModule,
-		CardModule,
-		DragDropModule,
-		SpinnerModule,
-		OverlayPanelModule,
-		SingleSelectModule,
-		TaskOrderByPipeModule,
-		TaskPriorityColorPipeModule,
-		UserAvatarModule,
-		TaskPriorityNamePipeModule,
-		ChipModule,
-		InplaceModule,
-		TooltipModule,
-		SelectButtonModule,
-		FormsModule,
-		TaskFilterPipeModule,
-		TaskShortInfoModule,
-		TaskAddModule,
-		TimeFromNowPipeModule
-	],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    RouterModule.forChild(routes),
+    OrderByPipeModule,
+    CardModule,
+    DragDropModule,
+    SpinnerModule,
+    SingleSelectModule,
+    TaskOrderByPipeModule,
+    TaskPriorityColorPipeModule,
+    UserAvatarModule,
+    TaskPriorityNamePipeModule,
+    ChipModule,
+    InplaceModule,
+    TooltipModule,
+    SelectButtonModule,
+    FormsModule,
+    TaskFilterPipeModule,
+    TaskShortInfoModule,
+    TaskAddModule,
+    TimeFromNowPipeModule,
+    SplitButtonModule,
+    BoardLeaveDialogModule
+  ],
   providers: [DialogService]
 })
 export class BoardDashboardModule {}

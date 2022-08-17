@@ -44,6 +44,7 @@ export class SingleSelectComponent implements OnInit, OnChanges {
   @Input() public showClear = false;
   @Input() public sort = this.optionLabel;
   @Input() public styleClass: any;
+  @Input() public appendTo: any;
   @Output() public changeValue = new EventEmitter<any>();
   @Output() public selectedItemChange = new EventEmitter<any>();
   @ViewChild('select') public dropdown: Dropdown;

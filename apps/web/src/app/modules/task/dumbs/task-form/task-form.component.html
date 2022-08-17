@@ -17,7 +17,7 @@
                          [(selectedItem)]="task.executor"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.executor }"
                          [showClear]="true"
-                         scrollHeight="150px"
+                         appendTo="body"
                          optionLabel="login"
                          filterBy="login">
     </grace-single-select>
@@ -29,7 +29,7 @@
     <grace-single-select [options]="sprints"
                          [(selectedItem)]="task.sprint"
                          [showClear]="true"
-                         scrollHeight="150px"
+                         appendTo="body"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.sprint }">
     </grace-single-select>
     <p *ngIf="errors?.sprint" class="p-error">{{ errors.sprint | join }}</p>
@@ -41,7 +41,7 @@
                          [(selectedItem)]="task.priority"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.priority }"
                          [isTemplateCombined]="true"
-                         scrollHeight="150px"
+                         appendTo="body"
                          [filter]="false"
                          dataKey="name">
       <ng-template #itemTemplate let-priority="item">{{ priority.value | taskPriorityName }}</ng-template>
