@@ -229,22 +229,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   }
 
   public dropTask(column: ColumnBoardDto) {
-    this.loading = true;
-    this.cdRef.markForCheck();
-
     this.taskService.update<Partial<TaskDto>, TaskDto>(this.draggedTask?._id, { ...this.draggedTask, status: column }).subscribe({
-      next: (task) => {
-        this.tasks = this.tasks.filter((_task) => _task?._id !== this.draggedTask?._id);
-        this.tasks.push({ ...task });
-        this.draggedTask = null;
-        this.updateInfoColumns();
-        this.loading = false;
-        this.cdRef.markForCheck();
-      },
-      error: () => {
-        this.loading = false;
-        this.cdRef.markForCheck();
-      }
+      next: () => this.draggedTask = null,
+      error: () => this.draggedTask = null
     });
   }
 
@@ -257,12 +244,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       data: {
         board: this.board,
         sprint: this.activeSprint
-      }
-    });
-
-    this.ref.onClose.subscribe((task) => {
-      if (task) {
-        this.load();
       }
     });
   }

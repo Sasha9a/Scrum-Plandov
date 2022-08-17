@@ -148,10 +148,6 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
         board: this.board
       }
     });
-
-    this.ref.onClose.subscribe(() => {
-      this.load();
-    });
   }
 
 }
