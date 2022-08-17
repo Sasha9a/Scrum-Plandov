@@ -38,6 +38,13 @@
             <span class="pi pi-bars" [pReorderableRowHandle]=""></span>
           </td>
           <td>
+            <span class="p-column-title pr-2">Предпросмотр</span>
+            <p class="p-1 font-bold w-min text-center"
+               [ngStyle]="{ 'background-color': column.backgroundColor, 'color': column.color, 'border-radius': '5px' }">
+              {{ column.name }}
+            </p>
+          </td>
+          <td>
             <span class="p-column-title pr-2">Название</span>
             <input type="text" pInputText [(ngModel)]="column.name">
           </td>

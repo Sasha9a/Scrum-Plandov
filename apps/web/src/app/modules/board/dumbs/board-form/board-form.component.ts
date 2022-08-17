@@ -23,9 +23,10 @@ export class BoardFormComponent extends BaseFormComponent<BoardFormDto> {
 
   public columns: CrmTableColumn[] = [
     { class: 'w-3rem' },
+    { label: 'Предпросмотр' },
     { label: 'Название' },
-    { label: 'Цвет' },
-    { label: 'Фоновый цвет' },
+    { label: 'Цвет', class: 'w-5rem' },
+    { label: 'Фоновый цвет', class: 'w-7rem' },
     { class: 'w-6rem' }
   ];
 
