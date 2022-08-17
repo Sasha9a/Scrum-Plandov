@@ -82,6 +82,11 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       this.loadBoard();
     });
 
+    const filters = localStorage.getItem(`board.filters.${this.boardId}`);
+    if (filters) {
+      this.selectedFilterItems = JSON.parse(filters);
+    }
+
     this.loadBoard();
   }
 
@@ -247,6 +252,11 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
         this.load();
       }
     });
+  }
+
+  public selectedFilters() {
+    localStorage.setItem(`board.filters.${this.board?._id}`, JSON.stringify(this.selectedFilterItems));
+    this.updateInfoColumns();
   }
 
 }
