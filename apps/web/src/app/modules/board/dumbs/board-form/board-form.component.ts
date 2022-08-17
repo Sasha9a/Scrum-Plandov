@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from "@angular/core";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
 import { ColumnBoardFormDto } from "@scrum/shared/dtos/board/column.board.form.dto";
 import { UserDto } from "@scrum/shared/dtos/user/user.dto";
@@ -19,6 +19,8 @@ export class BoardFormComponent extends BaseFormComponent<BoardFormDto> {
 
   @Output() public searchUser = new EventEmitter<string>();
 
+  public showFullColor = false;
+
   public columns: CrmTableColumn[] = [
     { class: 'w-3rem' },
     { label: 'Название' },
@@ -26,6 +28,16 @@ export class BoardFormComponent extends BaseFormComponent<BoardFormDto> {
     { label: 'Фоновый цвет' },
     { class: 'w-6rem' }
   ];
+
+  public constructor() {
+    super();
+    this.showFullColor = window.innerWidth <= 960;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  private onResize(event: Event) {
+    this.showFullColor = event.target['innerWidth'] <= 960;
+  }
 
   public addColumn() {
     if (!this.board.columns) {

@@ -27,6 +27,7 @@
   <div class="field">
     <label class="font-bold required-field">Столбцы</label>
     <grace-table name="columnsBoard"
+                 responsiveLayout="stack"
                  [reorderableColumns]="true"
                  (rowReorder)="rowReorder($event)"
                  [columns]="columns"
@@ -37,13 +38,16 @@
             <span class="pi pi-bars" [pReorderableRowHandle]=""></span>
           </td>
           <td>
+            <span class="p-column-title pr-2">Название</span>
             <input type="text" pInputText [(ngModel)]="column.name">
           </td>
           <td>
-            <p-colorPicker [(ngModel)]="column.color"></p-colorPicker>
+            <span class="p-column-title pr-2">Цвет</span>
+            <p-colorPicker [(ngModel)]="column.color" [inline]="showFullColor"></p-colorPicker>
           </td>
           <td>
-            <p-colorPicker [(ngModel)]="column.backgroundColor"></p-colorPicker>
+            <span class="p-column-title pr-2">Фоновый цвет</span>
+            <p-colorPicker [(ngModel)]="column.backgroundColor" [inline]="showFullColor"></p-colorPicker>
           </td>
           <td>
             <button pButton type="button"
