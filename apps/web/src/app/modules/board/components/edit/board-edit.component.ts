@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
@@ -9,13 +9,14 @@ import { ErrorService } from "@scrum/web/core/services/error.service";
 import { TitleService } from "@scrum/web/core/services/title.service";
 import { AuthService } from "@scrum/web/core/services/user/auth.service";
 import { UserService } from "@scrum/web/core/services/user/user.service";
+import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
 
 @Component({
   selector: 'grace-board-edit',
   templateUrl: './board-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BoardEditComponent implements OnInit {
+export class BoardEditComponent implements OnInit, OnDestroy {
 
   public loading = false;
   public boardId: string;
@@ -24,6 +25,7 @@ export class BoardEditComponent implements OnInit {
   public users: UserDto[] = [];
 
   public constructor(private readonly boardService: BoardService,
+                     private readonly websocketBoardService: WebsocketBoardService,
                      private readonly userService: UserService,
                      private readonly authService: AuthService,
                      private readonly route: ActivatedRoute,
@@ -40,12 +42,18 @@ export class BoardEditComponent implements OnInit {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.boardService.findById<BoardDto>(this.boardId).subscribe((data) => {
+    this.websocketBoardService.createWSConnection(this.authService.getToken(), this.boardId);
+
+    this.websocketBoardService.getBoard({ boardId: this.boardId }).subscribe((data) => {
       this.board = data;
       this.loading = false;
       this.titleService.setTitle(`${this.board?.name}`);
       this.cdRef.markForCheck();
     });
+  }
+
+  public ngOnDestroy() {
+    this.websocketBoardService.socket?.disconnect();
   }
 
   public searchUser(login: string) {
@@ -64,7 +72,7 @@ export class BoardEditComponent implements OnInit {
     this.loading = true;
     this.cdRef.markForCheck();
 
-    this.boardService.update(this.boardId, body).subscribe({
+    this.websocketBoardService.updateBoard({ boardId: this.boardId, body }).subscribe({
       next: () => {
         this.loading = false;
         this.cdRef.markForCheck();

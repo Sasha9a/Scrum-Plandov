@@ -76,8 +76,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.websocketBoardService.createWSConnection(this.authService.getToken(), this.boardId);
-
     this.updateBoardSubscription$ = this.websocketBoardService.updatedBoardInfo$.subscribe(() => {
       this.loadBoard();
     });
@@ -92,7 +90,6 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.updateBoardSubscription$?.unsubscribe();
-    this.websocketBoardService.socket?.disconnect();
     this.updateSprintSubscription$?.unsubscribe();
     this.websocketDashboardSprintService.socket?.disconnect();
   }
@@ -229,7 +226,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   }
 
   public dropTask(column: ColumnBoardDto) {
-    this.taskService.update<Partial<TaskDto>, TaskDto>(this.draggedTask?._id, { ...this.draggedTask, status: column }).subscribe({
+    this.websocketDashboardSprintService.updateTask({ taskId: this.draggedTask?._id, body: { ...this.draggedTask, status: column } }).subscribe({
       next: () => this.draggedTask = null,
       error: () => this.draggedTask = null
     });

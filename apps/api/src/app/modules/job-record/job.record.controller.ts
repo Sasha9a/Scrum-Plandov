@@ -63,7 +63,7 @@ export class JobRecordController extends BaseController {
 
     bodyParams.user = user;
     const entity = await this.jobRecordService.create<JobRecordFormDto>(bodyParams);
-    this.sprintDashboardGateway.sendUpdatedSprint(entity.task.sprint?.id);
+    // this.sprintDashboardGateway.sendUpdatedSprint(entity.task.sprint?.id);
     this.sprintGateway.sendUpdated(entity.task.board?.id);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }

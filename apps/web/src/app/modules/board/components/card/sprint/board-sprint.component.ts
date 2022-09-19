@@ -57,7 +57,6 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.websocketBoardService.createWSConnection(this.authService.getToken(), this.boardId);
     this.websocketSprintService.createWSConnection(this.authService.getToken(), this.boardId);
 
     this.updateBoardSubscription$ = this.websocketBoardService.updatedBoardInfo$.subscribe(() => {
@@ -72,7 +71,6 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.updateBoardSubscription$?.unsubscribe();
-    this.websocketBoardService.socket?.disconnect();
     this.updateSubscription$?.unsubscribe();
     this.websocketSprintService.socket?.disconnect();
     if (this.ref) {

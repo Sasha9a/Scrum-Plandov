@@ -1,19 +1,23 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { ErrorService } from "@scrum/web/core/services/error.service";
 import { MenuItem } from "primeng/api";
+import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
+import { AuthService } from "@scrum/web/core/services/user/auth.service";
 
 @Component({
   selector: 'grace-board-card',
   templateUrl: './board-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BoardCardComponent implements OnInit {
+export class BoardCardComponent implements OnInit, OnDestroy {
 
   public itemsMenu: MenuItem[] = [];
   public activeItemMenu: MenuItem;
 
   public constructor(private readonly route: ActivatedRoute,
+                     private readonly websocketBoardService: WebsocketBoardService,
+                     private readonly authService: AuthService,
                      private readonly errorService: ErrorService,
                      private readonly router: Router,
                      private readonly cdRef: ChangeDetectorRef) {}
@@ -31,8 +35,14 @@ export class BoardCardComponent implements OnInit {
       { id: 'report', label: 'Отчеты', icon: 'pi pi-chart-bar', routerLink: `/board/card/${boardId}/report`, command: (value) => this.setActiveItem(value) }
     ];
 
+    this.websocketBoardService.createWSConnection(this.authService.getToken(), boardId);
+
     this.activeItemMenu = this.findCurrentItem();
     this.cdRef.markForCheck();
+  }
+
+  public ngOnDestroy() {
+    this.websocketBoardService.socket?.disconnect();
   }
 
   public findCurrentItem(): MenuItem {

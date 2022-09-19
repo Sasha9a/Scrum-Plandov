@@ -3,6 +3,7 @@ import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.result.dto";
 import { Observable, Subject } from "rxjs";
 import { io, Socket } from "socket.io-client";
+import { TaskFormDto } from "@scrum/shared/dtos/task/task.form.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,10 @@ export class WebsocketDashboardSprintService {
 
   public findByIdAllTasks(payload: { sprintId: string }): Observable<TaskDto[]> {
     return this.emitAsObservable('findByIdAllTasks', payload);
+  }
+
+  public updateTask(payload: { taskId: string, body: TaskFormDto }): Observable<TaskDto> {
+    return this.emitAsObservable('updateTask', payload);
   }
 
   private emitAsObservable<T>(event: string, payload: any): Observable<T> {

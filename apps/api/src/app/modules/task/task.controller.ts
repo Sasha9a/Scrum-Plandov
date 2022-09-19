@@ -100,7 +100,7 @@ export class TaskController extends BaseController {
       bodyParams.left = bodyParams.grade;
     }
     const entity = await this.taskService.create<TaskFormDto>(bodyParams);
-    this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
+    // this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
     this.sprintGateway.sendUpdated(entity.board?.id);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }
@@ -139,7 +139,7 @@ export class TaskController extends BaseController {
 
     bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(id, bodyParams);
-    this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
+    // this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
     this.sprintGateway.sendUpdated(entity.board?.id);
     return res.status(HttpStatus.OK).json(entity).end();
   }
@@ -166,7 +166,7 @@ export class TaskController extends BaseController {
     }
 
     const entity = await this.taskService.delete(id);
-    this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
+    // this.sprintDashboardGateway.sendUpdatedSprint(entity.sprint?.id);
     this.sprintGateway.sendUpdated(entity.board?.id);
     return res.status(HttpStatus.OK).end();
   }
