@@ -122,12 +122,7 @@ export class SprintDashboardGateway extends BaseController implements OnGatewayC
   }
 
   public sendUpdatedSprint(sprintId: string, client: Socket) {
-    // this.server.in(sprintId).emit('updatedSprint');
-    this.clients.forEach((cl) => {
-      if (cl.id !== client.id) {
-        cl.to(sprintId).emit('updatedSprint');
-      }
-    });
+    client.broadcast.to(sprintId).emit('updatedSprint');
   }
 
 }
