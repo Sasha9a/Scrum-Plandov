@@ -16,7 +16,6 @@ import {
 import { BaseController } from "@scrum/api/core/controllers/base.controller";
 import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
 import { BoardService } from "@scrum/api/modules/board/board.service";
-import { BoardGateway } from "@scrum/api/modules/board/board.gateway";
 import { ColumnBoardService } from "@scrum/api/modules/column-board/column-board.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
 import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
@@ -38,8 +37,7 @@ export class BoardController extends BaseController {
                      @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
                      @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
                      @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService,
-                     private readonly fileService: FileService,
-                     private readonly boardGateway: BoardGateway) {
+                     private readonly fileService: FileService) {
     super();
   }
 
@@ -142,54 +140,13 @@ export class BoardController extends BaseController {
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   public async edit(@Res() res: Response, @Param('id') id: string, @Body() body: BoardFormDto, @Req() req: Request) {
-    const bodyParams = this.validate<BoardFormDto>(body, BoardFormDto);
-    const user: UserDto = req.user as UserDto;
-
-    const userEntity = await this.userService.findById(user._id);
-    if (!userEntity) {
-      throw new NotFoundException("Нет такого аккаунта");
+    const result = await this.boardService.updateBoard(id, body, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
     }
-
-    let board = await this.boardService.findById(id);
-    if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+    if (result?.entity) {
+      return res.status(HttpStatus.OK).json(result.entity).end();
     }
-
-    if (board.createdUser?.id !== user._id) {
-      throw new NotFoundException("Нет прав");
-    }
-
-    for (const column of board.columns) {
-      if (bodyParams.columns.findIndex((_column) => _column['_id'] === column.id) === -1) {
-        await this.boardColumnService.delete(column._id);
-      }
-    }
-
-    for (const column of bodyParams.columns) {
-      if (column['_id']) {
-        await this.boardColumnService.update<ColumnBoardFormDto>(column['_id'], column);
-      } else {
-        const entityColumn = await this.boardColumnService.create<ColumnBoardFormDto>(column);
-        column['_id'] = entityColumn._id;
-      }
-    }
-
-    board = await this.boardService.findById(id);
-    let tasks = await this.taskService.findAll({ board: board, status: { $nin: board.columns.map((_column) => _column._id) } });
-    for (const task of tasks) {
-      task.status = board.columns[0];
-      await task.save();
-    }
-
-    tasks = await this.taskService.findAll({ board: board, executor: { $nin: [...bodyParams.users.map((_user) => _user._id), board.createdUser?._id], $exists: true, $ne: null } });
-    for (const task of tasks) {
-      task.executor = null;
-      await task.save();
-    }
-
-    const entity = await this.boardService.update<BoardFormDto>(id, bodyParams);
-    this.boardGateway.sendUpdatedBoard(id);
-    return res.status(HttpStatus.OK).json(entity).end();
   }
 
   @UseGuards(JwtAuthGuard)
@@ -237,7 +194,6 @@ export class BoardController extends BaseController {
     }
 
     await this.boardService.delete(id);
-    this.boardGateway.sendUpdatedBoard(id);
     return res.status(HttpStatus.OK).end();
   }
 

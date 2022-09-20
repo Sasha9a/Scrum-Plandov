@@ -1,5 +1,8 @@
 export enum WsNameEnum {
-  getBoard = 'getBoard',
-  updatedBoard = 'updatedBoard',
-  updateBoard = 'updateBoard'
+  onUpdateBoard = 'onUpdateBoard',
+  updateBoard = 'updateBoard',
+  deleteBoard = 'deleteBoard',
+  findByIdAllTasks = 'findByIdAllTasks',
+  updateTask = 'updateTask',
+  updatedSprint = 'updatedSprint'
 }

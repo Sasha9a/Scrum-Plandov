@@ -15,6 +15,7 @@ import { TaskService } from "@scrum/api/modules/task/task.service";
 import { UserService } from "@scrum/api/modules/user/user.service";
 import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
 import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.result.dto";
+import { WsNameEnum } from "@scrum/shared/enums/ws-name.enum";
 import { Server, Socket } from "socket.io";
 import { TaskFormDto } from "@scrum/shared/dtos/task/task.form.dto";
 import fs from "fs";
@@ -35,8 +36,6 @@ export class SprintDashboardGateway extends BaseController implements OnGatewayC
 
   @WebSocketServer() public server: Server;
 
-  private clients: Socket[] = [];
-
   public constructor(private readonly userService: UserService,
                      private readonly sprintService: SprintService,
                      private readonly boardService: BoardService,
@@ -48,32 +47,33 @@ export class SprintDashboardGateway extends BaseController implements OnGatewayC
   @UseGuards(WsGuard)
   public handleConnection(@ConnectedSocket() client: Socket) {
     client.join(client.handshake.query.sprintId);
-    this.clients.push(client);
     client.send('Ok');
   }
 
   public handleDisconnect(@ConnectedSocket() client: Socket) {
     client.leave(client.handshake.query.sprintId as string);
-    this.clients = this.clients.filter((_client) => _client.id !== client.id);
     client.send('Ok');
   }
 
   @UseGuards(WsGuard)
-  @SubscribeMessage('findByIdAllTasks')
+  @SubscribeMessage(WsNameEnum.findByIdAllTasks)
   public async findByIdAllTasks(@MessageBody() data: { sprintId: string }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<TaskDto[]>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
 
     const sprint = await this.sprintService.findById(data.sprintId);
     if (!sprint) {
+      console.error("Нет такого объекта!");
       throw new WsException("Нет такого объекта!");
     }
 
     const board = await this.boardService.findById(sprint.board._id);
     if (!board) {
+      console.error("Нет такого объекта!");
       throw new WsException("Нет такого объекта!");
     }
 
     if (board.createdUser?.id !== user.id && board.users.findIndex((_user) => _user.id === user.id) === -1) {
+      console.error("Нет доступа!");
       throw new WsException("Нет доступа!");
     }
 
@@ -82,7 +82,7 @@ export class SprintDashboardGateway extends BaseController implements OnGatewayC
   }
 
   @UseGuards(WsGuard)
-  @SubscribeMessage('updateTask')
+  @SubscribeMessage(WsNameEnum.updateTask)
   public async updateTask(@MessageBody() data: { taskId: string, body: TaskFormDto }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<TaskDto>> {
     const bodyParams = this.validate<TaskFormDto>(data.body, TaskFormDto);
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
@@ -117,7 +117,7 @@ export class SprintDashboardGateway extends BaseController implements OnGatewayC
 
     bodyParams.updateDate = moment().toDate();
     const entity = await this.taskService.update<TaskFormDto>(data.taskId, bodyParams);
-    this.sendUpdatedSprint(entity.sprint?.id, client);
+    client.broadcast.to(entity.sprint?.id).emit(WsNameEnum.updatedSprint);
     return { success: true, error: '', result: entity };
   }
 
