@@ -1,7 +1,8 @@
 import {
   Body,
   Controller,
-  Delete, forwardRef,
+  Delete,
+  forwardRef,
   Get,
   HttpStatus,
   Inject,
@@ -12,32 +13,33 @@ import {
   Req,
   Res,
   UseGuards
-} from "@nestjs/common";
-import { BaseController } from "@scrum/api/core/controllers/base.controller";
-import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
-import { BoardService } from "@scrum/api/modules/board/board.service";
-import { ColumnBoardService } from "@scrum/api/modules/column-board/column-board.service";
-import { UserService } from "@scrum/api/modules/user/user.service";
-import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
-import { ColumnBoardFormDto } from "@scrum/shared/dtos/board/column.board.form.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
-import { Request, Response } from "express";
-import { TaskService } from "@scrum/api/modules/task/task.service";
-import { SprintService } from "@scrum/api/modules/sprint/sprint.service";
-import fs from "fs";
-import { FileService } from "@scrum/api/modules/file/file.service";
-import { JobRecordService } from "@scrum/api/modules/job-record/job.record.service";
+} from '@nestjs/common';
+import { BaseController } from '@scrum/api/core/controllers/base.controller';
+import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
+import { BoardService } from '@scrum/api/modules/board/board.service';
+import { ColumnBoardService } from '@scrum/api/modules/column-board/column-board.service';
+import { FileService } from '@scrum/api/modules/file/file.service';
+import { JobRecordService } from '@scrum/api/modules/job-record/job.record.service';
+import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
+import { TaskService } from '@scrum/api/modules/task/task.service';
+import { UserService } from '@scrum/api/modules/user/user.service';
+import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
+import { ColumnBoardFormDto } from '@scrum/shared/dtos/board/column.board.form.dto';
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
+import { Request, Response } from 'express';
+import fs from 'fs';
 
 @Controller('board')
 export class BoardController extends BaseController {
-
-  public constructor(private readonly boardService: BoardService,
-                     private readonly userService: UserService,
-                     private readonly boardColumnService: ColumnBoardService,
-                     @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
-                     @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
-                     @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService,
-                     private readonly fileService: FileService) {
+  public constructor(
+    private readonly boardService: BoardService,
+    private readonly userService: UserService,
+    private readonly boardColumnService: ColumnBoardService,
+    @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
+    @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
+    @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService,
+    private readonly fileService: FileService
+  ) {
     super();
   }
 
@@ -57,11 +59,11 @@ export class BoardController extends BaseController {
 
     const board = await this.boardService.findById(id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     const usersIds = [board.createdUser._id, ...board.users.map((user) => user._id)];
@@ -76,11 +78,11 @@ export class BoardController extends BaseController {
 
     const entity = await this.boardService.findById(id);
     if (!entity) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (entity.createdUser?.id !== user._id && entity.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     return res.status(HttpStatus.OK).json(entity).end();
@@ -94,7 +96,7 @@ export class BoardController extends BaseController {
 
     const userEntity = await this.userService.findById(user._id);
     if (!userEntity) {
-      throw new NotFoundException("Нет такого аккаунта");
+      throw new NotFoundException('Нет такого аккаунта');
     }
     bodyParams.createdUser = user;
 
@@ -113,19 +115,19 @@ export class BoardController extends BaseController {
 
     const board = await this.boardService.findById(id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (user?._id === board.createdUser?.id) {
       if (!body.user) {
-        throw new NotFoundException("Не передан пользователь");
+        throw new NotFoundException('Не передан пользователь');
       }
       const bodyUser = await this.userService.findById(body.user._id);
       if (!bodyUser) {
-        throw new NotFoundException("Нет такого аккаунта");
+        throw new NotFoundException('Нет такого аккаунта');
       }
       if (board.users.findIndex((_user) => _user?.id === bodyUser?.id) === -1) {
-        throw new NotFoundException("Нет такого пользователя в доске");
+        throw new NotFoundException('Нет такого пользователя в доске');
       }
       board.createdUser = bodyUser;
       board.users = board.users.filter((_user) => _user?.id !== bodyUser.id);
@@ -156,16 +158,16 @@ export class BoardController extends BaseController {
 
     const userEntity = await this.userService.findById(user._id);
     if (!userEntity) {
-      throw new NotFoundException("Нет такого аккаунта");
+      throw new NotFoundException('Нет такого аккаунта');
     }
 
     const board = await this.boardService.findById(id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id) {
-      throw new NotFoundException("Нет прав");
+      throw new NotFoundException('Нет прав');
     }
 
     for (const column of board.columns) {
@@ -196,5 +198,4 @@ export class BoardController extends BaseController {
     await this.boardService.delete(id);
     return res.status(HttpStatus.OK).end();
   }
-
 }

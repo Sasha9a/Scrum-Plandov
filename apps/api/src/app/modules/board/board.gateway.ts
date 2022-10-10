@@ -1,4 +1,4 @@
-import { forwardRef, Inject, UseGuards } from "@nestjs/common";
+import { forwardRef, Inject, UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -8,43 +8,46 @@ import {
   WebSocketGateway,
   WebSocketServer,
   WsException
-} from "@nestjs/websockets";
-import { WsGuard } from "@scrum/api/core/guards/ws.guard";
-import { BoardService } from "@scrum/api/modules/board/board.service";
-import { FileService } from "@scrum/api/modules/file/file.service";
-import { JobRecordService } from "@scrum/api/modules/job-record/job.record.service";
-import { SprintService } from "@scrum/api/modules/sprint/sprint.service";
-import { UserService } from "@scrum/api/modules/user/user.service";
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.result.dto";
-import fs from "fs";
-import { Server, Socket } from "socket.io";
-import { WsNameEnum } from "@scrum/shared/enums/ws-name.enum";
-import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
-import { TaskService } from "@scrum/api/modules/task/task.service";
-import { BaseController } from "@scrum/api/core/controllers/base.controller";
-import { ColumnBoardService } from "@scrum/api/modules/column-board/column-board.service";
+} from '@nestjs/websockets';
+import { BaseController } from '@scrum/api/core/controllers/base.controller';
+import { WsGuard } from '@scrum/api/core/guards/ws.guard';
+import { BoardService } from '@scrum/api/modules/board/board.service';
+import { ColumnBoardService } from '@scrum/api/modules/column-board/column-board.service';
+import { FileService } from '@scrum/api/modules/file/file.service';
+import { JobRecordService } from '@scrum/api/modules/job-record/job.record.service';
+import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
+import { TaskService } from '@scrum/api/modules/task/task.service';
+import { UserService } from '@scrum/api/modules/user/user.service';
+import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
+import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
+import { WebsocketResultDto } from '@scrum/shared/dtos/websocket/websocket.result.dto';
+import { WsNameEnum } from '@scrum/shared/enums/ws-name.enum';
+import fs from 'fs';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   namespace: 'board',
   path: '/api/socket/board',
-  cors:
-  {
+  cors: {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }
 })
 export class BoardGateway extends BaseController implements OnGatewayConnection, OnGatewayDisconnect {
-
   @WebSocketServer() public server: Server;
 
-  public constructor(private readonly userService: UserService,
-                     private readonly boardService: BoardService,
-                     private readonly boardColumnService: ColumnBoardService,
-                     private readonly fileService: FileService,
-                     @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
-                     @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
-                     @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService) {
+  public constructor(
+    private readonly userService: UserService,
+    private readonly boardService: BoardService,
+    private readonly boardColumnService: ColumnBoardService,
+    private readonly fileService: FileService,
+    @Inject(forwardRef(() => TaskService))
+    private readonly taskService: TaskService,
+    @Inject(forwardRef(() => SprintService))
+    private readonly sprintService: SprintService,
+    @Inject(forwardRef(() => JobRecordService))
+    private readonly jobRecordService: JobRecordService
+  ) {
     super();
   }
 
@@ -61,7 +64,10 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
 
   @UseGuards(WsGuard)
   @SubscribeMessage(WsNameEnum.updateBoard)
-  public async updateBoard(@MessageBody() data: { boardId: string, body: BoardFormDto }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<BoardDto>> {
+  public async updateBoard(
+    @MessageBody() data: { boardId: string; body: BoardFormDto },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<BoardDto>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
     user._id = user.id;
     const result = await this.boardService.updateBoard(data.boardId, data.body, user);
@@ -82,19 +88,19 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
 
     const userEntity = await this.userService.findById(user._id);
     if (!userEntity) {
-      console.error("Нет такого аккаунта");
-      throw new WsException("Нет такого аккаунта");
+      console.error('Нет такого аккаунта');
+      throw new WsException('Нет такого аккаунта');
     }
 
     const board = await this.boardService.findById(data.boardId);
     if (!board) {
-      console.error("Нет такого объекта!");
-      throw new WsException("Нет такого объекта!");
+      console.error('Нет такого объекта!');
+      throw new WsException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user.id) {
-      console.error("Нет прав");
-      throw new WsException("Нет прав");
+      console.error('Нет прав');
+      throw new WsException('Нет прав');
     }
 
     for (const column of board.columns) {
@@ -126,5 +132,4 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
     client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
     return { success: true, error: '', result: null };
   }
-
 }

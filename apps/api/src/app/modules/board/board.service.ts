@@ -1,37 +1,38 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { BaseService } from "@scrum/api/core/services/base.service";
-import { validateForm } from "@scrum/api/core/services/validate.service";
-import { ColumnBoardService } from "@scrum/api/modules/column-board/column-board.service";
-import { TaskService } from "@scrum/api/modules/task/task.service";
-import { UserService } from "@scrum/api/modules/user/user.service";
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
-import { ColumnBoardFormDto } from "@scrum/shared/dtos/board/column.board.form.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
-import { Board } from "@scrum/shared/schemas/board.schema";
-import { Model } from "mongoose";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { BaseService } from '@scrum/api/core/services/base.service';
+import { validateForm } from '@scrum/api/core/services/validate.service';
+import { ColumnBoardService } from '@scrum/api/modules/column-board/column-board.service';
+import { TaskService } from '@scrum/api/modules/task/task.service';
+import { UserService } from '@scrum/api/modules/user/user.service';
+import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
+import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
+import { ColumnBoardFormDto } from '@scrum/shared/dtos/board/column.board.form.dto';
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
+import { Board } from '@scrum/shared/schemas/board.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class BoardService extends BaseService<Board> {
-
-  public constructor(@InjectModel(Board.name) private readonly boardModel: Model<Board>,
-                     private readonly boardService: BoardService,
-                     private readonly userService: UserService,
-                     private readonly boardColumnService: ColumnBoardService,
-                     @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService) {
+  public constructor(
+    @InjectModel(Board.name) private readonly boardModel: Model<Board>,
+    private readonly boardService: BoardService,
+    private readonly userService: UserService,
+    private readonly boardColumnService: ColumnBoardService,
+    @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService
+  ) {
     super(boardModel);
   }
 
   public async incrementTaskNumber(boardId: string): Promise<null> {
-    return await this.boardModel.updateOne({ _id: boardId }, { $inc: { indexTaskNumber: 1 } }).exec() as null;
+    return (await this.boardModel.updateOne({ _id: boardId }, { $inc: { indexTaskNumber: 1 } }).exec()) as null;
   }
 
   public async findByMy(userId: string): Promise<Board[]> {
-    return await this.boardModel.find({ $or: [ { createdUser: userId as any }, { users: { $in: [userId as any] } } ] }).exec();
+    return await this.boardModel.find({ $or: [{ createdUser: userId as any }, { users: { $in: [userId as any] } }] }).exec();
   }
 
-  public async updateBoard(id: string, body: BoardFormDto, user: UserDto): Promise<{ entity?: BoardDto, error?: string }> {
+  public async updateBoard(id: string, body: BoardFormDto, user: UserDto): Promise<{ entity?: BoardDto; error?: string }> {
     const bodyParams = validateForm<BoardFormDto>(body, BoardFormDto);
 
     const userEntity = await this.userService.findById(user._id);
@@ -70,7 +71,10 @@ export class BoardService extends BaseService<Board> {
       await task.save();
     }
 
-    tasks = await this.taskService.findAll({ board: board, executor: { $nin: [...bodyParams.users.map((_user) => _user._id), board.createdUser?._id], $exists: true, $ne: null } });
+    tasks = await this.taskService.findAll({
+      board: board,
+      executor: { $nin: [...bodyParams.users.map((_user) => _user._id), board.createdUser?._id], $exists: true, $ne: null }
+    });
     for (const task of tasks) {
       task.executor = null;
       await task.save();
@@ -79,5 +83,4 @@ export class BoardService extends BaseService<Board> {
     const entity = await this.boardService.update<BoardFormDto>(id, bodyParams);
     return { entity };
   }
-
 }
