@@ -1,25 +1,26 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { BoardService } from "@scrum/web/core/services/board/board.service";
-import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
-import { ConfirmDialogService } from "@scrum/web/core/services/confirm-dialog.service";
-import { ErrorService } from "@scrum/web/core/services/error.service";
-import { WebsocketDashboardSprintService } from "@scrum/web/core/services/sprint/websocket-dashboard-sprint.service";
-import { TitleService } from "@scrum/web/core/services/title.service";
-import { AuthService } from "@scrum/web/core/services/user/auth.service";
-import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
-import { SprintService } from "@scrum/web/core/services/sprint/sprint.service";
-import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
-import { BoardLeaveDialogComponent } from "@scrum/web/modules/board/dumbs/board-leave-dialog/board-leave-dialog.component";
-import { TaskFilterPipe } from "@scrum/web/shared/pipes/task-filter/task-filter.pipe";
-import moment from "moment-timezone";
-import { TaskService } from "@scrum/web/core/services/task/task.service";
-import { ColumnBoardDto } from "@scrum/shared/dtos/board/column.board.dto";
-import { TaskAddComponent } from "@scrum/web/modules/task/components/task/add/task-add.component";
-import { MenuItem } from "primeng/api";
-import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
-import { Subscription } from "rxjs";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
+import { ColumnBoardDto } from '@scrum/shared/dtos/board/column.board.dto';
+import { SprintDto } from '@scrum/shared/dtos/sprint/sprint.dto';
+import { TaskDto } from '@scrum/shared/dtos/task/task.dto';
+import { BoardService } from '@scrum/web/core/services/board/board.service';
+import { WebsocketBoardService } from '@scrum/web/core/services/board/websocket-board.service';
+import { ConfirmDialogService } from '@scrum/web/core/services/confirm-dialog.service';
+import { ErrorService } from '@scrum/web/core/services/error.service';
+import { SprintService } from '@scrum/web/core/services/sprint/sprint.service';
+import { WebsocketSprintService } from '@scrum/web/core/services/sprint/websocket-sprint.service';
+import { TaskService } from '@scrum/web/core/services/task/task.service';
+import { WebsocketTaskService } from '@scrum/web/core/services/task/websocket-task.service';
+import { TitleService } from '@scrum/web/core/services/title.service';
+import { AuthService } from '@scrum/web/core/services/user/auth.service';
+import { BoardLeaveDialogComponent } from '@scrum/web/modules/board/dumbs/board-leave-dialog/board-leave-dialog.component';
+import { TaskAddComponent } from '@scrum/web/modules/task/components/task/add/task-add.component';
+import { TaskFilterPipe } from '@scrum/web/shared/pipes/task-filter/task-filter.pipe';
+import moment from 'moment-timezone';
+import { MenuItem } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'grace-board-dashboard',
@@ -29,7 +30,6 @@ import { Subscription } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardDashboardComponent implements OnInit, OnDestroy {
-
   public boardId: string;
   public board: BoardDto;
   public loading = false;
@@ -39,7 +39,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
 
   public endDate: number;
 
-  public filterItems: { name: string, value: string }[] = [];
+  public filterItems: { name: string; value: string }[] = [];
   public selectedFilterItems: string[] = [];
 
   public columnsInfo: Record<string, string> = {};
@@ -51,23 +51,26 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
 
   public ref: DynamicDialogRef;
 
-  private updateBoardSubscription$: Subscription;
-  private updateSprintSubscription$: Subscription;
+  private onUpdateBoard$: Subscription;
+  private onUpdateSprint$: Subscription;
 
-  public constructor(public readonly authService: AuthService,
-                     private readonly websocketBoardService: WebsocketBoardService,
-                     private readonly websocketDashboardSprintService: WebsocketDashboardSprintService,
-                     private readonly boardService: BoardService,
-                     private readonly taskService: TaskService,
-                     private readonly sprintService: SprintService,
-                     private readonly confirmService: ConfirmDialogService,
-                     private readonly cdRef: ChangeDetectorRef,
-                     private readonly errorService: ErrorService,
-                     private readonly router: Router,
-                     private readonly route: ActivatedRoute,
-                     private readonly taskFilterPipe: TaskFilterPipe,
-                     private readonly dialogService: DialogService,
-                     private readonly titleService: TitleService) {}
+  public constructor(
+    public readonly authService: AuthService,
+    private readonly websocketBoardService: WebsocketBoardService,
+    private readonly websocketSprintService: WebsocketSprintService,
+    private readonly websocketTaskService: WebsocketTaskService,
+    private readonly boardService: BoardService,
+    private readonly taskService: TaskService,
+    private readonly sprintService: SprintService,
+    private readonly confirmService: ConfirmDialogService,
+    private readonly cdRef: ChangeDetectorRef,
+    private readonly errorService: ErrorService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly taskFilterPipe: TaskFilterPipe,
+    private readonly dialogService: DialogService,
+    private readonly titleService: TitleService
+  ) {}
 
   public ngOnInit(): void {
     this.boardId = this.route.snapshot.params.id;
@@ -76,7 +79,11 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.updateBoardSubscription$ = this.websocketBoardService.updatedBoardInfo$.subscribe(() => {
+    this.onUpdateBoard$ = this.websocketBoardService.onUpdateBoard$.subscribe(() => {
+      this.loadBoard(false);
+    });
+
+    this.onUpdateSprint$ = this.websocketSprintService.onUpdateSprint$.subscribe(() => {
       this.loadBoard();
     });
 
@@ -89,16 +96,17 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.updateBoardSubscription$?.unsubscribe();
-    this.updateSprintSubscription$?.unsubscribe();
-    this.websocketDashboardSprintService.socket?.disconnect();
+    this.onUpdateBoard$?.unsubscribe();
+    this.onUpdateSprint$?.unsubscribe();
   }
 
-  public loadBoard() {
-    this.loading = true;
-    this.cdRef.markForCheck();
+  public loadBoard(withLoading = true) {
+    if (withLoading) {
+      this.loading = true;
+      this.cdRef.markForCheck();
+    }
 
-    this.websocketBoardService.getBoard({ boardId: this.boardId }).subscribe((board) => {
+    this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
       this.board = board;
       this.titleService.setTitle(`${this.board?.name}`);
       this.filterItems = [this.board.createdUser, ...this.board.users].map((user) => {
@@ -108,7 +116,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
         };
       });
 
-      this.loading = false;
+      if (withLoading) {
+        this.loading = false;
+      }
       this.cdRef.markForCheck();
       this.load();
     });
@@ -157,15 +167,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
 
     if (this.activeSprint !== sprint) {
-      this.updateSprintSubscription$?.unsubscribe();
-      this.websocketDashboardSprintService.socket?.disconnect();
       this.activeSprint = sprint;
-      this.websocketDashboardSprintService.createWSConnection(this.authService.getToken(), this.activeSprint?._id);
-      this.updateSprintSubscription$ = this.websocketDashboardSprintService.updatedSprintDashboardInfo$.subscribe(() => {
-        this.loadBoard();
-      });
     }
-    this.websocketDashboardSprintService.findByIdAllTasks({ sprintId: this.activeSprint?._id }).subscribe((tasks) => {
+    this.sprintService.findByIdAllTasks(this.activeSprint?._id).subscribe((tasks) => {
       this.tasks = tasks;
       this.endDate = moment(this.activeSprint.endDate).diff(moment().subtract(1, 'day'), 'days');
       this.updateInfoColumns();
@@ -181,7 +185,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.cdRef.markForCheck();
 
-        this.sprintService.completedSprint(this.activeSprint?._id).subscribe({
+        this.websocketBoardService.completedSprint({ sprintId: this.activeSprint?._id, boardId: this.boardId }).subscribe({
           next: () => {
             this.loading = false;
             this.board.activeSprints = this.board.activeSprints.filter((sprint) => sprint._id !== this.activeSprint?._id);
@@ -213,7 +217,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       const tasks = this.tasks?.filter((task) => task.status?._id === column._id);
       const countTaskAll = tasks?.length || 0;
       const countTasksWithFilters = this.taskFilterPipe.transform(tasks, this.selectedFilterItems)?.length;
-      this.columnsInfo[column._id] = `${countTasksWithFilters !== countTaskAll ? (countTasksWithFilters + ' из ' + countTaskAll) : countTaskAll}`;
+      this.columnsInfo[column._id] = `${
+        countTasksWithFilters !== countTaskAll ? countTasksWithFilters + ' из ' + countTaskAll : countTaskAll
+      }`;
     });
   }
 
@@ -226,16 +232,18 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   }
 
   public dropTask(column: ColumnBoardDto) {
-    this.websocketDashboardSprintService.updateTask({ taskId: this.draggedTask?._id, body: { ...this.draggedTask, status: column } }).subscribe({
-      next: () => this.draggedTask = null,
-      error: () => this.draggedTask = null
-    });
+    this.websocketTaskService
+      .updateTask({ taskId: this.draggedTask?._id, boardId: this.boardId, body: { ...this.draggedTask, status: column } })
+      .subscribe({
+        next: () => (this.draggedTask = null),
+        error: () => (this.draggedTask = null)
+      });
   }
 
   public createTask() {
     this.ref = this.dialogService.open(TaskAddComponent, {
       header: `Создать задачу`,
-      contentStyle: { 'overflow': 'auto' },
+      contentStyle: { overflow: 'auto' },
       styleClass: 'xl:w-4 lg:w-6 md:w-8 sm:w-10 w-full',
       baseZIndex: 99999,
       data: {
@@ -253,7 +261,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public showDialogLeave() {
     this.ref = this.dialogService.open(BoardLeaveDialogComponent, {
       header: `Исключение`,
-      contentStyle: { 'overflow': 'auto' },
+      contentStyle: { overflow: 'auto' },
       styleClass: 'xl:w-4 lg:w-6 md:w-8 sm:w-10 w-full',
       baseZIndex: 99999,
       data: {
@@ -261,5 +269,4 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 }

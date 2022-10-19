@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { MessageService } from "primeng/api";
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorService {
-
-  public constructor(private messageService: MessageService) {
-  }
+  public constructor(private messageService: MessageService) {}
 
   public addCustomError(title = 'Ошибка', description = '', life = 10000) {
     this.messageService.add({ key: 'message', severity: 'error', summary: title, detail: description, life });
@@ -35,4 +33,7 @@ export class ErrorService {
     this.messageService.add({ key: 'message', severity: 'success', summary: title, detail: description, life });
   }
 
+  public addInfoMessage(title: string = 'ОК', description: string = '', life = 10000) {
+    this.messageService.add({ key: 'message', severity: 'info', summary: title, detail: description, life });
+  }
 }

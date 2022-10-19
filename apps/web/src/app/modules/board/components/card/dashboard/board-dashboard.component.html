@@ -2,89 +2,133 @@
   <div class="flex justify-content-between align-items-center flex-wrap mt-3">
     <div class="mb-2">
       <p class="text-gray-500 text-base">{{ board?.name }}</p>
-      <div *ngIf="activeSprint" class="flex align-items-center gap-2 mt-1">
+      <div
+        *ngIf="activeSprint"
+        class="flex align-items-center gap-2 mt-1">
         <h1 class="my-0">{{ activeSprint.name }}</h1>
-        <p-inplace #inplace *ngIf="board?.activeSprints?.length > 1">
+        <p-inplace
+          #inplace
+          *ngIf="board?.activeSprints?.length > 1">
           <ng-template pTemplate="display">
             <span class="text-blue-400">Переключить спринт</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <grace-single-select [options]="board?.activeSprints"
-                                 [(selectedItem)]="activeSprint"
-                                 (selectedItemChange)="changeSprint(); inplace.deactivate()"
-                                 [filter]="false">
+            <grace-single-select
+              [options]="board?.activeSprints"
+              [(selectedItem)]="activeSprint"
+              (selectedItemChange)="changeSprint(); inplace.deactivate()"
+              [filter]="false">
             </grace-single-select>
           </ng-template>
         </p-inplace>
       </div>
-      <h1 *ngIf="!activeSprint" class="my-0 text-red-600">Не выбран спринт</h1>
+      <h1
+        *ngIf="!activeSprint"
+        class="my-0 text-red-600">
+        Не выбран спринт
+      </h1>
     </div>
     <div class="flex align-items-center">
-      <div *ngIf="activeSprint?.endDate"
-           [escape]="false"
-           pTooltip="Дата начала: {{ activeSprint?.startDate | date: 'dd.MM.YYYY' }}<br /> Дата завершения: {{ activeSprint?.endDate | date: 'dd.MM.YYYY' }}"
-           tooltipPosition="bottom"
-           class="mr-3">
+      <div
+        *ngIf="activeSprint?.endDate"
+        [escape]="false"
+        pTooltip="Дата начала: {{ activeSprint?.startDate | date: 'dd.MM.YYYY' }}<br /> Дата завершения: {{
+          activeSprint?.endDate | date: 'dd.MM.YYYY'
+        }}"
+        tooltipPosition="bottom"
+        class="mr-3">
         <i class="pi pi-clock"></i> <span class="ml-1">Осталось {{ endDate }} дней</span>
       </div>
-      <p-splitButton label="Создать задачу"
-                     icon="pi pi-plus"
-                     (onClick)="createTask()"
-                     [model]="buttonItems"
-                     styleClass="p-button-outlined">
+      <p-splitButton
+        label="Создать задачу"
+        icon="pi pi-plus"
+        (onClick)="createTask()"
+        [model]="buttonItems"
+        styleClass="p-button-outlined">
       </p-splitButton>
     </div>
   </div>
 
   <div class="flex gap-2 align-items-center mt-3">
     <p class="text-gray-400 font-bold">ФИЛЬТРЫ:</p>
-    <p-selectButton [options]="filterItems"
-                    [(ngModel)]="selectedFilterItems"
-                    (ngModelChange)="selectedFilters()"
-                    [multiple]="true"
-                    optionLabel="name"
-                    optionValue="value">
+    <p-selectButton
+      [options]="filterItems"
+      [(ngModel)]="selectedFilterItems"
+      (ngModelChange)="selectedFilters()"
+      [multiple]="true"
+      optionLabel="name"
+      optionValue="value">
     </p-selectButton>
   </div>
 
-  <div class="flex flex-nowrap overflow-x-auto overflow-y-hidden gap-2 mt-4" style="min-height: 200px;">
+  <div
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden gap-2 mt-4"
+    style="min-height: 200px">
     <div *ngFor="let column of board?.columns | orderBy: 'order:number'">
       <p class="text-gray-600 text-base mb-2 pl-1">{{ column.name }} {{ columnsInfo[column._id] }}</p>
       <div class="relative h-full bg-gray-50 p-1 xl:w-23rem lg:w-18rem md:w-15rem sm:w-13rem w-13rem drop-column">
         <ng-container *ngFor="let task of tasks | taskFilter: selectedFilterItems | taskOrderBy">
-          <div *ngIf="task.status?._id === column?._id"
-               class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-move"
-               [class.bg-red-50]="task.deadline ? (task.deadline | timeFromNow) < 0 && activeTask?._id !== task?._id : false"
-               [class.bg-yellow-50]="task.deadline ? (task.deadline | timeFromNow) < 3 && (task.deadline | timeFromNow) >= 0 && activeTask?._id !== task?._id : false"
-               [class.bg-blue-100]="activeTask?._id === task?._id"
-               [ngStyle]="{ 'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px', 'background-color': 'white' }"
-               (click)="activeTask = task"
-               pDraggable="tasks"
-               (onDragStart)="dragStartTask(task)"
-               (onDragEnd)="dragEndTask()">
+          <div
+            *ngIf="task.status?._id === column?._id"
+            class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-move"
+            [class.bg-red-50]="task.deadline ? (task.deadline | timeFromNow) < 0 && activeTask?._id !== task?._id : false"
+            [class.bg-yellow-50]="
+              task.deadline
+                ? (task.deadline | timeFromNow) < 3 && (task.deadline | timeFromNow) >= 0 && activeTask?._id !== task?._id
+                : false
+            "
+            [class.bg-blue-100]="activeTask?._id === task?._id"
+            [ngStyle]="{
+              'border-left': '4px solid ' + (task.priority | taskPriorityColor),
+              'border-radius': '5px',
+              'background-color': 'white'
+            }"
+            (click)="activeTask = task"
+            pDraggable="tasks"
+            (onDragStart)="dragStartTask(task)"
+            (onDragEnd)="dragEndTask()">
             <div class="flex justify-content-between align-items-center">
-              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board?.code }}-{{ task.number }}</a>
-              <grace-user-avatar *ngIf="task.executor" [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }" size=""></grace-user-avatar>
+              <a
+                routerLink="/task/card/{{ task._id }}"
+                (click)="$event.stopPropagation()"
+                >{{ board?.code }}-{{ task.number }}</a
+              >
+              <grace-user-avatar
+                *ngIf="task.executor"
+                [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }"
+                size=""></grace-user-avatar>
             </div>
             <p [class.mt-2]="!task.executor">{{ task.name }}</p>
             <p class="mt-2">{{ task.priority | taskPriorityName }}</p>
             <p class="mt-1">{{ task.executor?.name || task.executor?.login || 'Не назначен' }}</p>
-            <p *ngIf="task.deadline" class="mt-1">до {{ task.deadline | date: 'dd.MM.YYYY' }}</p>
-            <p *ngIf="task.grade" class="mt-1">{{ ((task.spent || 0) /  (task.grade || 0) * 100) | number: '.0-0' }}%</p>
-            <p-chip *ngIf="task.left" [label]="(task.left | number) + ' ч.'" styleClass="mt-1"></p-chip>
+            <p
+              *ngIf="task.deadline"
+              class="mt-1">
+              до {{ task.deadline | date: 'dd.MM.YYYY' }}
+            </p>
+            <p
+              *ngIf="task.grade"
+              class="mt-1">
+              {{ ((task.spent || 0) / (task.grade || 0)) * 100 | number: '.0-0' }}%
+            </p>
+            <p-chip
+              *ngIf="task.left"
+              [label]="(task.left | number) + ' ч.'"
+              styleClass="mt-1"></p-chip>
           </div>
         </ng-container>
-        <div *ngIf="draggedTask && draggedTask?.status?._id !== column?._id"
-             class="absolute top-0 left-0 w-full h-full border-3 border-dashed border-blue-300 bg-blue-50 drop-task m-1"
-             pDroppable="tasks"
-             (onDrop)="dropTask(column)">
-        </div>
+        <div
+          *ngIf="draggedTask && draggedTask?.status?._id !== column?._id"
+          class="absolute top-0 left-0 w-full h-full border-3 border-dashed border-blue-300 bg-blue-50 drop-task m-1"
+          pDroppable="tasks"
+          (onDrop)="dropTask(column)"></div>
       </div>
     </div>
   </div>
-
 </div>
 
 <grace-spinner *ngIf="loading"></grace-spinner>
 
-<grace-task-short-info [(task)]="activeTask" (updateTasks)="load()"></grace-task-short-info>
+<grace-task-short-info
+  [(task)]="activeTask"
+  (updateTasks)="load()"></grace-task-short-info>
