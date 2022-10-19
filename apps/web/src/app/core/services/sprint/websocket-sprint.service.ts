@@ -10,6 +10,7 @@ import { io } from 'socket.io-client';
   providedIn: 'root'
 })
 export class WebsocketSprintService extends WebsocketBaseService {
+  public onCreateSprint$: Subject<null> = new Subject();
   public onUpdateSprint$: Subject<null> = new Subject();
   public onDeleteSprint$: Subject<null> = new Subject();
 
@@ -44,6 +45,10 @@ export class WebsocketSprintService extends WebsocketBaseService {
       }
     });
 
+    this.socket.on(WsNameEnum.onCreateSprint, () => {
+      this.onCreateSprint$.next(null);
+    });
+
     this.socket.on(WsNameEnum.onUpdateSprint, () => {
       this.onUpdateSprint$.next(null);
     });
@@ -51,6 +56,10 @@ export class WebsocketSprintService extends WebsocketBaseService {
     this.socket.on(WsNameEnum.onDeleteSprint, () => {
       this.onDeleteSprint$.next(null);
     });
+  }
+
+  public createSprint(payload: { boardId: string; body: SprintFormDto }): Observable<SprintDto> {
+    return this.emitAsObservable(WsNameEnum.createSprint, payload);
   }
 
   public updateSprint(payload: { sprintId: string; boardId: string; body: SprintFormDto }): Observable<SprintDto> {

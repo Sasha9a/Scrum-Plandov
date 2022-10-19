@@ -43,6 +43,26 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @UseGuards(WsGuard)
+  @SubscribeMessage(WsNameEnum.createSprint)
+  public async createSprint(
+    @MessageBody() data: { boardId: string; body: SprintFormDto },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<SprintDto>> {
+    const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
+
+    const result = await this.sprintService.createSprint(data.body, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
+    }
+    if (result?.entity) {
+      client.broadcast.to(data.boardId).emit(WsNameEnum.onCreateSprint);
+      return { success: true, error: '', result: result.entity };
+    }
+  }
+
+  @UseGuards(WsGuard)
   @SubscribeMessage(WsNameEnum.updateSprint)
   public async updateSprint(
     @MessageBody() data: { sprintId: string; boardId: string; body: SprintFormDto },

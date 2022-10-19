@@ -163,20 +163,13 @@ export class SprintController extends BaseController {
   @UseGuards(JwtAuthGuard)
   @Post()
   public async create(@Res() res: Response, @Body() body: SprintFormDto, @Req() req: Request) {
-    const bodyParams = this.validate<SprintFormDto>(body, SprintFormDto);
-    const user: UserDto = req.user as UserDto;
-
-    const board = await this.boardService.findById(bodyParams.board._id);
-    if (!board) {
-      throw new NotFoundException('Нет такого объекта!');
+    const result = await this.sprintService.createSprint(body, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
     }
-
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException('Нет доступа!');
+    if (result?.entity) {
+      return res.status(HttpStatus.CREATED).json(result.entity).end();
     }
-
-    const entity = await this.sprintService.create<SprintFormDto>(bodyParams);
-    return res.status(HttpStatus.CREATED).json(entity).end();
   }
 
   @UseGuards(JwtAuthGuard)

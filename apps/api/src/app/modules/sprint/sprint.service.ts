@@ -20,6 +20,22 @@ export class SprintService extends BaseService<Sprint> {
     super(sprintModel);
   }
 
+  public async createSprint(body: SprintFormDto, user: UserDto): Promise<{ entity?: SprintDto; error?: string }> {
+    const bodyParams = validateForm<SprintFormDto>(body, SprintFormDto);
+
+    const board = await this.boardService.findById(bodyParams.board._id);
+    if (!board) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      return { error: 'Нет доступа!' };
+    }
+
+    const entity = await this.create<SprintFormDto>(bodyParams);
+    return { entity };
+  }
+
   public async updateSprint(id: string, body: SprintFormDto, user: UserDto): Promise<{ entity?: SprintDto; error?: string }> {
     const bodyParams = validateForm<SprintFormDto>(body, SprintFormDto);
 
