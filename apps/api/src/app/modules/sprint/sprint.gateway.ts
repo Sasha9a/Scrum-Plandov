@@ -1,39 +1,35 @@
+import { UseGuards } from '@nestjs/common';
 import {
-  ConnectedSocket, MessageBody,
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
-  OnGatewayDisconnect, SubscribeMessage,
+  OnGatewayDisconnect,
+  SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer, WsException
-} from "@nestjs/websockets";
-import { Server, Socket } from "socket.io";
-import { UserService } from "@scrum/api/modules/user/user.service";
-import { SprintService } from "@scrum/api/modules/sprint/sprint.service";
-import { BoardService } from "@scrum/api/modules/board/board.service";
-import { TaskService } from "@scrum/api/modules/task/task.service";
-import { UseGuards } from "@nestjs/common";
-import { WsGuard } from "@scrum/api/core/guards/ws.guard";
-import { WebsocketResultDto } from "@scrum/shared/dtos/websocket/websocket.result.dto";
-import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
-import { SprintWorkUserInfoDto } from "@scrum/shared/dtos/sprint/sprint.work.user.info.dto";
+  WebSocketServer,
+  WsException
+} from '@nestjs/websockets';
+import { WsGuard } from '@scrum/api/core/guards/ws.guard';
+import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
+import { UserService } from '@scrum/api/modules/user/user.service';
+import { SprintDto } from '@scrum/shared/dtos/sprint/sprint.dto';
+import { SprintFormDto } from '@scrum/shared/dtos/sprint/sprint.form.dto';
+import { WebsocketResultDto } from '@scrum/shared/dtos/websocket/websocket.result.dto';
+import { WsNameEnum } from '@scrum/shared/enums/ws-name.enum';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   namespace: 'sprint',
   path: '/api/socket/sprint',
-  cors:
-    {
-      methods: ['GET', 'POST'],
-      credentials: true
-    }
+  cors: {
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
 })
 export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
-
   @WebSocketServer() public server: Server;
 
-  public constructor(private readonly userService: UserService,
-                     private readonly sprintService: SprintService,
-                     private readonly boardService: BoardService,
-                     private readonly taskService: TaskService) {
-  }
+  public constructor(private readonly userService: UserService, private readonly sprintService: SprintService) {}
 
   @UseGuards(WsGuard)
   public handleConnection(@ConnectedSocket() client: Socket) {
@@ -47,68 +43,37 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @UseGuards(WsGuard)
-  @SubscribeMessage('findAllByBoard')
-  public async findAllByBoard(@MessageBody() data: { boardId: string }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<SprintTasksInfoDto[]>> {
+  @SubscribeMessage(WsNameEnum.updateSprint)
+  public async updateSprint(
+    @MessageBody() data: { sprintId: string; boardId: string; body: SprintFormDto },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<SprintDto>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
-    const results: SprintTasksInfoDto[] = [];
+    user._id = user.id;
 
-    const board = await this.boardService.findById(data.boardId);
-    if (!board) {
-      throw new WsException("Нет такого объекта!");
+    const result = await this.sprintService.updateSprint(data.sprintId, data.body, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
     }
-
-    if (board.createdUser?.id !== user.id && board.users.findIndex((_user) => _user.id === user.id) === -1) {
-      throw new WsException("Нет доступа!");
+    if (result?.entity) {
+      client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateSprint);
+      return { success: true, error: '', result: result.entity };
     }
-
-    const sprints = await this.sprintService.findAll({ board: board, isCompleted: false });
-    for (const sprint of sprints) {
-      const tasks = await this.taskService.findAll({ board: board, sprint: sprint });
-      const usersInfo: SprintWorkUserInfoDto[] = [];
-      for (const task of tasks) {
-        if (task.executor) {
-          let userInfo = usersInfo.find((userInfo) => userInfo.user?._id === task.executor?._id);
-          if (!userInfo) {
-            userInfo = {
-              user: task.executor,
-              count: 1,
-              grade: task.grade,
-              left: task.left || 0
-            };
-            usersInfo.push(userInfo);
-          } else {
-            userInfo.count++;
-            userInfo.grade += task.grade;
-            userInfo.left += (task.left || 0);
-          }
-        }
-      }
-      results.push({
-        sprint: sprint,
-        tasks: tasks,
-        notAssignedInfo: {
-          count: tasks.reduce((sum, task) => !task.executor ? sum + 1 : sum, 0),
-          grade: tasks.reduce((sum, task) => !task.executor ? sum + task.grade : sum, 0),
-          left: tasks.reduce((sum, task) => !task.executor ? sum + (task.left || 0) : sum, 0)
-        },
-        usersInfo: usersInfo,
-        sumInfo: {
-          count: tasks.length,
-          grade: tasks.reduce((sum, task) => sum + task.grade, 0),
-          left: tasks.reduce((sum, task) => sum + (task.left || 0), 0)
-        }
-      });
-    }
-
-    const tasks = await this.taskService.findAll({ board: board, sprint: null });
-    results.push({
-      tasks: tasks
-    });
-    return { success: true, error: '', result: results };
   }
 
-  public sendUpdated(boardId: string) {
-    this.server.in(boardId).emit('updated');
-  }
+  @UseGuards(WsGuard)
+  @SubscribeMessage(WsNameEnum.deleteSprint)
+  public async deleteBoard(@MessageBody() data: { boardId: string }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<null>> {
+    const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
 
+    const result = await this.sprintService.deleteSprint(data.boardId, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
+    }
+    client.broadcast.to(data.boardId).emit(WsNameEnum.onDeleteSprint);
+    return { success: true, error: '', result: null };
+  }
 }

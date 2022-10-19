@@ -1,7 +1,8 @@
 import {
   Body,
   Controller,
-  Delete, forwardRef,
+  Delete,
+  forwardRef,
   Get,
   HttpStatus,
   Inject,
@@ -12,27 +13,26 @@ import {
   Req,
   Res,
   UseGuards
-} from "@nestjs/common";
-import { BaseController } from "@scrum/api/core/controllers/base.controller";
-import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
-import { BoardService } from "@scrum/api/modules/board/board.service";
-import { SprintService } from "@scrum/api/modules/sprint/sprint.service";
-import { TaskService } from "@scrum/api/modules/task/task.service";
-import { SprintFormDto } from "@scrum/shared/dtos/sprint/sprint.form.dto";
-import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
-import { SprintWorkUserInfoDto } from "@scrum/shared/dtos/sprint/sprint.work.user.info.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
-import { Request, Response } from "express";
-import { SprintDto } from "@scrum/shared/dtos/sprint/sprint.dto";
-import { SprintGateway } from "@scrum/api/modules/sprint/sprint.gateway";
+} from '@nestjs/common';
+import { BaseController } from '@scrum/api/core/controllers/base.controller';
+import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
+import { BoardService } from '@scrum/api/modules/board/board.service';
+import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
+import { TaskService } from '@scrum/api/modules/task/task.service';
+import { SprintDto } from '@scrum/shared/dtos/sprint/sprint.dto';
+import { SprintFormDto } from '@scrum/shared/dtos/sprint/sprint.form.dto';
+import { SprintTasksInfoDto } from '@scrum/shared/dtos/sprint/sprint.tasks.info.dto';
+import { SprintWorkUserInfoDto } from '@scrum/shared/dtos/sprint/sprint.work.user.info.dto';
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
+import { Request, Response } from 'express';
 
 @Controller('sprint')
 export class SprintController extends BaseController {
-
-  public constructor(private readonly sprintService: SprintService,
-                     @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
-                     private readonly taskService: TaskService,
-                     private readonly sprintGateway: SprintGateway) {
+  public constructor(
+    private readonly sprintService: SprintService,
+    @Inject(forwardRef(() => BoardService)) private readonly boardService: BoardService,
+    private readonly taskService: TaskService
+  ) {
     super();
   }
 
@@ -43,11 +43,11 @@ export class SprintController extends BaseController {
 
     const board = await this.boardService.findById(id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     const entities = await this.sprintService.findAll({ board: board, isCompleted: false });
@@ -62,11 +62,11 @@ export class SprintController extends BaseController {
 
     const board = await this.boardService.findById(id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     const sprints = await this.sprintService.findAll({ board: board, isCompleted: false });
@@ -87,7 +87,7 @@ export class SprintController extends BaseController {
           } else {
             userInfo.count++;
             userInfo.grade += task.grade;
-            userInfo.left += (task.left || 0);
+            userInfo.left += task.left || 0;
           }
         }
       }
@@ -95,9 +95,9 @@ export class SprintController extends BaseController {
         sprint: sprint,
         tasks: tasks,
         notAssignedInfo: {
-          count: tasks.reduce((sum, task) => !task.executor ? sum + 1 : sum, 0),
-          grade: tasks.reduce((sum, task) => !task.executor ? sum + task.grade : sum, 0),
-          left: tasks.reduce((sum, task) => !task.executor ? sum + (task.left || 0) : sum, 0)
+          count: tasks.reduce((sum, task) => (!task.executor ? sum + 1 : sum), 0),
+          grade: tasks.reduce((sum, task) => (!task.executor ? sum + task.grade : sum), 0),
+          left: tasks.reduce((sum, task) => (!task.executor ? sum + (task.left || 0) : sum), 0)
         },
         usersInfo: usersInfo,
         sumInfo: {
@@ -123,20 +123,20 @@ export class SprintController extends BaseController {
 
     const sprint = await this.sprintService.findById(id);
     if (!sprint) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     const board = await this.boardService.findById(sprint.board._id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     if (board.activeSprints.findIndex((activeSprint) => activeSprint.id === sprint.id) !== -1) {
-      throw new NotFoundException("Спринт активный!");
+      throw new NotFoundException('Спринт активный!');
     }
 
     if (!board.activeSprints) {
@@ -154,16 +154,16 @@ export class SprintController extends BaseController {
 
     const sprint = await this.sprintService.findById(id);
     if (!sprint) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     const board = await this.boardService.findById(sprint.board._id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     board.activeSprints = board.activeSprints.filter((_sprint) => _sprint.id !== sprint.id);
@@ -179,16 +179,16 @@ export class SprintController extends BaseController {
 
     const sprint = await this.sprintService.findById(id);
     if (!sprint) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     const board = await this.boardService.findById(sprint.board._id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     const entities = await this.taskService.findAll({ board: board, sprint: sprint });
@@ -202,16 +202,16 @@ export class SprintController extends BaseController {
 
     const entity = await this.sprintService.findById(id);
     if (!entity) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     const board = await this.boardService.findById(entity.board._id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     return res.status(HttpStatus.OK).json(entity).end();
@@ -225,67 +225,36 @@ export class SprintController extends BaseController {
 
     const board = await this.boardService.findById(bodyParams.board._id);
     if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+      throw new NotFoundException('Нет такого объекта!');
     }
 
     if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+      throw new NotFoundException('Нет доступа!');
     }
 
     const entity = await this.sprintService.create<SprintFormDto>(bodyParams);
-    this.sprintGateway.sendUpdated(entity.board?.id);
-    // this.sprintDashboardGateway.sendUpdatedSprint(entity?.id);
     return res.status(HttpStatus.CREATED).json(entity).end();
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   public async edit(@Res() res: Response, @Param('id') id: string, @Body() body: SprintFormDto, @Req() req: Request) {
-    const bodyParams = this.validate<SprintFormDto>(body, SprintFormDto);
-    const user: UserDto = req.user as UserDto;
-
-    const board = await this.boardService.findById(bodyParams.board._id);
-    if (!board) {
-      throw new NotFoundException("Нет такого объекта!");
+    const result = await this.sprintService.updateSprint(id, body, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
     }
-
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
+    if (result?.entity) {
+      return res.status(HttpStatus.OK).json(result.entity).end();
     }
-
-    const entity = await this.sprintService.update<SprintFormDto>(id, bodyParams);
-    if (!entity) {
-      throw new NotFoundException("Произошла ошибка!");
-    }
-    this.sprintGateway.sendUpdated(entity.board?.id);
-    // this.sprintDashboardGateway.sendUpdatedSprint(entity?.id);
-    return res.status(HttpStatus.OK).json(entity).end();
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   public async delete(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
-    const user: UserDto = req.user as UserDto;
-
-    const sprint = await this.sprintService.findById(id);
-    if (!sprint) {
-      throw new NotFoundException("Нет такого объекта!");
+    const result = await this.sprintService.deleteSprint(id, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
     }
-
-    if (sprint.board.createdUser?.id !== user._id && sprint.board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException("Нет доступа!");
-    }
-
-    const tasks = await this.taskService.findAll({ sprint: sprint, board: sprint.board });
-    for (const task of tasks) {
-      task.sprint = null;
-      await task.save();
-    }
-
-    const entity = await this.sprintService.delete(id);
-    this.sprintGateway.sendUpdated(entity.board?.id);
-    // this.sprintDashboardGateway.sendUpdatedSprint(entity?.id);
     return res.status(HttpStatus.OK).end();
   }
-
 }
