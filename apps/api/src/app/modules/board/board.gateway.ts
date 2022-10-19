@@ -22,7 +22,6 @@ import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
 import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
 import { WebsocketResultDto } from '@scrum/shared/dtos/websocket/websocket.result.dto';
 import { WsNameEnum } from '@scrum/shared/enums/ws-name.enum';
-import fs from 'fs';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
@@ -70,6 +69,7 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
   ): Promise<WebsocketResultDto<BoardDto>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
     user._id = user.id;
+
     const result = await this.boardService.updateBoard(data.boardId, data.body, user);
     if (result?.error) {
       console.error(result.error);
@@ -85,51 +85,14 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
   @SubscribeMessage(WsNameEnum.deleteBoard)
   public async deleteBoard(@MessageBody() data: { boardId: string }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<null>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
 
-    const userEntity = await this.userService.findById(user._id);
-    if (!userEntity) {
-      console.error('Нет такого аккаунта');
-      throw new WsException('Нет такого аккаунта');
+    const result = await this.boardService.deleteBoard(data.boardId, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
     }
-
-    const board = await this.boardService.findById(data.boardId);
-    if (!board) {
-      console.error('Нет такого объекта!');
-      throw new WsException('Нет такого объекта!');
-    }
-
-    if (board.createdUser?.id !== user.id) {
-      console.error('Нет прав');
-      throw new WsException('Нет прав');
-    }
-
-    for (const column of board.columns) {
-      await this.boardColumnService.delete(column._id);
-    }
-
-    const jobInfos = await this.jobRecordService.findAll({ board: board });
-    for (const jobInfo of jobInfos) {
-      await this.jobRecordService.delete(jobInfo._id);
-    }
-
-    const tasks = await this.taskService.findAll({ board: board });
-    for (const task of tasks) {
-      for (const file of task.files) {
-        await this.fileService.deleteFile(file?.path);
-        if (fs.existsSync('./public/' + file?.path)) {
-          fs.unlinkSync('./public/' + file?.path);
-        }
-      }
-      await this.taskService.delete(task._id);
-    }
-
-    const sprints = await this.sprintService.findAll({ board: board });
-    for (const sprint of sprints) {
-      await this.sprintService.delete(sprint._id);
-    }
-
-    await this.boardService.delete(data.boardId);
-    client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
+    client.broadcast.to(data.boardId).emit(WsNameEnum.onDeleteBoard);
     return { success: true, error: '', result: null };
   }
 }

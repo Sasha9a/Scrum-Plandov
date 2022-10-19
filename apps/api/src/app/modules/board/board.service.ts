@@ -3,6 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BaseService } from '@scrum/api/core/services/base.service';
 import { validateForm } from '@scrum/api/core/services/validate.service';
 import { ColumnBoardService } from '@scrum/api/modules/column-board/column-board.service';
+import { FileService } from '@scrum/api/modules/file/file.service';
+import { JobRecordService } from '@scrum/api/modules/job-record/job.record.service';
+import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
 import { TaskService } from '@scrum/api/modules/task/task.service';
 import { UserService } from '@scrum/api/modules/user/user.service';
 import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
@@ -10,6 +13,7 @@ import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
 import { ColumnBoardFormDto } from '@scrum/shared/dtos/board/column.board.form.dto';
 import { UserDto } from '@scrum/shared/dtos/user/user.dto';
 import { Board } from '@scrum/shared/schemas/board.schema';
+import fs from 'fs';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -19,7 +23,10 @@ export class BoardService extends BaseService<Board> {
     private readonly boardService: BoardService,
     private readonly userService: UserService,
     private readonly boardColumnService: ColumnBoardService,
-    @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService
+    @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
+    @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
+    @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService,
+    private readonly fileService: FileService
   ) {
     super(boardModel);
   }
@@ -82,5 +89,49 @@ export class BoardService extends BaseService<Board> {
 
     const entity = await this.boardService.update<BoardFormDto>(id, bodyParams);
     return { entity };
+  }
+
+  public async deleteBoard(id: string, user: UserDto): Promise<{ error?: string }> {
+    const userEntity = await this.userService.findById(user._id);
+    if (!userEntity) {
+      return { error: 'Нет такого аккаунта' };
+    }
+
+    const board = await this.boardService.findById(id);
+    if (!board) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    if (board.createdUser?.id !== user._id) {
+      return { error: 'Нет прав' };
+    }
+
+    for (const column of board.columns) {
+      await this.boardColumnService.delete(column._id);
+    }
+
+    const jobInfos = await this.jobRecordService.findAll({ board: board });
+    for (const jobInfo of jobInfos) {
+      await this.jobRecordService.delete(jobInfo._id);
+    }
+
+    const tasks = await this.taskService.findAll({ board: board });
+    for (const task of tasks) {
+      for (const file of task.files) {
+        await this.fileService.deleteFile(file?.path);
+        if (fs.existsSync('./public/' + file?.path)) {
+          fs.unlinkSync('./public/' + file?.path);
+        }
+      }
+      await this.taskService.delete(task._id);
+    }
+
+    const sprints = await this.sprintService.findAll({ board: board });
+    for (const sprint of sprints) {
+      await this.sprintService.delete(sprint._id);
+    }
+
+    await this.boardService.delete(id);
+    return { error: null };
   }
 }

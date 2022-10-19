@@ -18,7 +18,6 @@ import { BaseController } from '@scrum/api/core/controllers/base.controller';
 import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
 import { BoardService } from '@scrum/api/modules/board/board.service';
 import { ColumnBoardService } from '@scrum/api/modules/column-board/column-board.service';
-import { FileService } from '@scrum/api/modules/file/file.service';
 import { JobRecordService } from '@scrum/api/modules/job-record/job.record.service';
 import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
 import { TaskService } from '@scrum/api/modules/task/task.service';
@@ -27,7 +26,6 @@ import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
 import { ColumnBoardFormDto } from '@scrum/shared/dtos/board/column.board.form.dto';
 import { UserDto } from '@scrum/shared/dtos/user/user.dto';
 import { Request, Response } from 'express';
-import fs from 'fs';
 
 @Controller('board')
 export class BoardController extends BaseController {
@@ -37,8 +35,7 @@ export class BoardController extends BaseController {
     private readonly boardColumnService: ColumnBoardService,
     @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
     @Inject(forwardRef(() => SprintService)) private readonly sprintService: SprintService,
-    @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService,
-    private readonly fileService: FileService
+    @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService
   ) {
     super();
   }
@@ -154,48 +151,10 @@ export class BoardController extends BaseController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   public async delete(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
-    const user: UserDto = req.user as UserDto;
-
-    const userEntity = await this.userService.findById(user._id);
-    if (!userEntity) {
-      throw new NotFoundException('Нет такого аккаунта');
+    const result = await this.boardService.deleteBoard(id, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
     }
-
-    const board = await this.boardService.findById(id);
-    if (!board) {
-      throw new NotFoundException('Нет такого объекта!');
-    }
-
-    if (board.createdUser?.id !== user._id) {
-      throw new NotFoundException('Нет прав');
-    }
-
-    for (const column of board.columns) {
-      await this.boardColumnService.delete(column._id);
-    }
-
-    const jobInfos = await this.jobRecordService.findAll({ board: board });
-    for (const jobInfo of jobInfos) {
-      await this.jobRecordService.delete(jobInfo._id);
-    }
-
-    const tasks = await this.taskService.findAll({ board: board });
-    for (const task of tasks) {
-      for (const file of task.files) {
-        await this.fileService.deleteFile(file?.path);
-        if (fs.existsSync('./public/' + file?.path)) {
-          fs.unlinkSync('./public/' + file?.path);
-        }
-      }
-      await this.taskService.delete(task._id);
-    }
-
-    const sprints = await this.sprintService.findAll({ board: board });
-    for (const sprint of sprints) {
-      await this.sprintService.delete(sprint._id);
-    }
-
-    await this.boardService.delete(id);
     return res.status(HttpStatus.OK).end();
   }
 }
