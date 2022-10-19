@@ -46,6 +46,26 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
   }
 
   @UseGuards(WsGuard)
+  @SubscribeMessage(WsNameEnum.createTask)
+  public async createTask(
+    @MessageBody() data: { boardId: string; body: TaskFormDto },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<TaskDto>> {
+    const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
+
+    const result = await this.taskService.createTask(data.body, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
+    }
+    if (result?.entity) {
+      client.broadcast.to(data.boardId).emit(WsNameEnum.onCreateTask);
+      return { success: true, error: '', result: result.entity };
+    }
+  }
+
+  @UseGuards(WsGuard)
   @SubscribeMessage(WsNameEnum.updateTask)
   public async updateTask(
     @MessageBody() data: { taskId: string; boardId: string; body: TaskFormDto },

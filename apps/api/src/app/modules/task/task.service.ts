@@ -22,6 +22,29 @@ export class TaskService extends BaseService<Task> {
     super(taskModel);
   }
 
+  public async createTask(body: TaskFormDto, user: UserDto): Promise<{ entity?: TaskDto; error?: string }> {
+    const bodyParams = validateForm<TaskFormDto>(body, TaskFormDto);
+
+    const board = await this.boardService.findById(bodyParams.board._id);
+    if (!board) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      return { error: 'Нет доступа!' };
+    }
+    bodyParams.number = board.indexTaskNumber;
+    await this.boardService.incrementTaskNumber(board._id);
+
+    bodyParams.createdUser = user;
+    bodyParams.status = board.columns.sort((a, b) => (a.order < b.order ? -1 : 1))?.[0];
+    if (bodyParams.grade) {
+      bodyParams.left = bodyParams.grade;
+    }
+    const entity = await this.create<TaskFormDto>(bodyParams);
+    return { entity };
+  }
+
   public async updateTask(id: string, body: TaskFormDto, user: UserDto): Promise<{ entity?: TaskDto; error?: string }> {
     const bodyParams = validateForm<TaskFormDto>(body, TaskFormDto);
 

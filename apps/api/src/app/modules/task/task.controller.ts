@@ -76,27 +76,13 @@ export class TaskController extends BaseController {
   @UseGuards(JwtAuthGuard)
   @Post()
   public async create(@Res() res: Response, @Body() body: TaskFormDto, @Req() req: Request) {
-    const bodyParams = this.validate<TaskFormDto>(body, TaskFormDto);
-    const user: UserDto = req.user as UserDto;
-
-    const board = await this.boardService.findById(bodyParams.board._id);
-    if (!board) {
-      throw new NotFoundException('Нет такого объекта!');
+    const result = await this.taskService.createTask(body, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
     }
-
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException('Нет доступа!');
+    if (result?.entity) {
+      return res.status(HttpStatus.CREATED).json(result.entity).end();
     }
-    bodyParams.number = board.indexTaskNumber;
-    await this.boardService.incrementTaskNumber(board._id);
-
-    bodyParams.createdUser = user;
-    bodyParams.status = board.columns.sort((a, b) => (a.order < b.order ? -1 : 1))?.[0];
-    if (bodyParams.grade) {
-      bodyParams.left = bodyParams.grade;
-    }
-    const entity = await this.taskService.create<TaskFormDto>(bodyParams);
-    return res.status(HttpStatus.CREATED).json(entity).end();
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,6 +1,7 @@
 export enum WsNameEnum {
   onUpdateBoard = 'onUpdateBoard',
   onDeleteBoard = 'onDeleteBoard',
+  onCreateTask = 'onCreateTask',
   onUpdateTask = 'onUpdateTask',
   onDeleteTask = 'onDeleteTask',
   onCreateSprint = 'onCreateSprint',
@@ -9,6 +10,7 @@ export enum WsNameEnum {
 
   updateBoard = 'updateBoard',
   deleteBoard = 'deleteBoard',
+  createTask = 'createTask',
   updateTask = 'updateTask',
   deleteTask = 'deleteTask',
   createSprint = 'createSprint',

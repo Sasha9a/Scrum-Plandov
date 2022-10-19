@@ -10,6 +10,7 @@ import { io } from 'socket.io-client';
   providedIn: 'root'
 })
 export class WebsocketTaskService extends WebsocketBaseService {
+  public onCreateTask$: Subject<null> = new Subject();
   public onUpdateTask$: Subject<null> = new Subject();
   public onDeleteTask$: Subject<null> = new Subject();
 
@@ -44,6 +45,10 @@ export class WebsocketTaskService extends WebsocketBaseService {
       }
     });
 
+    this.socket.on(WsNameEnum.onCreateTask, () => {
+      this.onCreateTask$.next(null);
+    });
+
     this.socket.on(WsNameEnum.onUpdateTask, () => {
       this.onUpdateTask$.next(null);
     });
@@ -51,6 +56,10 @@ export class WebsocketTaskService extends WebsocketBaseService {
     this.socket.on(WsNameEnum.onDeleteTask, () => {
       this.onDeleteTask$.next(null);
     });
+  }
+
+  public createTask(payload: { boardId: string; body: TaskFormDto }): Observable<TaskDto> {
+    return this.emitAsObservable(WsNameEnum.createTask, payload);
   }
 
   public updateTask(payload: { taskId: string; boardId: string; body: TaskFormDto }): Observable<TaskDto> {
