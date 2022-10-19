@@ -87,7 +87,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.cdRef.markForCheck();
 
-        this.taskService.deleteById(this.task?._id).subscribe(() => {
+        this.websocketTaskService.deleteTask({ taskId: this.task?._id, boardId: this.task?.board?._id }).subscribe(() => {
           this.loading = false;
           this.cdRef.markForCheck();
           this.errorService.addSuccessMessage(`Задача "${this.task?.board?.code}-${this.task?.number}" удалена`);
