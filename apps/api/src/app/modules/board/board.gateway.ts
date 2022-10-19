@@ -82,6 +82,42 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
   }
 
   @UseGuards(WsGuard)
+  @SubscribeMessage(WsNameEnum.startSprint)
+  public async startSprint(
+    @MessageBody() data: { sprintId: string; boardId: string },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<null>> {
+    const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
+
+    const result = await this.sprintService.startSprint(data.sprintId, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
+    }
+    client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
+    return { success: true, error: '', result: null };
+  }
+
+  @UseGuards(WsGuard)
+  @SubscribeMessage(WsNameEnum.completedSprint)
+  public async completedSprint(
+    @MessageBody() data: { sprintId: string; boardId: string },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<null>> {
+    const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
+
+    const result = await this.sprintService.completedSprint(data.sprintId, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
+    }
+    client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
+    return { success: true, error: '', result: null };
+  }
+
+  @UseGuards(WsGuard)
   @SubscribeMessage(WsNameEnum.deleteBoard)
   public async deleteBoard(@MessageBody() data: { boardId: string }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<null>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);

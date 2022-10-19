@@ -11,5 +11,7 @@ export enum WsNameEnum {
   updateTask = 'updateTask',
   deleteTask = 'deleteTask',
   updateSprint = 'updateSprint',
-  deleteSprint = 'deleteSprint'
+  deleteSprint = 'deleteSprint',
+  startSprint = 'startSprint',
+  completedSprint = 'completedSprint'
 }

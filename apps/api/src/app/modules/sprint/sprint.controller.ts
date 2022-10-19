@@ -19,7 +19,6 @@ import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
 import { BoardService } from '@scrum/api/modules/board/board.service';
 import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
 import { TaskService } from '@scrum/api/modules/task/task.service';
-import { SprintDto } from '@scrum/shared/dtos/sprint/sprint.dto';
 import { SprintFormDto } from '@scrum/shared/dtos/sprint/sprint.form.dto';
 import { SprintTasksInfoDto } from '@scrum/shared/dtos/sprint/sprint.tasks.info.dto';
 import { SprintWorkUserInfoDto } from '@scrum/shared/dtos/sprint/sprint.work.user.info.dto';
@@ -117,62 +116,6 @@ export class SprintController extends BaseController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('start/:id')
-  public async startSprint(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
-    const user: UserDto = req.user as UserDto;
-
-    const sprint = await this.sprintService.findById(id);
-    if (!sprint) {
-      throw new NotFoundException('Нет такого объекта!');
-    }
-
-    const board = await this.boardService.findById(sprint.board._id);
-    if (!board) {
-      throw new NotFoundException('Нет такого объекта!');
-    }
-
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException('Нет доступа!');
-    }
-
-    if (board.activeSprints.findIndex((activeSprint) => activeSprint.id === sprint.id) !== -1) {
-      throw new NotFoundException('Спринт активный!');
-    }
-
-    if (!board.activeSprints) {
-      board.activeSprints = [];
-    }
-    board.activeSprints.push(sprint);
-    await board.save();
-    return res.status(HttpStatus.OK).end();
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('completed/:id')
-  public async completedSprint(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
-    const user: UserDto = req.user as UserDto;
-
-    const sprint = await this.sprintService.findById(id);
-    if (!sprint) {
-      throw new NotFoundException('Нет такого объекта!');
-    }
-
-    const board = await this.boardService.findById(sprint.board._id);
-    if (!board) {
-      throw new NotFoundException('Нет такого объекта!');
-    }
-
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
-      throw new NotFoundException('Нет доступа!');
-    }
-
-    board.activeSprints = board.activeSprints.filter((_sprint) => _sprint.id !== sprint.id);
-    await board.save();
-    await this.sprintService.update<SprintDto>(sprint._id, { isCompleted: true });
-    return res.status(HttpStatus.OK).end();
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get(':id/tasks')
   public async findByIdAllTasks(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
     const user: UserDto = req.user as UserDto;
@@ -246,6 +189,26 @@ export class SprintController extends BaseController {
     if (result?.entity) {
       return res.status(HttpStatus.OK).json(result.entity).end();
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('start/:id')
+  public async startSprint(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
+    const result = await this.sprintService.startSprint(id, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
+    }
+    return res.status(HttpStatus.OK).end();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('completed/:id')
+  public async completedSprint(@Res() res: Response, @Param('id') id: string, @Req() req: Request) {
+    const result = await this.sprintService.completedSprint(id, req.user as UserDto);
+    if (result?.error) {
+      throw new NotFoundException(result.error);
+    }
+    return res.status(HttpStatus.OK).end();
   }
 
   @UseGuards(JwtAuthGuard)

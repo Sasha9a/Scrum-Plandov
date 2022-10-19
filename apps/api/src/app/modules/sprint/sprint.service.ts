@@ -39,6 +39,54 @@ export class SprintService extends BaseService<Sprint> {
     return { entity };
   }
 
+  public async startSprint(id: string, user: UserDto): Promise<{ error?: string }> {
+    const sprint = await this.findById(id);
+    if (!sprint) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    const board = await this.boardService.findById(sprint.board._id);
+    if (!board) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      return { error: 'Нет доступа!' };
+    }
+
+    if (board.activeSprints.findIndex((activeSprint) => activeSprint.id === sprint.id) !== -1) {
+      return { error: 'Спринт активный!' };
+    }
+
+    if (!board.activeSprints) {
+      board.activeSprints = [];
+    }
+    board.activeSprints.push(sprint);
+    await board.save();
+    return { error: null };
+  }
+
+  public async completedSprint(id: string, user: UserDto): Promise<{ error?: string }> {
+    const sprint = await this.findById(id);
+    if (!sprint) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    const board = await this.boardService.findById(sprint.board._id);
+    if (!board) {
+      return { error: 'Нет такого объекта!' };
+    }
+
+    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+      return { error: 'Нет доступа!' };
+    }
+
+    board.activeSprints = board.activeSprints.filter((_sprint) => _sprint.id !== sprint.id);
+    await board.save();
+    await this.update<SprintDto>(sprint._id, { isCompleted: true });
+    return { error: null };
+  }
+
   public async deleteSprint(id: string, user: UserDto): Promise<{ error?: string }> {
     const sprint = await this.findById(id);
     if (!sprint) {

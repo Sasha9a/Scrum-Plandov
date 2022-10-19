@@ -64,7 +64,10 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsGuard)
   @SubscribeMessage(WsNameEnum.deleteSprint)
-  public async deleteBoard(@MessageBody() data: { boardId: string }, @ConnectedSocket() client: Socket): Promise<WebsocketResultDto<null>> {
+  public async deleteSprint(
+    @MessageBody() data: { boardId: string },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<null>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
     user._id = user.id;
 
