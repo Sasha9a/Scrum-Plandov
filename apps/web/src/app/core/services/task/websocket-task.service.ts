@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SprintDto } from '@scrum/shared/dtos/sprint/sprint.dto';
-import { SprintFormDto } from '@scrum/shared/dtos/sprint/sprint.form.dto';
+import { TaskDto } from '@scrum/shared/dtos/task/task.dto';
+import { TaskFormDto } from '@scrum/shared/dtos/task/task.form.dto';
 import { WsNameEnum } from '@scrum/shared/enums/ws-name.enum';
 import { WebsocketBaseService } from '@scrum/web/core/services/websocket-base.service';
 import { Observable, Subject } from 'rxjs';
@@ -9,13 +9,13 @@ import { io } from 'socket.io-client';
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketSprintService extends WebsocketBaseService {
-  public onUpdateSprint$: Subject<null> = new Subject();
-  public onDeleteSprint$: Subject<null> = new Subject();
+export class WebsocketTaskService extends WebsocketBaseService {
+  public onUpdateTask$: Subject<null> = new Subject();
+  public onDeleteTask$: Subject<null> = new Subject();
 
   public createWSConnection(token: string, boardId: string) {
-    this.socket = io('/sprint', {
-      path: '/api/socket/sprint',
+    this.socket = io('/task', {
+      path: '/api/socket/task',
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -44,20 +44,20 @@ export class WebsocketSprintService extends WebsocketBaseService {
       }
     });
 
-    this.socket.on(WsNameEnum.onUpdateSprint, () => {
-      this.onUpdateSprint$.next(null);
+    this.socket.on(WsNameEnum.onUpdateTask, () => {
+      this.onUpdateTask$.next(null);
     });
 
-    this.socket.on(WsNameEnum.onDeleteSprint, () => {
-      this.onDeleteSprint$.next(null);
+    this.socket.on(WsNameEnum.onDeleteTask, () => {
+      this.onDeleteTask$.next(null);
     });
   }
 
-  public updateSprint(payload: { sprintId: string; boardId: string; body: SprintFormDto }): Observable<SprintDto> {
-    return this.emitAsObservable(WsNameEnum.updateSprint, payload);
+  public updateTask(payload: { taskId: string; boardId: string; body: TaskFormDto }): Observable<TaskDto> {
+    return this.emitAsObservable(WsNameEnum.updateTask, payload);
   }
 
-  public deleteSprint(payload: { boardId: string }): Observable<null> {
-    return this.emitAsObservable(WsNameEnum.deleteSprint, payload);
+  public deleteTask(payload: { taskId: string; boardId: string }): Observable<null> {
+    return this.emitAsObservable(WsNameEnum.deleteTask, payload);
   }
 }
