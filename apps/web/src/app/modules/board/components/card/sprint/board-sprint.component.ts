@@ -9,6 +9,7 @@ import { ConfirmDialogService } from '@scrum/web/core/services/confirm-dialog.se
 import { ErrorService } from '@scrum/web/core/services/error.service';
 import { SprintService } from '@scrum/web/core/services/sprint/sprint.service';
 import { WebsocketSprintService } from '@scrum/web/core/services/sprint/websocket-sprint.service';
+import { WebsocketTaskService } from '@scrum/web/core/services/task/websocket-task.service';
 import { TitleService } from '@scrum/web/core/services/title.service';
 import { AuthService } from '@scrum/web/core/services/user/auth.service';
 import { SprintWorkUsersInfoComponent } from '@scrum/web/modules/sprint/dumbs/sprint-work-users-info/sprint-work-users-info.component';
@@ -35,13 +36,21 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
   public activeTask: TaskDto;
 
   private onUpdateBoard$: Subscription;
+
+  private onCreateSprint$: Subscription;
   private onUpdateSprint$: Subscription;
+  private onDeleteSprint$: Subscription;
+
+  private onCreateTask$: Subscription;
+  private onUpdateTask$: Subscription;
+  private onDeleteTask$: Subscription;
 
   public constructor(
     private readonly sprintService: SprintService,
     private readonly authService: AuthService,
     private readonly websocketBoardService: WebsocketBoardService,
     private readonly websocketSprintService: WebsocketSprintService,
+    private readonly websocketTaskService: WebsocketTaskService,
     private readonly boardService: BoardService,
     private readonly cdRef: ChangeDetectorRef,
     private readonly dialogService: DialogService,
@@ -58,44 +67,70 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.onUpdateBoard$ = this.websocketBoardService.onUpdateBoard$.subscribe(() => {
-      this.loadBoard();
-    });
-    this.onUpdateSprint$ = this.websocketSprintService.onUpdateSprint$.subscribe(() => {
-      this.load();
-    });
-
+    this.initSubscribes();
     this.loadBoard();
   }
 
   public ngOnDestroy() {
     this.onUpdateBoard$?.unsubscribe();
     this.onUpdateSprint$?.unsubscribe();
-    if (this.ref) {
-      this.ref.close();
-    }
+    this.ref?.close();
   }
 
-  public loadBoard() {
-    this.loading = true;
-    this.cdRef.markForCheck();
+  public initSubscribes() {
+    this.onUpdateBoard$ = this.websocketBoardService.onUpdateBoard$.subscribe(() => {
+      this.loadBoard(false);
+    });
+
+    this.onCreateSprint$ = this.websocketSprintService.onCreateSprint$.subscribe(() => {
+      this.load(false);
+    });
+    this.onUpdateSprint$ = this.websocketSprintService.onUpdateSprint$.subscribe(() => {
+      this.load(false);
+    });
+    this.onDeleteSprint$ = this.websocketSprintService.onDeleteSprint$.subscribe(() => {
+      this.load(false);
+    });
+
+    this.onCreateTask$ = this.websocketTaskService.onCreateTask$.subscribe(() => {
+      this.load(false);
+    });
+    this.onUpdateTask$ = this.websocketTaskService.onUpdateTask$.subscribe(() => {
+      this.load(false);
+    });
+    this.onDeleteTask$ = this.websocketTaskService.onDeleteTask$.subscribe(() => {
+      this.load(false);
+    });
+  }
+
+  public loadBoard(withLoading = true) {
+    if (withLoading) {
+      this.loading = true;
+      this.cdRef.markForCheck();
+    }
 
     this.boardService.findById<BoardDto>(this.boardId).subscribe((board) => {
       this.board = board;
       this.titleService.setTitle(`${this.board?.name}`);
-      this.loading = false;
+      if (withLoading) {
+        this.loading = false;
+      }
       this.cdRef.markForCheck();
-      this.load();
+      this.load(withLoading);
     });
   }
 
-  public load() {
-    this.loading = true;
-    this.cdRef.markForCheck();
+  public load(withLoading = true) {
+    if (withLoading) {
+      this.loading = true;
+      this.cdRef.markForCheck();
+    }
 
     this.sprintService.findAllByBoard(this.boardId).subscribe((sprints) => {
       this.sprints = sprints;
-      this.loading = false;
+      if (withLoading) {
+        this.loading = false;
+      }
       this.cdRef.markForCheck();
     });
   }
@@ -118,11 +153,11 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.cdRef.markForCheck();
 
-        this.sprintService.startSprint(sprint.sprint?._id).subscribe({
+        this.websocketBoardService.startSprint({ sprintId: sprint.sprint?._id, boardId: this.boardId }).subscribe({
           next: () => {
-            this.loading = false;
             this.board.activeSprints.push(sprint.sprint);
             this.errorService.addSuccessMessage('Спринт запущен');
+            this.loading = false;
             this.cdRef.markForCheck();
           },
           error: () => {

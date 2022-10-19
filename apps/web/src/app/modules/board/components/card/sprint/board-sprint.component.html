@@ -1,85 +1,110 @@
-<div *ngIf="!loading" class="mt-2">
+<div
+  *ngIf="!loading"
+  class="mt-2">
   <p-accordion [multiple]="true">
-    <p-accordionTab *ngFor="let sprint of sprints" [selected]="true">
+    <p-accordionTab
+      *ngFor="let sprint of sprints"
+      [selected]="true">
       <ng-template pTemplate="header">
         <div class="flex flex-wrap justify-content-between w-full">
           <div class="flex flex-wrap gap-2 align-items-center">
             <h4 class="my-2">{{ sprint.sprint?.name || 'Список задач' }}</h4>
             <small class="text-gray-600">{{ sprint.tasks?.length }} проблем(ы)</small>
-            <p-tag *ngIf="sprint.sprint && (board?.activeSprints | findByKey: '_id': sprint.sprint?._id)" severity="success" value="АКТИВНО"></p-tag>
-            <small *ngIf="sprint.sprint" class="text-gray-600">
-              {{ sprint.sprint?.startDate ? (sprint.sprint?.startDate | date) : 'Неизвестно' }} - {{ sprint.sprint?.endDate ? (sprint.sprint?.endDate | date) : 'Неизвестно' }}
+            <p-tag
+              *ngIf="sprint.sprint && (board?.activeSprints | findByKey: '_id':sprint.sprint?._id)"
+              severity="success"
+              value="АКТИВНО"></p-tag>
+            <small
+              *ngIf="sprint.sprint"
+              class="text-gray-600">
+              {{ sprint.sprint?.startDate ? (sprint.sprint?.startDate | date) : 'Неизвестно' }} -
+              {{ sprint.sprint?.endDate ? (sprint.sprint?.endDate | date) : 'Неизвестно' }}
             </small>
           </div>
           <div>
-            <button *ngIf="!sprint.sprint"
-                    pButton type="button"
-                    label="Создать спринт"
-                    class="p-button-secondary p-button-text"
-                    routerLink="/sprint/add"
-                    [queryParams]="{ boardId: board?._id }"
-                    (click)="$event.stopPropagation()">
-            </button>
-            <button *ngIf="sprint.sprint && !(board?.activeSprints | findByKey: '_id': sprint.sprint?._id)"
-                    pButton type="button"
-                    label="Запустить спринт"
-                    class="p-button-success p-button-text"
-                    (click)="startSprint(sprint); $event.stopPropagation()">
-            </button>
-            <button *ngIf="sprint.sprint"
-                    pButton type="button"
-                    label="Изменить"
-                    class="p-button-secondary p-button-text"
-                    routerLink="/sprint/edit/{{ sprint.sprint?._id }}"
-                    (click)="$event.stopPropagation()">
-            </button>
-            <button *ngIf="sprint.sprint"
-                    pButton type="button"
-                    label="Сводка"
-                    class="p-button-text hidden md:inline-flex"
-                    (click)="openSprintUsersInfo(sprint); $event.stopPropagation()">
-            </button>
+            <button
+              *ngIf="!sprint.sprint"
+              pButton
+              type="button"
+              label="Создать спринт"
+              class="p-button-secondary p-button-text"
+              routerLink="/sprint/add"
+              [queryParams]="{ boardId: board?._id }"
+              (click)="$event.stopPropagation()"></button>
+            <button
+              *ngIf="sprint.sprint && !(board?.activeSprints | findByKey: '_id':sprint.sprint?._id)"
+              pButton
+              type="button"
+              label="Запустить спринт"
+              class="p-button-success p-button-text"
+              (click)="startSprint(sprint); $event.stopPropagation()"></button>
+            <button
+              *ngIf="sprint.sprint"
+              pButton
+              type="button"
+              label="Изменить"
+              class="p-button-secondary p-button-text"
+              routerLink="/sprint/edit/{{ sprint.sprint?._id }}"
+              (click)="$event.stopPropagation()"></button>
+            <button
+              *ngIf="sprint.sprint"
+              pButton
+              type="button"
+              label="Сводка"
+              class="p-button-text hidden md:inline-flex"
+              (click)="openSprintUsersInfo(sprint); $event.stopPropagation()"></button>
           </div>
         </div>
       </ng-template>
       <ng-template pTemplate="content">
-        <div *ngFor="let task of sprint.tasks | taskOrderBy"
-             class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-pointer"
-             [class.bg-red-50]="task.deadline ? (task.deadline | timeFromNow) < 0 && activeTask?._id !== task?._id : false"
-             [class.bg-yellow-50]="task.deadline ? (task.deadline | timeFromNow) < 3 && (task.deadline | timeFromNow) >= 0 && activeTask?._id !== task?._id : false"
-             [class.bg-blue-100]="activeTask?._id === task?._id"
-             [ngStyle]="{'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }"
-             (click)="activeTask = task">
+        <div
+          *ngFor="let task of sprint.tasks | taskOrderBy"
+          class="shadow-1 p-2 my-1 hover:bg-gray-100 cursor-pointer"
+          [class.bg-red-50]="task.deadline ? (task.deadline | timeFromNow) < 0 && activeTask?._id !== task?._id : false"
+          [class.bg-yellow-50]="
+            task.deadline ? (task.deadline | timeFromNow) < 3 && (task.deadline | timeFromNow) >= 0 && activeTask?._id !== task?._id : false
+          "
+          [class.bg-blue-100]="activeTask?._id === task?._id"
+          [ngStyle]="{ 'border-left': '4px solid ' + (task.priority | taskPriorityColor), 'border-radius': '5px' }"
+          (click)="activeTask = task">
           <div class="flex justify-content-between align-items-center">
             <div class="flex gap-2">
-              <a routerLink="/task/card/{{ task._id }}" (click)="$event.stopPropagation()">{{ board?.code }}-{{ task.number }}</a>
+              <a
+                routerLink="/task/card/{{ task._id }}"
+                (click)="$event.stopPropagation()">
+                {{ board?.code }}-{{ task.number }}
+              </a>
               <p>{{ task.name }}</p>
             </div>
             <div>
-              <grace-user-avatar *ngIf="task.executor"
-                                 [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }"
-                                 size="">
+              <grace-user-avatar
+                *ngIf="task.executor"
+                [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }"
+                size="">
               </grace-user-avatar>
             </div>
           </div>
-          <div class="flex flex-wrap gap-1" [class.mt-1]="!task.executor">
+          <div
+            class="flex flex-wrap gap-1"
+            [class.mt-1]="!task.executor">
             <p>{{ task.priority | taskPriorityName }}</p>
             <p>·</p>
             <p>{{ task.executor?.name || task.executor?.login || 'Не назначен' }}</p>
             <p>·</p>
-            <p>{{ task.deadline ? ('до ' + (task.deadline | date: 'dd.MM.YYYY')): 'Не назначен' }}</p>
+            <p>{{ task.deadline ? 'до ' + (task.deadline | date: 'dd.MM.YYYY') : 'Не назначен' }}</p>
             <p>·</p>
             <p>{{ task.grade ? (task.grade | number) + ' ч.' : 'Нет' }}</p>
           </div>
         </div>
-        <button *ngIf="!sprint.sprint"
-                pButton type="button"
-                [class.mt-3]="sprint.tasks?.length"
-                icon="pi pi-plus"
-                label="Создать задачу"
-                class="p-button-text"
-                (click)="createTask()">
-        </button>
+        <button
+          *ngIf="!sprint.sprint"
+          pButton
+          type="button"
+          [class.mt-3]="sprint.tasks?.length"
+          icon="pi pi-plus"
+          label="Создать задачу"
+          class="p-button-text"
+          (click)="createTask()"></button>
       </ng-template>
     </p-accordionTab>
   </p-accordion>
@@ -87,4 +112,6 @@
 
 <grace-spinner *ngIf="loading"></grace-spinner>
 
-<grace-task-short-info [(task)]="activeTask" (updateTasks)="load()"></grace-task-short-info>
+<grace-task-short-info
+  [(task)]="activeTask"
+  (updateTasks)="load()"></grace-task-short-info>
