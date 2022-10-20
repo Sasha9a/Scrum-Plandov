@@ -20,7 +20,6 @@ import { Model } from 'mongoose';
 export class BoardService extends BaseService<Board> {
   public constructor(
     @InjectModel(Board.name) private readonly boardModel: Model<Board>,
-    private readonly boardService: BoardService,
     private readonly userService: UserService,
     private readonly boardColumnService: ColumnBoardService,
     @Inject(forwardRef(() => TaskService)) private readonly taskService: TaskService,
@@ -47,7 +46,7 @@ export class BoardService extends BaseService<Board> {
       return { error: 'Нет такого аккаунта' };
     }
 
-    let board = await this.boardService.findById(id);
+    let board = await this.findById(id);
     if (!board) {
       return { error: 'Нет такого объекта!' };
     }
@@ -71,7 +70,7 @@ export class BoardService extends BaseService<Board> {
       }
     }
 
-    board = await this.boardService.findById(id);
+    board = await this.findById(id);
     let tasks = await this.taskService.findAll({ board: board, status: { $nin: board.columns.map((_column) => _column._id) } });
     for (const task of tasks) {
       task.status = board.columns[0];
@@ -87,7 +86,7 @@ export class BoardService extends BaseService<Board> {
       await task.save();
     }
 
-    const entity = await this.boardService.update<BoardFormDto>(id, bodyParams);
+    const entity = await this.update<BoardFormDto>(id, bodyParams);
     return { entity };
   }
 
@@ -97,7 +96,7 @@ export class BoardService extends BaseService<Board> {
       return { error: 'Нет такого аккаунта' };
     }
 
-    const board = await this.boardService.findById(id);
+    const board = await this.findById(id);
     if (!board) {
       return { error: 'Нет такого объекта!' };
     }
@@ -131,7 +130,7 @@ export class BoardService extends BaseService<Board> {
       await this.sprintService.delete(sprint._id);
     }
 
-    await this.boardService.delete(id);
+    await this.delete(id);
     return { error: null };
   }
 }
