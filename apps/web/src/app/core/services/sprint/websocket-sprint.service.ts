@@ -66,7 +66,7 @@ export class WebsocketSprintService extends WebsocketBaseService {
     return this.emitAsObservable(WsNameEnum.updateSprint, payload);
   }
 
-  public deleteSprint(payload: { boardId: string }): Observable<null> {
+  public deleteSprint(payload: { sprintId: string; boardId: string }): Observable<null> {
     return this.emitAsObservable(WsNameEnum.deleteSprint, payload);
   }
 }

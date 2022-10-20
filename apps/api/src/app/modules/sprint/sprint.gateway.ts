@@ -85,13 +85,13 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   @SubscribeMessage(WsNameEnum.deleteSprint)
   public async deleteSprint(
-    @MessageBody() data: { boardId: string },
+    @MessageBody() data: { sprintId: string; boardId: string },
     @ConnectedSocket() client: Socket
   ): Promise<WebsocketResultDto<null>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
     user._id = user.id;
 
-    const result = await this.sprintService.deleteSprint(data.boardId, user);
+    const result = await this.sprintService.deleteSprint(data.sprintId, user);
     if (result?.error) {
       console.error(result.error);
       throw new WsException(result.error);
