@@ -17,5 +17,6 @@ export enum WsNameEnum {
   updateSprint = 'updateSprint',
   deleteSprint = 'deleteSprint',
   startSprint = 'startSprint',
-  completedSprint = 'completedSprint'
+  completedSprint = 'completedSprint',
+  createJobRecord = 'createJobRecord'
 }

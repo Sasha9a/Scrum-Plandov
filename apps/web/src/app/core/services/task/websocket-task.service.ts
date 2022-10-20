@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { JobRecordDto } from '@scrum/shared/dtos/job-record/job.record.dto';
+import { JobRecordFormDto } from '@scrum/shared/dtos/job-record/job.record.form.dto';
 import { TaskDto } from '@scrum/shared/dtos/task/task.dto';
 import { TaskFormDto } from '@scrum/shared/dtos/task/task.form.dto';
 import { WsNameEnum } from '@scrum/shared/enums/ws-name.enum';
@@ -60,6 +62,10 @@ export class WebsocketTaskService extends WebsocketBaseService {
 
   public createTask(payload: { boardId: string; body: TaskFormDto }): Observable<TaskDto> {
     return this.emitAsObservable(WsNameEnum.createTask, payload);
+  }
+
+  public createJobRecord(payload: { boardId: string; body: JobRecordFormDto }): Observable<JobRecordDto> {
+    return this.emitAsObservable(WsNameEnum.createJobRecord, payload);
   }
 
   public updateTask(payload: { taskId: string; boardId: string; body: TaskFormDto }): Observable<TaskDto> {

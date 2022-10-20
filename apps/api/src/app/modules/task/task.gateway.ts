@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { forwardRef, Inject, UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -11,8 +11,11 @@ import {
 } from '@nestjs/websockets';
 import { BaseController } from '@scrum/api/core/controllers/base.controller';
 import { WsGuard } from '@scrum/api/core/guards/ws.guard';
+import { JobRecordService } from '@scrum/api/modules/job-record/job.record.service';
 import { TaskService } from '@scrum/api/modules/task/task.service';
 import { UserService } from '@scrum/api/modules/user/user.service';
+import { JobRecordDto } from '@scrum/shared/dtos/job-record/job.record.dto';
+import { JobRecordFormDto } from '@scrum/shared/dtos/job-record/job.record.form.dto';
 import { TaskDto } from '@scrum/shared/dtos/task/task.dto';
 import { TaskFormDto } from '@scrum/shared/dtos/task/task.form.dto';
 import { WebsocketResultDto } from '@scrum/shared/dtos/websocket/websocket.result.dto';
@@ -30,7 +33,11 @@ import { Server, Socket } from 'socket.io';
 export class TaskGateway extends BaseController implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() public server: Server;
 
-  public constructor(private readonly userService: UserService, private readonly taskService: TaskService) {
+  public constructor(
+    private readonly userService: UserService,
+    private readonly taskService: TaskService,
+    @Inject(forwardRef(() => JobRecordService)) private readonly jobRecordService: JobRecordService
+  ) {
     super();
   }
 
@@ -61,6 +68,26 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onCreateTask);
+      return { success: true, error: '', result: result.entity };
+    }
+  }
+
+  @UseGuards(WsGuard)
+  @SubscribeMessage(WsNameEnum.createJobRecord)
+  public async createJobRecord(
+    @MessageBody() data: { boardId: string; body: JobRecordFormDto },
+    @ConnectedSocket() client: Socket
+  ): Promise<WebsocketResultDto<JobRecordDto>> {
+    const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
+    user._id = user.id;
+
+    const result = await this.jobRecordService.createJobRecord(data.body, user);
+    if (result?.error) {
+      console.error(result.error);
+      throw new WsException(result.error);
+    }
+    if (result?.entity) {
+      client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateTask);
       return { success: true, error: '', result: result.entity };
     }
   }
