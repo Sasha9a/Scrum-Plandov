@@ -1,9 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { TaskDto } from "@scrum/shared/dtos/task/task.dto";
-import { TaskEditComponent } from "@scrum/web/modules/task/components/task/edit/task-edit.component";
-import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
-import { JobRecordAddComponent } from "@scrum/web/modules/task/components/job-record/add/job-record-add.component";
-import { JobRecordDto } from "@scrum/shared/dtos/job-record/job.record.dto";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
+import { JobRecordDto } from '@scrum/shared/dtos/job-record/job.record.dto';
+import { TaskDto } from '@scrum/shared/dtos/task/task.dto';
+import { JobRecordAddComponent } from '@scrum/web/modules/task/components/job-record/add/job-record-add.component';
+import { TaskEditComponent } from '@scrum/web/modules/task/components/task/edit/task-edit.component';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'grace-task-short-info',
@@ -11,7 +21,6 @@ import { JobRecordDto } from "@scrum/shared/dtos/job-record/job.record.dto";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
-
   @Input() public task: TaskDto;
   @Output() public taskChange = new EventEmitter<TaskDto>();
 
@@ -21,8 +30,7 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
 
   public ref: DynamicDialogRef;
 
-  public constructor(private readonly dialogService: DialogService) {
-  }
+  public constructor(private readonly dialogService: DialogService) {}
 
   public ngOnInit() {
     if (this.task) {
@@ -31,9 +39,7 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.ref) {
-      this.ref.close();
-    }
+    this.ref?.close();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -50,7 +56,7 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
   public editTask() {
     this.ref = this.dialogService.open(TaskEditComponent, {
       header: `${this.task?.board?.code}-${this.task?.number}`,
-      contentStyle: { 'overflow': 'auto' },
+      contentStyle: { overflow: 'auto' },
       styleClass: 'xl:w-4 lg:w-6 md:w-8 sm:w-10 w-full',
       baseZIndex: 99999,
       data: {
@@ -58,7 +64,7 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
 
-    this.ref.onClose.subscribe((res: { task: TaskDto, isDeleted: boolean }) => {
+    this.ref.onClose.subscribe((res: { task: TaskDto; isDeleted: boolean }) => {
       if (res?.isDeleted) {
         this.visible = false;
         this.closeTask();
@@ -74,7 +80,7 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
   public jobRecord() {
     this.ref = this.dialogService.open(JobRecordAddComponent, {
       header: `Вести журнал работы: ${this.task?.board?.code}-${this.task?.number}`,
-      contentStyle: { 'overflow': 'auto' },
+      contentStyle: { overflow: 'auto' },
       styleClass: 'xl:w-3 lg:w-6 md:w-7 sm:w-9 w-full',
       baseZIndex: 99999,
       data: {
@@ -89,5 +95,4 @@ export class TaskShortInfoComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
-
 }
