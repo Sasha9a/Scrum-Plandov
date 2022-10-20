@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
-import { BoardService } from "@scrum/web/core/services/board/board.service";
+import { ActivatedRoute, Router } from '@angular/router';
+import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
+import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
+import { BoardService } from '@scrum/web/core/services/board/board.service';
+import { WebsocketBoardService } from '@scrum/web/core/services/board/websocket-board.service';
 import { ConfirmDialogService } from '@scrum/web/core/services/confirm-dialog.service';
-import { ErrorService } from "@scrum/web/core/services/error.service";
-import { TitleService } from "@scrum/web/core/services/title.service";
-import { AuthService } from "@scrum/web/core/services/user/auth.service";
-import { UserService } from "@scrum/web/core/services/user/user.service";
-import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-board.service";
+import { ErrorService } from '@scrum/web/core/services/error.service';
+import { TitleService } from '@scrum/web/core/services/title.service';
+import { AuthService } from '@scrum/web/core/services/user/auth.service';
+import { UserService } from '@scrum/web/core/services/user/user.service';
 
 @Component({
   selector: 'grace-board-edit',
@@ -17,23 +17,24 @@ import { WebsocketBoardService } from "@scrum/web/core/services/board/websocket-
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardEditComponent implements OnInit, OnDestroy {
-
   public loading = false;
   public boardId: string;
   public board: BoardDto;
 
   public users: UserDto[] = [];
 
-  public constructor(private readonly boardService: BoardService,
-                     private readonly websocketBoardService: WebsocketBoardService,
-                     private readonly userService: UserService,
-                     private readonly authService: AuthService,
-                     private readonly route: ActivatedRoute,
-                     private readonly errorService: ErrorService,
-                     private readonly titleService: TitleService,
-                     private readonly cdRef: ChangeDetectorRef,
-                     private readonly router: Router,
-                     private readonly confirmService: ConfirmDialogService) {}
+  public constructor(
+    private readonly boardService: BoardService,
+    private readonly websocketBoardService: WebsocketBoardService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+    private readonly route: ActivatedRoute,
+    private readonly errorService: ErrorService,
+    private readonly titleService: TitleService,
+    private readonly cdRef: ChangeDetectorRef,
+    private readonly router: Router,
+    private readonly confirmService: ConfirmDialogService
+  ) {}
 
   public ngOnInit(): void {
     this.boardId = this.route.snapshot.params.id;
@@ -44,7 +45,7 @@ export class BoardEditComponent implements OnInit, OnDestroy {
 
     this.websocketBoardService.createWSConnection(this.authService.getToken(), this.boardId);
 
-    this.websocketBoardService.getBoard({ boardId: this.boardId }).subscribe((data) => {
+    this.boardService.findById<BoardDto>(this.boardId).subscribe((data) => {
       this.board = data;
       this.loading = false;
       this.titleService.setTitle(`${this.board?.name}`);
@@ -93,7 +94,7 @@ export class BoardEditComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.cdRef.markForCheck();
 
-        this.boardService.deleteById(this.boardId).subscribe(() => {
+        this.websocketBoardService.deleteBoard({ boardId: this.boardId }).subscribe(() => {
           this.loading = false;
           this.cdRef.markForCheck();
           this.errorService.addSuccessMessage(`Доска "${this.board.name}" удалена`);
@@ -102,5 +103,4 @@ export class BoardEditComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 }
