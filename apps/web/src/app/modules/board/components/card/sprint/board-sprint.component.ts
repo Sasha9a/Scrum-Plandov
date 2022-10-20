@@ -73,7 +73,12 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.onUpdateBoard$?.unsubscribe();
+    this.onCreateSprint$?.unsubscribe();
     this.onUpdateSprint$?.unsubscribe();
+    this.onDeleteSprint$?.unsubscribe();
+    this.onCreateTask$?.unsubscribe();
+    this.onUpdateTask$?.unsubscribe();
+    this.onDeleteTask$?.unsubscribe();
     this.ref?.close();
   }
 

@@ -52,7 +52,13 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public ref: DynamicDialogRef;
 
   private onUpdateBoard$: Subscription;
+
   private onUpdateSprint$: Subscription;
+  private onDeleteSprint$: Subscription;
+
+  private onCreateTask$: Subscription;
+  private onUpdateTask$: Subscription;
+  private onDeleteTask$: Subscription;
 
   public constructor(
     public readonly authService: AuthService,
@@ -79,13 +85,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       return this.errorService.addCustomError('Ошибка', 'Произошла ошибка, вернитесь на главную и попробуйте снова.');
     }
 
-    this.onUpdateBoard$ = this.websocketBoardService.onUpdateBoard$.subscribe(() => {
-      this.loadBoard(false);
-    });
-
-    this.onUpdateSprint$ = this.websocketSprintService.onUpdateSprint$.subscribe(() => {
-      this.loadBoard();
-    });
+    this.initSubscribes();
 
     const filters = localStorage.getItem(`board.filters.${this.boardId}`);
     if (filters) {
@@ -98,6 +98,33 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this.onUpdateBoard$?.unsubscribe();
     this.onUpdateSprint$?.unsubscribe();
+    this.onDeleteSprint$?.unsubscribe();
+    this.onCreateTask$?.unsubscribe();
+    this.onUpdateTask$?.unsubscribe();
+    this.onDeleteTask$?.unsubscribe();
+  }
+
+  public initSubscribes() {
+    this.onUpdateBoard$ = this.websocketBoardService.onUpdateBoard$.subscribe(() => {
+      this.loadBoard(false);
+    });
+
+    this.onUpdateSprint$ = this.websocketSprintService.onUpdateSprint$.subscribe(() => {
+      this.load(false);
+    });
+    this.onDeleteSprint$ = this.websocketSprintService.onDeleteSprint$.subscribe(() => {
+      this.load(false);
+    });
+
+    this.onCreateTask$ = this.websocketTaskService.onCreateTask$.subscribe(() => {
+      this.load(false);
+    });
+    this.onUpdateTask$ = this.websocketTaskService.onUpdateTask$.subscribe(() => {
+      this.load(false);
+    });
+    this.onDeleteTask$ = this.websocketTaskService.onDeleteTask$.subscribe(() => {
+      this.load(false);
+    });
   }
 
   public loadBoard(withLoading = true) {
@@ -120,13 +147,13 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
       this.cdRef.markForCheck();
-      this.load();
+      this.load(withLoading);
     });
   }
 
-  public load() {
+  public load(withLoading = true) {
     if (this.board?.activeSprints?.length) {
-      this.loadSprint(this.board?.activeSprints[0]);
+      this.loadSprint(this.board?.activeSprints[0], withLoading);
     } else {
       this.updateInfoColumns();
     }
@@ -162,9 +189,11 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
     ];
   }
 
-  public loadSprint(sprint: SprintDto) {
-    this.loading = true;
-    this.cdRef.markForCheck();
+  public loadSprint(sprint: SprintDto, withLoading = true) {
+    if (withLoading) {
+      this.loading = true;
+      this.cdRef.markForCheck();
+    }
 
     if (this.activeSprint !== sprint) {
       this.activeSprint = sprint;
@@ -173,7 +202,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       this.tasks = tasks;
       this.endDate = moment(this.activeSprint.endDate).diff(moment().subtract(1, 'day'), 'days');
       this.updateInfoColumns();
-      this.loading = false;
+      if (withLoading) {
+        this.loading = false;
+      }
       this.cdRef.markForCheck();
     });
   }
