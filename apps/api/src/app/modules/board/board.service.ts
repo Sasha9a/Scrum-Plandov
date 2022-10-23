@@ -51,7 +51,7 @@ export class BoardService extends BaseService<Board> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id) {
+    if (board.createdUser?.id !== user._id.toString()) {
       return { error: 'Нет прав' };
     }
 
@@ -101,7 +101,7 @@ export class BoardService extends BaseService<Board> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id) {
+    if (board.createdUser?.id !== user._id.toString()) {
       return { error: 'Нет прав' };
     }
 

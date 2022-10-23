@@ -18,9 +18,10 @@ export class WebsocketBaseService {
         if (response.success) {
           subscriber.next(response.result);
           subscriber.complete();
+        } else {
+          subscriber.error(response.error);
+          this.errorService.addCustomError(response.error);
         }
-        subscriber.error(response.error);
-        this.errorService.addCustomError(response.error);
       });
     });
   }
