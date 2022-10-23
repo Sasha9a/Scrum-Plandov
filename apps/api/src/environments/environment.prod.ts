@@ -15,5 +15,5 @@ export const environment: ConfigInterface = {
       pass: 'YC4j1sQnDizkmTkLHbYq'
     }
   },
-  url: 'https://scrum-nash.ru'
+  url: 'https://scrum.plandov.ru'
 };
