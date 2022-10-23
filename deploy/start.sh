@@ -35,7 +35,7 @@ sudo ufw allow 'Nginx Full'
 sudo ufw delete allow 'Nginx HTTP'
 sudo ufw enable
 ufw allow ssh
-git clone https://github.com/Sasha9a/Grace-Scrum.git
+git clone https://github.com/Sasha9a/Grace-Scrum.git -b v0.0.3
 cd Grace-Scrum
 sudo npm install
 nx affected:build --all --prod
