@@ -11,7 +11,7 @@ export const environment: ConfigInterface = {
     secure: true,
     from: 'Scrum <aleksander.dovgiy@yandex.ru>',
     auth: {
-      user: 'aleksander.dovgiy',
+      user: 'aleksander.dovgiy@yandex.ru',
       pass: 'nbwbculshslypfpd'
     }
   },
