@@ -58,7 +58,6 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     @ConnectedSocket() client: Socket
   ): Promise<WebsocketResultDto<TaskDto>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
-    user._id = user.id;
 
     const result = await this.taskService.createTask(data.body, user);
     if (result?.error) {
@@ -78,7 +77,6 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     @ConnectedSocket() client: Socket
   ): Promise<WebsocketResultDto<JobRecordDto>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
-    user._id = user.id;
 
     const result = await this.jobRecordService.createJobRecord(data.body, user);
     if (result?.error) {
@@ -98,7 +96,6 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     @ConnectedSocket() client: Socket
   ): Promise<WebsocketResultDto<TaskDto>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
-    user._id = user.id;
 
     const result = await this.taskService.updateTask(data.taskId, data.body, user);
     if (result?.error) {
@@ -118,7 +115,6 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     @ConnectedSocket() client: Socket
   ): Promise<WebsocketResultDto<null>> {
     const user = await this.userService.getUserByAuthorization(client.handshake.headers.authorization);
-    user._id = user.id;
 
     const result = await this.taskService.deleteTask(data.taskId, user);
     if (result?.error) {

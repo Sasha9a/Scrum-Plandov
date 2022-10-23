@@ -28,7 +28,7 @@ export class SprintService extends BaseService<Sprint> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (board.createdUser?.id !== user._id.toString() && board.users.findIndex((_user) => _user.id === user._id.toString()) === -1) {
       return { error: 'Нет доступа!' };
     }
 
@@ -44,7 +44,7 @@ export class SprintService extends BaseService<Sprint> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (board.createdUser?.id !== user._id.toString() && board.users.findIndex((_user) => _user.id === user._id.toString()) === -1) {
       return { error: 'Нет доступа!' };
     }
 
@@ -66,7 +66,7 @@ export class SprintService extends BaseService<Sprint> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (board.createdUser?.id !== user._id.toString() && board.users.findIndex((_user) => _user.id === user._id.toString()) === -1) {
       return { error: 'Нет доступа!' };
     }
 
@@ -93,7 +93,7 @@ export class SprintService extends BaseService<Sprint> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (board.createdUser?.id !== user._id.toString() && board.users.findIndex((_user) => _user.id === user._id.toString()) === -1) {
       return { error: 'Нет доступа!' };
     }
 
@@ -109,7 +109,10 @@ export class SprintService extends BaseService<Sprint> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (sprint.board.createdUser?.id !== user._id && sprint.board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (
+      sprint.board.createdUser?.id !== user._id.toString() &&
+      sprint.board.users.findIndex((_user) => _user.id === user._id.toString()) === -1
+    ) {
       return { error: 'Нет доступа!' };
     }
 

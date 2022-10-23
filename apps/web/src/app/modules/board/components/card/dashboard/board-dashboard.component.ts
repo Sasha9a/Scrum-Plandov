@@ -113,7 +113,7 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
       this.load(false);
     });
     this.onDeleteSprint$ = this.websocketSprintService.onDeleteSprint$.subscribe(() => {
-      this.load(false);
+      this.loadBoard(false);
     });
 
     this.onCreateTask$ = this.websocketTaskService.onCreateTask$.subscribe(() => {
@@ -142,6 +142,9 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
           value: user?._id
         };
       });
+
+      this.activeSprint = null;
+      this.tasks = [];
 
       if (withLoading) {
         this.loading = false;
@@ -266,7 +269,13 @@ export class BoardDashboardComponent implements OnInit, OnDestroy {
     this.websocketTaskService
       .updateTask({ taskId: this.draggedTask?._id, boardId: this.boardId, body: { ...this.draggedTask, status: column } })
       .subscribe({
-        next: () => (this.draggedTask = null),
+        next: (task) => {
+          this.tasks = this.tasks.filter((_task) => _task?._id !== task?._id);
+          this.tasks.push(task);
+          this.draggedTask = null;
+          this.updateInfoColumns();
+          this.cdRef.markForCheck();
+        },
         error: () => (this.draggedTask = null)
       });
   }

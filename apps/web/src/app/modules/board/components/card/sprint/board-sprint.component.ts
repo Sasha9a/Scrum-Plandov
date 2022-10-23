@@ -94,7 +94,7 @@ export class BoardSprintComponent implements OnInit, OnDestroy {
       this.load(false);
     });
     this.onDeleteSprint$ = this.websocketSprintService.onDeleteSprint$.subscribe(() => {
-      this.load(false);
+      this.loadBoard(false);
     });
 
     this.onCreateTask$ = this.websocketTaskService.onCreateTask$.subscribe(() => {

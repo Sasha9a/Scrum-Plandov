@@ -30,7 +30,7 @@ export class TaskService extends BaseService<Task> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (board.createdUser?.id !== user._id.toString() && board.users.findIndex((_user) => _user.id === user._id.toString()) === -1) {
       return { error: 'Нет доступа!' };
     }
     bodyParams.number = board.indexTaskNumber;
@@ -53,7 +53,7 @@ export class TaskService extends BaseService<Task> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (board.createdUser?.id !== user._id && board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (board.createdUser?.id !== user._id.toString() && board.users.findIndex((_user) => _user.id === user._id.toString()) === -1) {
       return { error: 'Нет доступа!' };
     }
 
@@ -85,7 +85,10 @@ export class TaskService extends BaseService<Task> {
       return { error: 'Нет такого объекта!' };
     }
 
-    if (task.board.createdUser?.id !== user._id && task.board.users.findIndex((_user) => _user.id === user._id) === -1) {
+    if (
+      task.board.createdUser?.id !== user._id.toString() &&
+      task.board.users.findIndex((_user) => _user.id === user._id.toString()) === -1
+    ) {
       return { error: 'Нет доступа!' };
     }
 
