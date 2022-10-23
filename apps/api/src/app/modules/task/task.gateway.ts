@@ -6,8 +6,7 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
-  WsException
+  WebSocketServer
 } from '@nestjs/websockets';
 import { BaseController } from '@scrum/api/core/controllers/base.controller';
 import { WsGuard } from '@scrum/api/core/guards/ws.guard';
@@ -64,7 +63,7 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     const result = await this.taskService.createTask(data.body, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onCreateTask);
@@ -84,7 +83,7 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     const result = await this.jobRecordService.createJobRecord(data.body, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateTask);
@@ -104,7 +103,7 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     const result = await this.taskService.updateTask(data.taskId, data.body, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateTask);
@@ -124,7 +123,7 @@ export class TaskGateway extends BaseController implements OnGatewayConnection, 
     const result = await this.taskService.deleteTask(data.taskId, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     client.broadcast.to(data.boardId).emit(WsNameEnum.onDeleteTask);
     return { success: true, error: '', result: null };

@@ -6,8 +6,7 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
-  WsException
+  WebSocketServer
 } from '@nestjs/websockets';
 import { BaseController } from '@scrum/api/core/controllers/base.controller';
 import { WsGuard } from '@scrum/api/core/guards/ws.guard';
@@ -73,7 +72,7 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
     const result = await this.boardService.updateBoard(data.boardId, data.body, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
@@ -93,7 +92,7 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
     const result = await this.sprintService.startSprint(data.sprintId, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
     return { success: true, error: '', result: null };
@@ -111,7 +110,7 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
     const result = await this.sprintService.completedSprint(data.sprintId, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateBoard);
     return { success: true, error: '', result: null };
@@ -126,7 +125,7 @@ export class BoardGateway extends BaseController implements OnGatewayConnection,
     const result = await this.boardService.deleteBoard(data.boardId, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     client.broadcast.to(data.boardId).emit(WsNameEnum.onDeleteBoard);
     return { success: true, error: '', result: null };

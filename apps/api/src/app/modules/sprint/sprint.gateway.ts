@@ -6,8 +6,7 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
-  WsException
+  WebSocketServer
 } from '@nestjs/websockets';
 import { WsGuard } from '@scrum/api/core/guards/ws.guard';
 import { SprintService } from '@scrum/api/modules/sprint/sprint.service';
@@ -54,7 +53,7 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const result = await this.sprintService.createSprint(data.body, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onCreateSprint);
@@ -74,7 +73,7 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const result = await this.sprintService.updateSprint(data.sprintId, data.body, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     if (result?.entity) {
       client.broadcast.to(data.boardId).emit(WsNameEnum.onUpdateSprint);
@@ -94,7 +93,7 @@ export class SprintGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const result = await this.sprintService.deleteSprint(data.sprintId, user);
     if (result?.error) {
       console.error(result.error);
-      throw new WsException(result.error);
+      return { success: false, error: result.error, result: null };
     }
     client.broadcast.to(data.boardId).emit(WsNameEnum.onDeleteSprint);
     return { success: true, error: '', result: null };
