@@ -1,4 +1,4 @@
-import { ConfigInterface } from "@scrum/shared/interfaces/config.interface";
+import { ConfigInterface } from '@scrum/shared/interfaces/config.interface';
 
 export const environment: ConfigInterface = {
   production: false,
@@ -12,7 +12,7 @@ export const environment: ConfigInterface = {
     from: 'Scrum <aleksandr_dovgiyy@mail.ru>',
     auth: {
       user: 'aleksandr_dovgiyy@mail.ru',
-      pass: 'l1ucQZn786rjy9QSScSp'
+      pass: 'YC4j1sQnDizkmTkLHbYq'
     }
   },
   url: 'http://localhost:4200'
