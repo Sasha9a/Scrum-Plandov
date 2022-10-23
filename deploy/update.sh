@@ -15,15 +15,15 @@ echo 'Connect to Server...'
 # echo 'vm.vfs_cache_pressure=50' | sudo tee -a /etc/sysctl.conf
 
 umask 777
-ssh -tt -i ~/.ssh/id_rsa root@85.193.86.74 << EOF
+ssh -tt -i ~/.ssh/id_rsa root@89.223.64.41 << EOF
 cd Grace-Scrum
 sudo git pull
 sudo npm install
 nx affected:build --all --prod
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum-nash.ru
-sudo ln -s /etc/nginx/sites-available/scrum-nash.ru /etc/nginx/sites-enabled/
-sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum-nash.ru/html
-sudo certbot --nginx --reinstall --redirect -d scrum-nash.ru -d www.scrum-nash.ru
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
+sudo ln -s /etc/nginx/sites-available/scrum.plandov.ru /etc/nginx/sites-enabled/
+sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum.plandov.ru/html
+sudo certbot --nginx --reinstall --redirect -d scrum.plandov.ru -d www.scrum.plandov.ru
 sudo pm2 restart 0
 exit
 EOF

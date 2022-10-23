@@ -15,7 +15,7 @@ echo 'Connect to Server...'
 # echo 'vm.vfs_cache_pressure=50' | sudo tee -a /etc/sysctl.conf
 
 umask 777
-ssh -tt -i ~/.ssh/id_rsa root@85.193.86.74 << EOF
+ssh -tt -i ~/.ssh/id_rsa root@89.223.64.41 << EOF
 sudo apt -y update
 sudo curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
 sudo apt -y install nodejs
@@ -39,13 +39,13 @@ git clone https://github.com/Sasha9a/Grace-Scrum.git
 cd Grace-Scrum
 sudo npm install
 nx affected:build --all --prod
-sudo mkdir -p /var/www/scrum-nash.ru/html
-sudo chown -R $USER:$USER /var/www/scrum-nash.ru/html
-sudo chmod -R 755 /var/www/scrum-nash.ru
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum-nash.ru
-sudo ln -s /etc/nginx/sites-available/scrum-nash.ru /etc/nginx/sites-enabled/
-sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum-nash.ru/html
-sudo certbot --nginx --reinstall --redirect -d scrum-nash.ru -d www.scrum-nash.ru
+sudo mkdir -p /var/www/scrum.plandov.ru/html
+sudo chown -R $USER:$USER /var/www/scrum.plandov.ru/html
+sudo chmod -R 755 /var/www/scrum.plandov.ru
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
+sudo ln -s /etc/nginx/sites-available/scrum.plandov.ru /etc/nginx/sites-enabled/
+sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum.plandov.ru/html
+sudo certbot --nginx --reinstall --redirect -d scrum.plandov.ru -d www.scrum.plandov.ru
 sudo systemctl enable mongodb
 sudo pm2 start dist/apps/api/main.js
 sudo pm2 save
