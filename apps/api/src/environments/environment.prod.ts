@@ -7,7 +7,7 @@ export const environment: ConfigInterface = {
   expiresIn: Number(process.env.EXPIRES_IN) || 2592000,
   mail: {
     host: 'smtp.yandex.ru',
-    port: 465,
+    port: 25,
     secure: true,
     from: 'Scrum <aleksander.dovgiy@yandex.ru>',
     auth: {
