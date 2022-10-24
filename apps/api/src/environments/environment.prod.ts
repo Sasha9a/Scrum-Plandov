@@ -6,13 +6,13 @@ export const environment: ConfigInterface = {
   db: process.env.DB || 'mongodb://localhost:27017/scrum',
   expiresIn: Number(process.env.EXPIRES_IN) || 2592000,
   mail: {
-    host: 'smtp.yandex.ru',
-    port: 25,
+    host: 'smtp.mail.ru',
+    port: 465,
     secure: true,
-    from: 'Scrum <aleksander.dovgiy@yandex.ru>',
+    from: 'Scrum <aleksandr_dovgiyy@mail.ru>',
     auth: {
-      user: 'aleksander.dovgiy@yandex.ru',
-      pass: 'nbwbculshslypfpd'
+      user: 'aleksandr_dovgiyy@mail.ru',
+      pass: 'YC4j1sQnDizkmTkLHbYq'
     }
   },
   url: 'https://scrum.plandov.ru'
