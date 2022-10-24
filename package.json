@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/platform-socket.io": "^8.4.7",
     "@nestjs/websockets": "^8.4.7",
+    "@nestjs-modules/mailer": "^1.8.1",
     "@nrwl/angular": "14.1.9",
     "bcrypt": "^5.0.1",
     "chart.js": "^3.8.0",

@@ -1,3 +1,4 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { BaseController } from '@scrum/api/core/controllers/base.controller';
 import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
@@ -24,7 +25,8 @@ export class UserController extends BaseController {
   public constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
-    private readonly verifyService: VerifyService
+    private readonly verifyService: VerifyService,
+    private readonly mailService: MailerService
   ) {
     super();
   }
@@ -93,7 +95,7 @@ export class UserController extends BaseController {
       throw new NotFoundException('Произошла ошибка');
     }
 
-    await sendMail({
+    await this.mailService.sendMail({
       to: bodyParams.email,
       subject: 'Регистрация на Plandov Scrum',
       html: `
@@ -108,6 +110,22 @@ export class UserController extends BaseController {
         </div>
       </div>`
     });
+
+    // await sendMail({
+    //   to: bodyParams.email,
+    //   subject: 'Регистрация на Plandov Scrum',
+    //   html: `
+    //   <div style="display: flex; justify-content: center; text-align: center">
+    //     <div>
+    //       <h3>Добрый день! Вы подали заявку на регистрацию в Plandov Scrum</h3>
+    //       <p>Чтобы продолжить регистрацию нажмите на кнопку ниже.</p>
+    //       <div style="margin-top: 1rem">
+    //         <a href="${environment.url}/user/verify/${pathVerify}" target="_blank" style="padding: 0.5rem;border-radius: 10px;border: none;background-color: green;color: white">Подтвердить</a>
+    //       </div>
+    //       <p style="margin-top: 5rem">Если вы не оставляли заявку на регистрацию, то проигнорируйте это письмо</p>
+    //     </div>
+    //   </div>`
+    // });
 
     bodyParams.password = bcrypt.hashSync(bodyParams.password, 10);
     const newUser = await this.userService.create<UserCreateFormDto>(bodyParams);

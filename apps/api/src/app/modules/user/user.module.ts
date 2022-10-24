@@ -1,17 +1,18 @@
-import { JwtModule } from "@nestjs/jwt";
-import { MongooseModule } from "@nestjs/mongoose";
-import { PassportModule } from "@nestjs/passport";
-import { JwtAuthGuard } from "@scrum/api/core/guards/jwt-auth.guard";
-import { RoleGuard } from "@scrum/api/core/guards/role.guard";
-import { WsGuard } from "@scrum/api/core/guards/ws.guard";
-import { AuthService } from "@scrum/api/modules/user/auth.service";
-import { JwtStrategy } from "@scrum/api/modules/user/jwt.strategy";
-import { UserController } from "@scrum/api/modules/user/user.controller";
-import { UserService } from "@scrum/api/modules/user/user.service";
-import { VerifyModule } from "@scrum/api/modules/verify/verify.module";
-import { User, UserSchema } from "@scrum/shared/schemas/user.schema";
-import { environment } from "../../../environments/environment";
-import { Module } from "@nestjs/common";
+import { MailerModule } from '@nestjs-modules/mailer';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from '@nestjs/passport';
+import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
+import { RoleGuard } from '@scrum/api/core/guards/role.guard';
+import { WsGuard } from '@scrum/api/core/guards/ws.guard';
+import { AuthService } from '@scrum/api/modules/user/auth.service';
+import { JwtStrategy } from '@scrum/api/modules/user/jwt.strategy';
+import { UserController } from '@scrum/api/modules/user/user.controller';
+import { UserService } from '@scrum/api/modules/user/user.service';
+import { VerifyModule } from '@scrum/api/modules/verify/verify.module';
+import { User, UserSchema } from '@scrum/shared/schemas/user.schema';
+import { environment } from '../../../environments/environment';
 
 @Module({
   imports: [
@@ -25,6 +26,20 @@ import { Module } from "@nestjs/common";
       secret: environment.secret,
       signOptions: {
         expiresIn: environment.expiresIn
+      }
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: environment.mail.host,
+        port: environment.mail.port,
+        secure: environment.mail.secure,
+        auth: {
+          user: environment.mail.auth.user,
+          pass: environment.mail.auth.pass
+        }
+      },
+      defaults: {
+        from: environment.mail.from
       }
     }),
     VerifyModule
