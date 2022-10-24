@@ -95,10 +95,11 @@ export class UserController extends BaseController {
       throw new NotFoundException('Произошла ошибка');
     }
 
-    await this.mailService.sendMail({
-      to: bodyParams.email,
-      subject: 'Регистрация на Plandov Scrum',
-      html: `
+    await this.mailService
+      .sendMail({
+        to: bodyParams.email,
+        subject: 'Регистрация на Plandov Scrum',
+        html: `
       <div style="display: flex; justify-content: center; text-align: center">
         <div>
           <h3>Добрый день! Вы подали заявку на регистрацию в Plandov Scrum</h3>
@@ -109,7 +110,8 @@ export class UserController extends BaseController {
           <p style="margin-top: 5rem">Если вы не оставляли заявку на регистрацию, то проигнорируйте это письмо</p>
         </div>
       </div>`
-    });
+      })
+      .catch(console.error);
 
     // await sendMail({
     //   to: bodyParams.email,
