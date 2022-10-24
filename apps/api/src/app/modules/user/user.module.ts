@@ -1,4 +1,3 @@
-import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -26,20 +25,6 @@ import { environment } from '../../../environments/environment';
       secret: environment.secret,
       signOptions: {
         expiresIn: environment.expiresIn
-      }
-    }),
-    MailerModule.forRoot({
-      transport: {
-        host: environment.mail.host,
-        port: environment.mail.port,
-        secure: environment.mail.secure,
-        auth: {
-          user: environment.mail.auth.user,
-          pass: environment.mail.auth.pass
-        }
-      },
-      defaults: {
-        from: environment.mail.from
       }
     }),
     VerifyModule
