@@ -9,10 +9,10 @@ export const environment: ConfigInterface = {
     host: 'smtp.mail.ru',
     port: 465,
     secure: true,
-    from: 'Scrum <aleksandr_dovgiyy@mail.ru>',
+    from: 'Scrum <scrum.plandov@mail.ru>',
     auth: {
-      user: 'aleksandr_dovgiyy@mail.ru',
-      pass: 'YC4j1sQnDizkmTkLHbYq'
+      user: 'scrum.plandov@mail.ru',
+      pass: 'j9XUZgEgjddADsyVyp50'
     }
   },
   url: 'http://localhost:4200'
