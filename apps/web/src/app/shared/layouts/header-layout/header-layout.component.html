@@ -3,28 +3,36 @@
     <div class="col-11">
       <div class="flex justify-content-between align-items-center flex-wrap">
         <p class="text-2xl my-3">
-          <a routerLink="/" class="text-black-alpha-90 font-bold">
+          <a
+            [routerLink]="authService.currentUser ? '/board' : '/'"
+            class="text-black-alpha-90 font-bold">
             Scrum
           </a>
         </p>
         <div>
-          <p-avatar *ngIf="!authService.currentUser"
-                    icon="pi pi-user" size="large"
-                    styleClass="cursor-pointer"
-                    shape="circle"
-                    routerLink="/user/login">
+          <p-avatar
+            *ngIf="!authService.currentUser"
+            icon="pi pi-user"
+            size="large"
+            styleClass="cursor-pointer"
+            shape="circle"
+            routerLink="/user/login">
           </p-avatar>
-          <scrum-user-avatar *ngIf="authService.currentUser"
-                             [user]="userAvatar"
-                             (click)="op.toggle($event)"
-                             class="cursor-pointer">
+          <scrum-user-avatar
+            *ngIf="authService.currentUser"
+            [user]="userAvatar"
+            (click)="op.toggle($event)"
+            class="cursor-pointer">
           </scrum-user-avatar>
-          <p-overlayPanel #op styleClass="dropdown-overlay-panel">
+          <p-overlayPanel
+            #op
+            styleClass="dropdown-overlay-panel">
             <ng-template pTemplate>
-              <p-menu [model]="menuHeader"
-                      [style]="{ 'border': 'none' }"
-                      styleClass="w-full"
-                      (click)="op.hide()">
+              <p-menu
+                [model]="menuHeader"
+                [style]="{ border: 'none' }"
+                styleClass="w-full"
+                (click)="op.hide()">
               </p-menu>
             </ng-template>
           </p-overlayPanel>
