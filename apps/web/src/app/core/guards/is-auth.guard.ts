@@ -6,14 +6,14 @@ import { Observable, tap } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class IsAuthGuard implements CanActivate {
   public constructor(private readonly authService: AuthService, private readonly router: Router) {}
 
   public canActivate(): Observable<boolean> {
     return this.authService.isAuthenticated().pipe(
       tap((authenticated) => {
-        if (!authenticated) {
-          this.router.navigate(['/user/login']).catch(console.error);
+        if (authenticated) {
+          this.router.navigate(['/board']).catch(console.error);
         }
       })
     );
