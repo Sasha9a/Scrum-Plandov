@@ -1,0 +1,45 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "production" ]
+  pull_request:
+    branches: [ "production" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+    - name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        key: ${{secrets.SERVER_SSH}}
+        host: ${{secrets.SERVER_IP}}
+        username: ${{secrets.SERVER_USERNAME}}
+        script: |
+          cd Scrum-Plandov
+          sudo git pull
+          nx affected:build --all --prod
+          sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
+          sudo ln -s /etc/nginx/sites-available/scrum.plandov.ru /etc/nginx/sites-enabled/
+          sudo cp -r ~/Scrum-Plandov/dist/apps/web/* /var/www/scrum.plandov.ru/html
+          sudo certbot --nginx --reinstall --redirect -d scrum.plandov.ru -d www.scrum.plandov.ru
+          sudo pm2 restart 0
