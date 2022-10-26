@@ -25,6 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: '~/Scrum-Plandov/package-lock.json'
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
@@ -35,7 +36,7 @@ jobs:
         host: ${{secrets.SERVER_IP}}
         username: ${{secrets.SERVER_USERNAME}}
         script: |
-          cd ~/Scrum-Plandov
+          cd Scrum-Plandov
           sudo git pull
           nx affected:build --all --prod
           sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
