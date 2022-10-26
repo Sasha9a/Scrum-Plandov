@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
        run:
-         working-directory: "~/Scrum-Plandov"
+         working-directory: "/root/Scrum-Plandov"
 
     strategy:
       matrix:
@@ -30,7 +30,7 @@ jobs:
         username: ${{secrets.SERVER_USERNAME}}
         script: |
           ls -la
-          cd ~/Scrum-Plandov
+          cd /root/Scrum-Plandov
           sudo git pull
           nx affected:build --all --prod
           sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
