@@ -29,8 +29,9 @@ jobs:
         host: ${{secrets.SERVER_IP}}
         username: ${{secrets.SERVER_USERNAME}}
         script: |
-          ls -la
+          pwd
           cd /root/Scrum-Plandov
+          pwd
           sudo git pull
           nx affected:build --all --prod
           sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
