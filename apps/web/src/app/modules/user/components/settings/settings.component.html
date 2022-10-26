@@ -4,17 +4,17 @@
   <div class="xl:col-4 md:col-6 col-12">
     <div class="mt-3">
       <ng-container *ngIf="activeItemMenu.id === 'info'">
-        <grace-user-info *ngIf="!loading" [user]="$any(authService.currentUser)"></grace-user-info>
+        <scrum-user-info *ngIf="!loading" [user]="$any(authService.currentUser)"></scrum-user-info>
       </ng-container>
       <ng-container *ngIf="activeItemMenu.id === 'edit'">
-        <grace-user-edit-form [user]="$any(authService.currentUser)" [(loading)]="loading" (save)="edit($event)"></grace-user-edit-form>
+        <scrum-user-edit-form [user]="$any(authService.currentUser)" [(loading)]="loading" (save)="edit($event)"></scrum-user-edit-form>
       </ng-container>
       <ng-container *ngIf="activeItemMenu.id === 'pass'">
-        <grace-change-password-form *ngIf="!loading" (save)="changePassword($event)"></grace-change-password-form>
+        <scrum-change-password-form *ngIf="!loading" (save)="changePassword($event)"></scrum-change-password-form>
       </ng-container>
       <ng-container *ngIf="activeItemMenu.id === 'email'">
         <ng-container *ngIf="!loading">
-          <grace-recovery-form *ngIf="!nextStep" (save)="changeEmail($event)" textButton="Сменить"></grace-recovery-form>
+          <scrum-recovery-form *ngIf="!nextStep" (save)="changeEmail($event)" textButton="Сменить"></scrum-recovery-form>
           <div *ngIf="nextStep" class="text-center">
             <h3>На эту почту было отправлено письмо с подтверждением. Подтвердите и почта поменяется на вашем аккаунте.</h3>
           </div>
@@ -24,4 +24,4 @@
   </div>
 </div>
 
-<grace-spinner *ngIf="loading"></grace-spinner>
+<scrum-spinner *ngIf="loading"></scrum-spinner>

@@ -1,4 +1,4 @@
-<grace-task-form *ngIf="!loading && task"
+<scrum-task-form *ngIf="!loading && task"
                  [task]="task"
                  [users]="users"
                  [sprints]="sprints"
@@ -6,6 +6,6 @@
                  (delete)="delete()"
                  [canDelete]="true"
                  [showBack]="false">
-</grace-task-form>
+</scrum-task-form>
 
-<grace-spinner *ngIf="loading || !task"></grace-spinner>
+<scrum-spinner *ngIf="loading || !task"></scrum-spinner>

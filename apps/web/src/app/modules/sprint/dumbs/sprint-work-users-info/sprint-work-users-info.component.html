@@ -1,4 +1,4 @@
-<grace-table name="sprintWorkUsersInfo"
+<scrum-table name="sprintWorkUsersInfo"
              [columns]="columns"
              [values]="values">
   <ng-template #rowTemplate let-info="item">
@@ -6,7 +6,7 @@
       <td>
         <ng-container *ngIf="info.user; else noUser">
           <div class="flex align-items-center gap-2">
-            <grace-user-avatar [user]="{ name: info.user?.name, login: info.user?.login, file: info.user?.avatar }" size=""></grace-user-avatar>
+            <scrum-user-avatar [user]="{ name: info.user?.name, login: info.user?.login, file: info.user?.avatar }" size=""></scrum-user-avatar>
             <p class="h-full">{{ info.user?.name || info.user?.login }}</p>
           </div>
         </ng-container>
@@ -27,4 +27,4 @@
       <td>{{ sprint.sumInfo?.left ? (sprint.sumInfo?.left | number) : 0 }} ч.</td>
     </tr>
   </ng-template>
-</grace-table>
+</scrum-table>

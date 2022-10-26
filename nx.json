@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "grace-scrum",
+  "npmScope": "scrum-plandov",
   "affected": {
     "defaultBase": "master"
   },

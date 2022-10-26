@@ -13,12 +13,12 @@
             <span class="text-blue-400">Переключить спринт</span>
           </ng-template>
           <ng-template pTemplate="content">
-            <grace-single-select
+            <scrum-single-select
               [options]="board?.activeSprints"
               [(selectedItem)]="activeSprint"
               (selectedItemChange)="changeSprint(); inplace.deactivate()"
               [filter]="false">
-            </grace-single-select>
+            </scrum-single-select>
           </ng-template>
         </p-inplace>
       </div>
@@ -93,10 +93,10 @@
                 (click)="$event.stopPropagation()"
                 >{{ board?.code }}-{{ task.number }}</a
               >
-              <grace-user-avatar
+              <scrum-user-avatar
                 *ngIf="task.executor"
                 [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }"
-                size=""></grace-user-avatar>
+                size=""></scrum-user-avatar>
             </div>
             <p [class.mt-2]="!task.executor">{{ task.name }}</p>
             <p class="mt-2">{{ task.priority | taskPriorityName }}</p>
@@ -127,8 +127,8 @@
   </div>
 </div>
 
-<grace-spinner *ngIf="loading"></grace-spinner>
+<scrum-spinner *ngIf="loading"></scrum-spinner>
 
-<grace-task-short-info
+<scrum-task-short-info
   [(task)]="activeTask"
-  (updateTasks)="load()"></grace-task-short-info>
+  (updateTasks)="load()"></scrum-task-short-info>

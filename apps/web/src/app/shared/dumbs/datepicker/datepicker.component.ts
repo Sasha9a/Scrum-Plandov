@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'grace-datepicker',
+  selector: 'scrum-datepicker',
   templateUrl: './datepicker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerComponent {
-
   public _value: Date;
 
   public _minDate: Date;
@@ -49,5 +48,4 @@ export class DatepickerComponent {
   @Input() public inputStyleClass: string;
   @Input() public timeOnly = false;
   @Input() public showTime = false;
-
 }

@@ -1,7 +1,7 @@
-<grace-job-record-form *ngIf="!saving"
+<scrum-job-record-form *ngIf="!saving"
                        [task]="task"
                        (save)="create($event)"
                        [showBack]="false">
-</grace-job-record-form>
+</scrum-job-record-form>
 
-<grace-spinner *ngIf="saving"></grace-spinner>
+<scrum-spinner *ngIf="saving"></scrum-spinner>

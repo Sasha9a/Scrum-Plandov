@@ -13,31 +13,31 @@
 
   <div class="field">
     <label class="font-bold">Исполнитель</label>
-    <grace-single-select [options]="users"
+    <scrum-single-select [options]="users"
                          [(selectedItem)]="task.executor"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.executor }"
                          [showClear]="true"
                          appendTo="body"
                          optionLabel="login"
                          filterBy="login">
-    </grace-single-select>
+    </scrum-single-select>
     <p *ngIf="errors?.executor" class="p-error">{{ errors.executor | join }}</p>
   </div>
 
   <div class="field">
     <label class="font-bold">Спринт</label>
-    <grace-single-select [options]="sprints"
+    <scrum-single-select [options]="sprints"
                          [(selectedItem)]="task.sprint"
                          [showClear]="true"
                          appendTo="body"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.sprint }">
-    </grace-single-select>
+    </scrum-single-select>
     <p *ngIf="errors?.sprint" class="p-error">{{ errors.sprint | join }}</p>
   </div>
 
   <div class="field">
     <label class="font-bold required-field">Приоритет</label>
-    <grace-single-select [options]="priorities"
+    <scrum-single-select [options]="priorities"
                          [(selectedItem)]="task.priority"
                          [ngClass]="{ 'ng-invalid ng-dirty': errors?.priority }"
                          [isTemplateCombined]="true"
@@ -45,7 +45,7 @@
                          [filter]="false"
                          dataKey="name">
       <ng-template #itemTemplate let-priority="item">{{ priority.value | taskPriorityName }}</ng-template>
-    </grace-single-select>
+    </scrum-single-select>
     <p *ngIf="errors?.priority" class="p-error">{{ errors.priority | join }}</p>
   </div>
 
@@ -57,7 +57,7 @@
 
   <div class="field">
     <label class="font-bold">Дедлайн</label>
-    <grace-datepicker [(value)]="task.deadline" [ngClass]="{ 'ng-invalid ng-dirty': errors?.deadline }"></grace-datepicker>
+    <scrum-datepicker [(value)]="task.deadline" [ngClass]="{ 'ng-invalid ng-dirty': errors?.deadline }"></scrum-datepicker>
     <p *ngIf="errors?.deadline" class="p-error">{{ errors.deadline | join }}</p>
   </div>
 
@@ -65,10 +65,10 @@
     <label class="font-bold">Вложенные файлы</label>
     <div *ngIf="task.files?.length" class="flex gap-4 mb-1">
       <ng-container *ngFor="let file of task.files">
-        <grace-file *ngIf="file" [file]="file" [canDelete]="true" (delete)="deleteFile(file)"></grace-file>
+        <scrum-file *ngIf="file" [file]="file" [canDelete]="true" (delete)="deleteFile(file)"></scrum-file>
       </ng-container>
     </div>
-    <grace-file-uploader [multiple]="true" [maxFileSize]="52428800" (filesUploaded)="filesUploaded($event)"></grace-file-uploader>
+    <scrum-file-uploader [multiple]="true" [maxFileSize]="52428800" (filesUploaded)="filesUploaded($event)"></scrum-file-uploader>
     <p *ngIf="errors?.files" class="p-error">{{ errors.files | join }}</p>
   </div>
 
@@ -77,7 +77,7 @@
 <div class="flex flex-wrap justify-content-between mt-5">
   <div>
     <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(task)"></button>
-    <grace-go-back-button *ngIf="showBack" [route]="route" [queryParams]="queryParams"></grace-go-back-button>
+    <scrum-go-back-button *ngIf="showBack" [route]="route" [queryParams]="queryParams"></scrum-go-back-button>
   </div>
   <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(task)"></button>
 </div>

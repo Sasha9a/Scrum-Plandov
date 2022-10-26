@@ -35,8 +35,8 @@ sudo ufw allow 'Nginx Full'
 sudo ufw delete allow 'Nginx HTTP'
 sudo ufw enable
 ufw allow ssh
-git clone https://github.com/Sasha9a/Grace-Scrum.git -b v0.0.3
-cd Grace-Scrum
+git clone https://github.com/Sasha9a/Scrum-Plandov.git -b v0.0.3
+cd Scrum-Plandov
 sudo npm install
 nx affected:build --all --prod
 sudo mkdir -p /var/www/scrum.plandov.ru/html
@@ -44,7 +44,7 @@ sudo chown -R $USER:$USER /var/www/scrum.plandov.ru/html
 sudo chmod -R 755 /var/www/scrum.plandov.ru
 sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
 sudo ln -s /etc/nginx/sites-available/scrum.plandov.ru /etc/nginx/sites-enabled/
-sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum.plandov.ru/html
+sudo cp -r ~/Scrum-Plandov/dist/apps/web/* /var/www/scrum.plandov.ru/html
 sudo certbot --nginx --reinstall --redirect -d scrum.plandov.ru -d www.scrum.plandov.ru
 sudo systemctl enable mongodb
 sudo pm2 start dist/apps/api/main.js

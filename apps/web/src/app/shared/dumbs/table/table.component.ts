@@ -6,17 +6,18 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output, SimpleChanges,
+  Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation
-} from "@angular/core";
-import { CrmTableColumn } from "@scrum/web/core/models/crm-table-column";
-import { DomHandler } from "primeng/dom";
-import { Table, TableService } from "primeng/table";
-import { ObjectUtils } from "primeng/utils";
+} from '@angular/core';
+import { CrmTableColumn } from '@scrum/web/core/models/crm-table-column';
+import { DomHandler } from 'primeng/dom';
+import { Table, TableService } from 'primeng/table';
+import { ObjectUtils } from 'primeng/utils';
 
 @Component({
-  selector: 'grace-table[name]',
+  selector: 'scrum-table[name]',
   templateUrl: './table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +33,6 @@ import { ObjectUtils } from "primeng/utils";
   ]
 })
 export class TableComponent implements OnInit, OnChanges {
-
   @ViewChild('table', { static: true }) private table: Table;
 
   @ContentChild('headerTemplate') public headerTemplate: any;
@@ -69,7 +69,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() public rowGroupMode: string;
 
   @Input() public reorderableColumns: boolean;
-  @Output() public rowReorder = new EventEmitter<{ dragIndex: number, dropIndex: number }>();
+  @Output() public rowReorder = new EventEmitter<{ dragIndex: number; dropIndex: number }>();
 
   @Input() public autoLayout = false;
 
@@ -77,10 +77,11 @@ export class TableComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     if (!this.sort) {
-      this.sort = localStorage.getItem(`table.${this.name}.sort`)
-        ?? this.columns.find(column => column.sort && column.defaultSort)?.sort
-        ?? this.columns.find(column => column.sort)?.sort
-        ?? '';
+      this.sort =
+        localStorage.getItem(`table.${this.name}.sort`) ??
+        this.columns.find((column) => column.sort && column.defaultSort)?.sort ??
+        this.columns.find((column) => column.sort)?.sort ??
+        '';
     }
 
     const selectedColumnsNames = localStorage.getItem(`table.${this.name}.columns`);
@@ -104,15 +105,11 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   public getSortIconClass(sort: string): string {
-    return this.sort.includes(sort)
-      ? this.sort[0] === '-' ? 'pi pi-sort-down' : 'pi pi-sort-up'
-      : 'pi pi-sort';
+    return this.sort.includes(sort) ? (this.sort[0] === '-' ? 'pi pi-sort-down' : 'pi pi-sort-up') : 'pi pi-sort';
   }
 
   public setSort(sort: string): void {
-    this.sort = this.sort === sort
-      ? sort[0] === '-' ? sort.substring(1) : `-${sort}`
-      : sort;
+    this.sort = this.sort === sort ? (sort[0] === '-' ? sort.substring(1) : `-${sort}`) : sort;
     localStorage.setItem(`table.${this.name}.sort`, this.sort);
     if (this.groupRowsBy) {
       this.values = [...this.values];
@@ -123,12 +120,11 @@ export class TableComponent implements OnInit, OnChanges {
 
   public updateSelectedColumnsMap() {
     this.selectedColumnsMap = {};
-    this.selectedColumns.forEach((col) => this.selectedColumnsMap[col.name as string] = true);
+    this.selectedColumns.forEach((col) => (this.selectedColumnsMap[col.name as string] = true));
   }
 
   public setFilterColumns(selectedColumns: CrmTableColumn[]) {
     this.updateSelectedColumnsMap();
-    localStorage.setItem(`table.${this.name}.columns`, JSON.stringify(selectedColumns.map(col => col.name)));
+    localStorage.setItem(`table.${this.name}.columns`, JSON.stringify(selectedColumns.map((col) => col.name)));
   }
-
 }

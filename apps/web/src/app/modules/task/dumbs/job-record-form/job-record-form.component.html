@@ -9,7 +9,7 @@
 <div class="flex flex-wrap justify-content-between mt-5">
   <div>
     <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(jobRecord)"></button>
-    <grace-go-back-button *ngIf="showBack" [route]="route" [queryParams]="queryParams"></grace-go-back-button>
+    <scrum-go-back-button *ngIf="showBack" [route]="route" [queryParams]="queryParams"></scrum-go-back-button>
   </div>
   <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(jobRecord)"></button>
 </div>

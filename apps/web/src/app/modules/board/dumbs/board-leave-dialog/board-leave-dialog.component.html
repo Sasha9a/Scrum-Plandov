@@ -2,16 +2,16 @@
   <p>Вы действительно хотите покинуть доску?</p>
   <div *ngIf="authService.currentUser?._id === board?.createdUser?._id" class="mt-3">
     <p>Так как вы являетесь владельцем доски, выберите пользователя которому передадите свои права</p>
-    <grace-single-select [options]="board?.users"
+    <scrum-single-select [options]="board?.users"
                          [(selectedItem)]="userSelect"
                          appendTo="body"
                          optionLabel="login"
                          styleClass="mt-2"
                          filterBy="login"
                          placeholder="Пользователь">
-    </grace-single-select>
+    </scrum-single-select>
   </div>
   <button pButton type="button" icon="pi pi-times" label="Покинуть" class="p-button-danger mt-3" (click)="leaveBoard()"></button>
 </ng-container>
 
-<grace-spinner *ngIf="loading"></grace-spinner>
+<scrum-spinner *ngIf="loading"></scrum-spinner>

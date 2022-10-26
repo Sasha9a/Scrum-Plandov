@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'grace-multi-select',
+  selector: 'scrum-multi-select',
   templateUrl: './multi-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiSelectComponent implements OnChanges {
-
   public isNotNamedArray = false;
 
   @Input() public options: any[];
@@ -60,7 +59,7 @@ export class MultiSelectComponent implements OnChanges {
 
   public setNamedValue(items: string[] | number[], fieldToRewrite: 'options' | 'selectedItems') {
     if (typeof items[0] === 'string' || typeof items[0] === 'number') {
-      this[fieldToRewrite] = items.map(item => ({
+      this[fieldToRewrite] = items.map((item) => ({
         name: item,
         value: item
       }));
@@ -84,5 +83,4 @@ export class MultiSelectComponent implements OnChanges {
       this.selectedItemsChange.emit(event.value);
     }
   }
-
 }

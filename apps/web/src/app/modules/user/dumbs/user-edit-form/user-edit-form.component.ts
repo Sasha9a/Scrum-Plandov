@@ -1,19 +1,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FileDto } from "@scrum/shared/dtos/file.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
-import { UserEditFormDto } from "@scrum/shared/dtos/user/user.edit.form.dto";
-import { AuthService } from "@scrum/web/core/services/user/auth.service";
-import { UserService } from "@scrum/web/core/services/user/user.service";
-import { validate } from "@scrum/web/core/services/validation/validate.service";
-import { BaseFormComponent } from "@scrum/web/shared/dumbs/base-form/base-form.component";
+import { FileDto } from '@scrum/shared/dtos/file.dto';
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
+import { UserEditFormDto } from '@scrum/shared/dtos/user/user.edit.form.dto';
+import { AuthService } from '@scrum/web/core/services/user/auth.service';
+import { UserService } from '@scrum/web/core/services/user/user.service';
+import { validate } from '@scrum/web/core/services/validation/validate.service';
+import { BaseFormComponent } from '@scrum/web/shared/dumbs/base-form/base-form.component';
 
 @Component({
-  selector: 'grace-user-edit-form',
+  selector: 'scrum-user-edit-form',
   templateUrl: './user-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditFormComponent extends BaseFormComponent<UserEditFormDto> {
-
   @Input() public user = new UserEditFormDto();
   public dto = UserEditFormDto;
 
@@ -24,18 +23,19 @@ export class UserEditFormComponent extends BaseFormComponent<UserEditFormDto> {
 
   public errorLogin: string;
 
-  public constructor(private readonly userService: UserService,
-                     private readonly authService: AuthService) {
+  public constructor(private readonly userService: UserService, private readonly authService: AuthService) {
     super();
   }
 
   public onAvatarFileSelect(file: FileDto) {
     this.user.avatar = file;
-    this.userService.update<Partial<UserDto>, UserDto>(this.authService.currentUser?._id, {
-      avatar: file,
-      login: this.authService.currentUser?.login,
-      name: this.authService.currentUser?.name
-    }).subscribe();
+    this.userService
+      .update<Partial<UserDto>, UserDto>(this.authService.currentUser?._id, {
+        avatar: file,
+        login: this.authService.currentUser?.login,
+        name: this.authService.currentUser?.name
+      })
+      .subscribe();
     this.authService.updateLoggedUser({ avatar: file });
   }
 
@@ -66,5 +66,4 @@ export class UserEditFormComponent extends BaseFormComponent<UserEditFormDto> {
       });
     }
   }
-
 }

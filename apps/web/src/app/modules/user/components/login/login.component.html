@@ -1,12 +1,12 @@
 <div class="grid justify-content-center">
   <div class="xl:col-4 md:col-6 col-12">
     <ng-container *ngIf="!loading">
-      <grace-login-form (save)="login($event)"></grace-login-form>
+      <scrum-login-form (save)="login($event)"></scrum-login-form>
       <div class="flex justify-content-between mt-4">
         <a class="text-lg" routerLink="/user/recovery">Забыли пароль?</a>
         <a class="text-lg" routerLink="/user/register">Регистрация</a>
       </div>
     </ng-container>
-    <grace-spinner *ngIf="loading"></grace-spinner>
+    <scrum-spinner *ngIf="loading"></scrum-spinner>
   </div>
 </div>

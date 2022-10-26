@@ -1,10 +1,10 @@
-<grace-task-form *ngIf="!saving"
+<scrum-task-form *ngIf="!saving"
                  [board]="board"
                  [sprint]="sprint"
                  [users]="users"
                  [sprints]="sprints"
                  (save)="create($event)"
                  [showBack]="false">
-</grace-task-form>
+</scrum-task-form>
 
-<grace-spinner *ngIf="saving"></grace-spinner>
+<scrum-spinner *ngIf="saving"></scrum-spinner>

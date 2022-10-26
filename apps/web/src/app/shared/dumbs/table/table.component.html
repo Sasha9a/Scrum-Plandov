@@ -20,7 +20,7 @@
   <ng-container *ngIf="filterColumns">
     <ng-template pTemplate="caption">
       <div style="width: 300px">
-        <grace-multi-select
+        <scrum-multi-select
           [options]="columns"
           [(selectedItems)]="selectedColumns"
           (selectedItemsChange)="setFilterColumns($event)"
@@ -30,7 +30,7 @@
           optionLabel="label"
           placeholder="Выберите столбцы"
           dataKey="name">
-        </grace-multi-select>
+        </scrum-multi-select>
       </div>
     </ng-template>
   </ng-container>

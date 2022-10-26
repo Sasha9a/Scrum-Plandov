@@ -2,29 +2,29 @@
   <div class="col">
     <div class="grid">
       <div class="col-12 md:col-6 xl:col-3 pb-0">
-        <grace-daterangepicker [value]="[queryParams?.from, queryParams?.to]" (changeValue)="setDateFilters($event)"></grace-daterangepicker>
+        <scrum-daterangepicker [value]="[queryParams?.from, queryParams?.to]" (changeValue)="setDateFilters($event)"></scrum-daterangepicker>
       </div>
       <div class="col-12 md:col-6 xl:col-3 pb-0">
-        <grace-user-multi-select [users]="filters.users"
+        <scrum-user-multi-select [users]="filters.users"
                                  [(selectedUsers)]="selectedFilters.users"
                                  (selectedUsersChange)="setEntityFilters('userIds', $any($event))"
                                  [labelInput]="true">
-        </grace-user-multi-select>
+        </scrum-user-multi-select>
       </div>
       <div class="col-12 md:col-6 xl:col-3 pb-0">
-        <grace-multi-select [options]="filters.sprints"
+        <scrum-multi-select [options]="filters.sprints"
                             [(selectedItems)]="selectedFilters.sprints"
                             (selectedItemsChange)="setEntityFilters('sprintIds', $event)"
                             [label]="'Спринт'">
-        </grace-multi-select>
+        </scrum-multi-select>
       </div>
 
       <div class="col-12 md:col-6 xl:col-3 pb-0">
-        <grace-task-multi-select [tasks]="filters.tasks"
+        <scrum-task-multi-select [tasks]="filters.tasks"
                                  [(selectedTasks)]="selectedFilters.tasks"
                                  (selectedTasksChange)="setEntityFilters('taskIds', $any($event))"
                                  [labelInput]="true">
-        </grace-task-multi-select>
+        </scrum-task-multi-select>
       </div>
     </div>
   </div>
@@ -39,7 +39,7 @@
   <p-skeleton *ngIf="loading" width="100%" height="400px"></p-skeleton>
 </div>
 
-<grace-table name="report.spent"
+<scrum-table name="report.spent"
              [columns]="columns"
              [values]="data?.items"
              [loading]="loading">
@@ -56,4 +56,4 @@
       <td>{{ item.spent | number }}</td>
     </tr>
   </ng-template>
-</grace-table>
+</scrum-table>

@@ -1,18 +1,17 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { UserCreateFormDto } from "@scrum/shared/dtos/user/user.create.form.dto";
-import { UserPasswordService } from "@scrum/web/core/services/user/user-password.service";
-import { UserService } from "@scrum/web/core/services/user/user.service";
-import { validate } from "@scrum/web/core/services/validation/validate.service";
-import { BaseFormComponent } from "@scrum/web/shared/dumbs/base-form/base-form.component";
-import { forkJoin } from "rxjs";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { UserCreateFormDto } from '@scrum/shared/dtos/user/user.create.form.dto';
+import { UserPasswordService } from '@scrum/web/core/services/user/user-password.service';
+import { UserService } from '@scrum/web/core/services/user/user.service';
+import { validate } from '@scrum/web/core/services/validation/validate.service';
+import { BaseFormComponent } from '@scrum/web/shared/dumbs/base-form/base-form.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'grace-register-form',
+  selector: 'scrum-register-form',
   templateUrl: './register-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterFormComponent extends BaseFormComponent<UserCreateFormDto> {
-
   public userRegister = new UserCreateFormDto();
   public dto = UserCreateFormDto;
 
@@ -26,8 +25,7 @@ export class RegisterFormComponent extends BaseFormComponent<UserCreateFormDto> 
   public errorLogin: string;
   public errorEmail: string;
 
-  public constructor(private readonly passwordService: UserPasswordService,
-                     private readonly userService: UserService) {
+  public constructor(private readonly passwordService: UserPasswordService, private readonly userService: UserService) {
     super();
   }
 
@@ -88,5 +86,4 @@ export class RegisterFormComponent extends BaseFormComponent<UserCreateFormDto> 
       });
     }
   }
-
 }

@@ -16,7 +16,7 @@ import { TaskEditComponent } from '@scrum/web/modules/task/components/task/edit/
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'grace-task-short-info',
+  selector: 'scrum-task-short-info',
   templateUrl: './task-short-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

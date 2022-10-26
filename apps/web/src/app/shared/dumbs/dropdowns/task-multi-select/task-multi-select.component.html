@@ -1,4 +1,4 @@
-<grace-multi-select [options]="tasks"
+<scrum-multi-select [options]="tasks"
                     [(selectedItems)]="selectedTasks"
                     (selectedItemsChange)="selectedTasksChange.emit($event)"
                     filterBy="name,number"
@@ -13,4 +13,4 @@
       <div class="text-gray-500">{{ task.name | truncate }}</div>
     </div>
   </ng-template>
-</grace-multi-select>
+</scrum-multi-select>

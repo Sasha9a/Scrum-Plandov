@@ -18,7 +18,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'grace-board-sprint',
+  selector: 'scrum-board-sprint',
   templateUrl: './board-sprint.component.html',
   styleUrls: ['./board-sprint.component.scss'],
   encapsulation: ViewEncapsulation.None,

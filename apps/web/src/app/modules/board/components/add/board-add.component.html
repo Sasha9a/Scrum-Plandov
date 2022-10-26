@@ -1,13 +1,13 @@
 <div *ngIf="!saving" class="grid justify-content-center">
   <div class="md:col-6 col-12">
     <h1 class="text-center">Создание доски</h1>
-    <grace-board-form [board]="board"
+    <scrum-board-form [board]="board"
                       [users]="users"
                       (searchUser)="searchUser($event)"
                       (save)="create($event)"
                       route="/board">
-    </grace-board-form>
+    </scrum-board-form>
   </div>
 </div>
 
-<grace-spinner *ngIf="saving"></grace-spinner>
+<scrum-spinner *ngIf="saving"></scrum-spinner>

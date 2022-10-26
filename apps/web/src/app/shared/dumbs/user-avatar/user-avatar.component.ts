@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FileDto } from "@scrum/shared/dtos/file.dto";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FileDto } from '@scrum/shared/dtos/file.dto';
 
 @Component({
-  selector: 'grace-user-avatar',
+  selector: 'scrum-user-avatar',
   templateUrl: './user-avatar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserAvatarComponent {
-
-  @Input() public user: { name: string, login: string, file?: FileDto };
+  @Input() public user: { name: string; login: string; file?: FileDto };
   @Input() public size = 'large';
   @Input() public shape: 'circle' | 'square' = 'circle';
 
@@ -20,5 +19,4 @@ export class UserAvatarComponent {
       return this.user?.login ? this.user.login.substring(0, 2).toUpperCase() : '';
     }
   }
-
 }

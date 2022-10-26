@@ -12,7 +12,7 @@ import { AuthService } from '@scrum/web/core/services/user/auth.service';
 import { UserService } from '@scrum/web/core/services/user/user.service';
 
 @Component({
-  selector: 'grace-board-edit',
+  selector: 'scrum-board-edit',
   templateUrl: './board-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

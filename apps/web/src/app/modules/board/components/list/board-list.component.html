@@ -3,7 +3,7 @@
   <button pButton type="button" icon="pi pi-plus" label="Создать доску" class="p-button-success" routerLink="/board/add"></button>
 </div>
 
-<grace-table name="boards"
+<scrum-table name="boards"
              [loading]="loading"
              [columns]="columns"
              [values]="boards">
@@ -18,4 +18,4 @@
       </td>
     </tr>
   </ng-template>
-</grace-table>
+</scrum-table>

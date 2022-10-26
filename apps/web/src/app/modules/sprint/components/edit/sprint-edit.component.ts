@@ -10,7 +10,7 @@ import { TitleService } from '@scrum/web/core/services/title.service';
 import { AuthService } from '@scrum/web/core/services/user/auth.service';
 
 @Component({
-  selector: 'grace-sprint-edit',
+  selector: 'scrum-sprint-edit',
   templateUrl: './sprint-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

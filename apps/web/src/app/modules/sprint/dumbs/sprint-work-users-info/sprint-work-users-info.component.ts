@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SprintTasksInfoDto } from "@scrum/shared/dtos/sprint/sprint.tasks.info.dto";
-import { SprintWorkUserInfoDto } from "@scrum/shared/dtos/sprint/sprint.work.user.info.dto";
-import { CrmTableColumn } from "@scrum/web/core/models/crm-table-column";
-import { DynamicDialogConfig } from "primeng/dynamicdialog";
+import { SprintTasksInfoDto } from '@scrum/shared/dtos/sprint/sprint.tasks.info.dto';
+import { SprintWorkUserInfoDto } from '@scrum/shared/dtos/sprint/sprint.work.user.info.dto';
+import { CrmTableColumn } from '@scrum/web/core/models/crm-table-column';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'grace-sprint-work-users-info',
+  selector: 'scrum-sprint-work-users-info',
   templateUrl: './sprint-work-users-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SprintWorkUsersInfoComponent {
-
   public sprint: SprintTasksInfoDto;
   public values: SprintWorkUserInfoDto[];
 
@@ -29,5 +28,4 @@ export class SprintWorkUsersInfoComponent {
   public toInfo(info: any): SprintWorkUserInfoDto {
     return info as SprintWorkUserInfoDto;
   }
-
 }

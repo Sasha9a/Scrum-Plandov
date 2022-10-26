@@ -1,31 +1,32 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Router } from "@angular/router";
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { BoardFormDto } from "@scrum/shared/dtos/board/board.form.dto";
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
-import { BoardService } from "@scrum/web/core/services/board/board.service";
-import { ErrorService } from "@scrum/web/core/services/error.service";
-import { AuthService } from "@scrum/web/core/services/user/auth.service";
-import { UserService } from "@scrum/web/core/services/user/user.service";
+import { Router } from '@angular/router';
+import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
+import { BoardFormDto } from '@scrum/shared/dtos/board/board.form.dto';
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
+import { BoardService } from '@scrum/web/core/services/board/board.service';
+import { ErrorService } from '@scrum/web/core/services/error.service';
+import { AuthService } from '@scrum/web/core/services/user/auth.service';
+import { UserService } from '@scrum/web/core/services/user/user.service';
 
 @Component({
-  selector: 'grace-board-add',
+  selector: 'scrum-board-add',
   templateUrl: './board-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardAddComponent {
-
   public board = new BoardFormDto();
   public saving = false;
 
   public users: UserDto[] = [];
 
-  public constructor(private readonly boardService: BoardService,
-                     private readonly userService: UserService,
-                     private readonly authService: AuthService,
-                     private readonly router: Router,
-                     private readonly errorService: ErrorService,
-                     private readonly cdRef: ChangeDetectorRef) {}
+  public constructor(
+    private readonly boardService: BoardService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly errorService: ErrorService,
+    private readonly cdRef: ChangeDetectorRef
+  ) {}
 
   public searchUser(login: string) {
     if (login.length > 1) {
@@ -55,5 +56,4 @@ export class BoardAddComponent {
       }
     });
   }
-
 }

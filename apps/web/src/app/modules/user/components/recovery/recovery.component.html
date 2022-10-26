@@ -3,12 +3,12 @@
     <ng-container *ngIf="!nextStep">
       <h1 class="text-center">Восстановление пароля</h1>
       <ng-container *ngIf="!loading">
-        <grace-recovery-form (save)="click($event)"></grace-recovery-form>
+        <scrum-recovery-form (save)="click($event)"></scrum-recovery-form>
         <div class="mt-4">
           <a class="text-lg" routerLink="/user/login">Назад</a>
         </div>
       </ng-container>
-      <grace-spinner *ngIf="loading"></grace-spinner>
+      <scrum-spinner *ngIf="loading"></scrum-spinner>
     </ng-container>
     <div *ngIf="nextStep" class="text-center">
       <h3>На эту почту было отправлено письмо с дальнейшими инструкциями.</h3>

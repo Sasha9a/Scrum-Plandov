@@ -14,7 +14,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'grace-task-edit',
+  selector: 'scrum-task-edit',
   templateUrl: './task-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

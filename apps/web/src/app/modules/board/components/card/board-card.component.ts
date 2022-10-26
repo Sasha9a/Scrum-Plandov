@@ -9,7 +9,7 @@ import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'grace-board-card',
+  selector: 'scrum-board-card',
   templateUrl: './board-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -3,12 +3,12 @@
   class="grid justify-content-center">
   <div class="xl:col-4 md:col-6 col-12">
     <h1 class="text-center">Создание спринта</h1>
-    <grace-sprint-form
+    <scrum-sprint-form
       [board]="board"
       (save)="create($event)"
       route="/board/card/{{ boardId }}/sprint">
-    </grace-sprint-form>
+    </scrum-sprint-form>
   </div>
 </div>
 
-<grace-spinner *ngIf="saving"></grace-spinner>
+<scrum-spinner *ngIf="saving"></scrum-spinner>

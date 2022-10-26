@@ -14,11 +14,11 @@
                     shape="circle"
                     routerLink="/user/login">
           </p-avatar>
-          <grace-user-avatar *ngIf="authService.currentUser"
+          <scrum-user-avatar *ngIf="authService.currentUser"
                              [user]="userAvatar"
                              (click)="op.toggle($event)"
                              class="cursor-pointer">
-          </grace-user-avatar>
+          </scrum-user-avatar>
           <p-overlayPanel #op styleClass="dropdown-overlay-panel">
             <ng-template pTemplate>
               <p-menu [model]="menuHeader"

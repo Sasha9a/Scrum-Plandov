@@ -1,7 +1,7 @@
 {
   "projectType": "application",
   "sourceRoot": "apps/web/src",
-  "prefix": "grace",
+  "prefix": "scrum",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",

@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import moment from "moment-timezone";
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import moment from 'moment-timezone';
 
 @Component({
-  selector: 'grace-footer-layout',
+  selector: 'scrum-footer-layout',
   templateUrl: './footer-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterLayoutComponent implements OnInit {
-
   public footerYear: string;
 
   public ngOnInit(): void {

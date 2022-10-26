@@ -6,7 +6,7 @@ import { WebsocketTaskService } from '@scrum/web/core/services/task/websocket-ta
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'grace-job-record-add',
+  selector: 'scrum-job-record-add',
   templateUrl: './job-record-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

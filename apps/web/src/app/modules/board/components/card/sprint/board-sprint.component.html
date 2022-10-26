@@ -77,11 +77,11 @@
               <p>{{ task.name }}</p>
             </div>
             <div>
-              <grace-user-avatar
+              <scrum-user-avatar
                 *ngIf="task.executor"
                 [user]="{ name: task.executor?.name, login: task.executor?.login, file: task.executor?.avatar }"
                 size="">
-              </grace-user-avatar>
+              </scrum-user-avatar>
             </div>
           </div>
           <div
@@ -110,8 +110,8 @@
   </p-accordion>
 </div>
 
-<grace-spinner *ngIf="loading"></grace-spinner>
+<scrum-spinner *ngIf="loading"></scrum-spinner>
 
-<grace-task-short-info
+<scrum-task-short-info
   [(task)]="activeTask"
-  (updateTasks)="load()"></grace-task-short-info>
+  (updateTasks)="load()"></scrum-task-short-info>

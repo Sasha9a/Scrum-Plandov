@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'grace-main-page',
+  selector: 'scrum-main-page',
   templateUrl: './main-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainPageComponent {
-
-}
+export class MainPageComponent {}

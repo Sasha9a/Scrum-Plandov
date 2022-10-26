@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'grace-spinner',
+  selector: 'scrum-spinner',
   templateUrl: './spinner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpinnerComponent {
-
   @Input() public text = 'Загрузка...';
-
 }

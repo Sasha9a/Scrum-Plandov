@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UserPasswordFormDto } from "@scrum/shared/dtos/user/user.password.form.dto";
-import { UserPasswordService } from "@scrum/web/core/services/user/user-password.service";
-import { BaseFormComponent } from "@scrum/web/shared/dumbs/base-form/base-form.component";
+import { UserPasswordFormDto } from '@scrum/shared/dtos/user/user.password.form.dto';
+import { UserPasswordService } from '@scrum/web/core/services/user/user-password.service';
+import { BaseFormComponent } from '@scrum/web/shared/dumbs/base-form/base-form.component';
 
 @Component({
-  selector: 'grace-change-password-form',
+  selector: 'scrum-change-password-form',
   templateUrl: './change-password-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangePasswordFormComponent extends BaseFormComponent<UserPasswordFormDto> {
-
   public userInfo = new UserPasswordFormDto();
   public dto = UserPasswordFormDto;
 
@@ -31,5 +30,4 @@ export class ChangePasswordFormComponent extends BaseFormComponent<UserPasswordF
       super.onSave(entity);
     }
   }
-
 }

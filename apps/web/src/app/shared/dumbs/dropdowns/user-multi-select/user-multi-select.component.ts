@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserDto } from "@scrum/shared/dtos/user/user.dto";
+import { UserDto } from '@scrum/shared/dtos/user/user.dto';
 
 @Component({
-  selector: 'grace-user-multi-select',
+  selector: 'scrum-user-multi-select',
   templateUrl: './user-multi-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

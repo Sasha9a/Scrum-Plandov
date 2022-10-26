@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
-import moment, { unitOfTime } from "moment-timezone";
-import { Calendar } from "primeng/calendar";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import moment, { unitOfTime } from 'moment-timezone';
+import { Calendar } from 'primeng/calendar';
 
 @Component({
-  selector: 'grace-daterangepicker',
+  selector: 'scrum-daterangepicker',
   templateUrl: './daterangepicker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DaterangepickerComponent {
-
   @ViewChild('rangepicker') public rangepicker: Calendar;
   @Output() public valueChange = new EventEmitter<Date>();
   @Input() public showButtonBar = false;
@@ -47,5 +46,4 @@ export class DaterangepickerComponent {
     this.changeValue.emit(this._value);
     this.rangepicker.toggle();
   }
-
 }

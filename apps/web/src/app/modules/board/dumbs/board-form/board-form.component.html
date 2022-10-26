@@ -26,7 +26,7 @@
 
   <div class="field">
     <label class="font-bold required-field">Столбцы</label>
-    <grace-table name="columnsBoard"
+    <scrum-table name="columnsBoard"
                  responsiveLayout="stack"
                  [reorderableColumns]="true"
                  (rowReorder)="rowReorder($event)"
@@ -65,7 +65,7 @@
           </td>
         </tr>
       </ng-template>
-    </grace-table>
+    </scrum-table>
 
     <button pButton label="Добавить столбец"
             class="p-button-text w-14rem mt-2"
@@ -79,7 +79,7 @@
 <div class="flex flex-wrap justify-content-between mt-5">
   <div>
     <button pButton [label]="saveButtonLabel" class="p-button-success mr-2" (click)="onSave(board)"></button>
-    <grace-go-back-button [route]="route" [queryParams]="queryParams"></grace-go-back-button>
+    <scrum-go-back-button [route]="route" [queryParams]="queryParams"></scrum-go-back-button>
   </div>
   <button *ngIf="canDelete" pButton [label]="'Удалить'" class="p-button-danger p-button-text mr-2" (click)="delete.emit(board)"></button>
 </div>

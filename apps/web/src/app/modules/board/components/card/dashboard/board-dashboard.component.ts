@@ -23,7 +23,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'grace-board-dashboard',
+  selector: 'scrum-board-dashboard',
   templateUrl: './board-dashboard.component.html',
   styleUrls: ['./board-dashboard.component.scss'],
   encapsulation: ViewEncapsulation.None,

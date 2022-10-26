@@ -9,7 +9,7 @@ import { WebsocketSprintService } from '@scrum/web/core/services/sprint/websocke
 import { AuthService } from '@scrum/web/core/services/user/auth.service';
 
 @Component({
-  selector: 'grace-add',
+  selector: 'scrum-add',
   templateUrl: './sprint-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

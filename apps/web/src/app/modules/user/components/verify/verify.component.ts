@@ -1,19 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { RecoveryPasswordFormDto } from "@scrum/shared/dtos/recovery/recovery.password.form.dto";
-import { UserPasswordFormDto } from "@scrum/shared/dtos/user/user.password.form.dto";
-import { VerifyDto } from "@scrum/shared/dtos/verify/verify.dto";
-import { VerifyEmailTypeEnum } from "@scrum/shared/enums/verify.email.type.enum";
-import { UserService } from "@scrum/web/core/services/user/user.service";
-import { VerifyService } from "@scrum/web/core/services/verify/verify.service";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { RecoveryPasswordFormDto } from '@scrum/shared/dtos/recovery/recovery.password.form.dto';
+import { UserPasswordFormDto } from '@scrum/shared/dtos/user/user.password.form.dto';
+import { VerifyDto } from '@scrum/shared/dtos/verify/verify.dto';
+import { VerifyEmailTypeEnum } from '@scrum/shared/enums/verify.email.type.enum';
+import { UserService } from '@scrum/web/core/services/user/user.service';
+import { VerifyService } from '@scrum/web/core/services/verify/verify.service';
 
 @Component({
-  selector: 'grace-verify',
+  selector: 'scrum-verify',
   templateUrl: './verify.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerifyComponent implements OnInit {
-
   public path: string;
   public verifyInfo: VerifyDto;
   public loading = true;
@@ -24,10 +23,12 @@ export class VerifyComponent implements OnInit {
     return VerifyEmailTypeEnum;
   }
 
-  public constructor(private readonly verifyService: VerifyService,
-                     private readonly userService: UserService,
-                     private readonly route: ActivatedRoute,
-                     private readonly cdRef: ChangeDetectorRef) {}
+  public constructor(
+    private readonly verifyService: VerifyService,
+    private readonly userService: UserService,
+    private readonly route: ActivatedRoute,
+    private readonly cdRef: ChangeDetectorRef
+  ) {}
 
   public ngOnInit(): void {
     this.path = this.route.snapshot.params.path;

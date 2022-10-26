@@ -1,4 +1,4 @@
-<grace-multi-select [options]="users"
+<scrum-multi-select [options]="users"
                     [(selectedItems)]="selectedUsers"
                     (selectedItemsChange)="selectedUsersChange.emit($event)"
                     filterBy="name,login"
@@ -13,4 +13,4 @@
       <div>{{ user.name || user.login }}</div>
     </div>
   </ng-template>
-</grace-multi-select>
+</scrum-multi-select>

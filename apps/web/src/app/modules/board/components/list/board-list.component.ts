@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BoardDto } from "@scrum/shared/dtos/board/board.dto";
-import { CrmTableColumn } from "@scrum/web/core/models/crm-table-column";
-import { BoardService } from "@scrum/web/core/services/board/board.service";
+import { BoardDto } from '@scrum/shared/dtos/board/board.dto';
+import { CrmTableColumn } from '@scrum/web/core/models/crm-table-column';
+import { BoardService } from '@scrum/web/core/services/board/board.service';
 
 @Component({
-  selector: 'grace-board-list',
+  selector: 'scrum-board-list',
   templateUrl: './board-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardListComponent implements OnInit {
-
   public loading = true;
   public boards: BoardDto[];
 
@@ -19,8 +18,7 @@ export class BoardListComponent implements OnInit {
     { label: 'Владелец' }
   ];
 
-  public constructor(private readonly boardService: BoardService,
-                     private readonly cdRef: ChangeDetectorRef) {}
+  public constructor(private readonly boardService: BoardService, private readonly cdRef: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     this.boardService.findByMy().subscribe((boards) => {
@@ -33,5 +31,4 @@ export class BoardListComponent implements OnInit {
   public toBoard(board: any): BoardDto {
     return board as BoardDto;
   }
-
 }

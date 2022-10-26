@@ -13,7 +13,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: 'grace-task-add',
+  selector: 'scrum-task-add',
   templateUrl: './task-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -84,9 +84,9 @@
       <div class="col-5 text-gray-500">Автор:</div>
       <div class="col-7">
         <div class="flex gap-2 align-items-center">
-          <grace-user-avatar
+          <scrum-user-avatar
             [user]="{ name: task?.createdUser?.name, login: task?.createdUser?.login, file: task?.createdUser?.avatar }"
-            size=""></grace-user-avatar>
+            size=""></scrum-user-avatar>
           <a
             routerLink="/user/card/{{ task?.createdUser?._id }}"
             target="_blank">
@@ -101,9 +101,9 @@
         <div
           *ngIf="task?.executor"
           class="flex gap-2 align-items-center">
-          <grace-user-avatar
+          <scrum-user-avatar
             [user]="{ name: task?.executor?.name, login: task?.executor?.login, file: task?.executor?.avatar }"
-            size=""></grace-user-avatar>
+            size=""></scrum-user-avatar>
           <a
             routerLink="/user/card/{{ task?.executor?._id }}"
             target="_blank">
@@ -140,9 +140,9 @@
     <div class="flex gap-2">
       <p *ngIf="!task?.files?.length">Нет файлов</p>
       <ng-container *ngFor="let file of task?.files">
-        <grace-file
+        <scrum-file
           *ngIf="file"
-          [file]="file"></grace-file>
+          [file]="file"></scrum-file>
       </ng-container>
     </div>
   </div>

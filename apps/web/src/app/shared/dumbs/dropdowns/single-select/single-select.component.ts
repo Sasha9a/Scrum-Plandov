@@ -7,19 +7,19 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output, SimpleChanges,
+  Output,
+  SimpleChanges,
   ViewChild
-} from "@angular/core";
-import { Dropdown } from "primeng/dropdown";
+} from '@angular/core';
+import { Dropdown } from 'primeng/dropdown';
 
 @Component({
-  selector: 'grace-single-select',
+  selector: 'scrum-single-select',
   templateUrl: './single-select.component.html',
   styleUrls: ['./single-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SingleSelectComponent implements OnInit, OnChanges {
-
   public isNotNamedArray = false;
 
   @Input() public changeValueOptions: any;
@@ -59,17 +59,14 @@ export class SingleSelectComponent implements OnInit, OnChanges {
 
   @Input() public isTemplateCombined = false;
 
-  public constructor(private chRef: ChangeDetectorRef) {
-  }
+  public constructor(private chRef: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     if (this.options?.length && (typeof this.options[0] === 'string' || typeof this.options[0] === 'number')) {
-      this.options = this.options.map(option => (
-        {
-          name: option,
-          value: option
-        }
-      ));
+      this.options = this.options.map((option) => ({
+        name: option,
+        value: option
+      }));
       this.isNotNamedArray = true;
     }
   }
@@ -109,5 +106,4 @@ export class SingleSelectComponent implements OnInit, OnChanges {
   public hidePanel() {
     this.dropdown.hide();
   }
-
 }

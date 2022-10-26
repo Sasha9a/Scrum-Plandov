@@ -8,7 +8,7 @@
       <div class="xl:col-4 md:col-6 col-12">
         <ng-container *ngIf="!recoveryStep; else nextStepRecovery">
           <h1 class="text-center">Восстановление пароля</h1>
-          <grace-change-password-form (save)="recovery($event)"></grace-change-password-form>
+          <scrum-change-password-form (save)="recovery($event)"></scrum-change-password-form>
         </ng-container>
         <ng-template #nextStepRecovery>
           <h3 class="text-center">Пароль успешно изменен!</h3>
@@ -27,4 +27,4 @@
   </ng-container>
 </ng-container>
 
-<grace-spinner *ngIf="loading"></grace-spinner>
+<scrum-spinner *ngIf="loading"></scrum-spinner>

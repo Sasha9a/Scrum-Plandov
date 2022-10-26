@@ -16,13 +16,13 @@ echo 'Connect to Server...'
 
 umask 777
 ssh -tt -i ~/.ssh/id_rsa root@89.223.64.41 << EOF
-cd Grace-Scrum
+cd Scrum-Plandov
 sudo git pull
 sudo npm install
 nx affected:build --all --prod
 sudo cp deploy/nginx.conf /etc/nginx/sites-available/scrum.plandov.ru
 sudo ln -s /etc/nginx/sites-available/scrum.plandov.ru /etc/nginx/sites-enabled/
-sudo cp -r ~/Grace-Scrum/dist/apps/web/* /var/www/scrum.plandov.ru/html
+sudo cp -r ~/Scrum-Plandov/dist/apps/web/* /var/www/scrum.plandov.ru/html
 sudo certbot --nginx --reinstall --redirect -d scrum.plandov.ru -d www.scrum.plandov.ru
 sudo pm2 restart 0
 exit
