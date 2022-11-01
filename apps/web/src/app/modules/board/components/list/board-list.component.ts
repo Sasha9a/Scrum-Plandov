@@ -4,7 +4,7 @@ import { CrmTableColumn } from '@scrum/web/core/models/crm-table-column';
 import { BoardService } from '@scrum/web/core/services/board/board.service';
 
 @Component({
-  selector: 'scrum-board-list',
+  selector: 'scrum-user-list',
   templateUrl: './board-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

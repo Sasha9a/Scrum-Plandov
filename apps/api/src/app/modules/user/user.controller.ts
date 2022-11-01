@@ -1,10 +1,13 @@
 import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { BaseController } from '@scrum/api/core/controllers/base.controller';
+import { Roles } from '@scrum/api/core/decorators/role.decorator';
 import { JwtAuthGuard } from '@scrum/api/core/guards/jwt-auth.guard';
+import { RoleGuard } from '@scrum/api/core/guards/role.guard';
 import sendMail from '@scrum/api/core/services/mail.service';
 import { AuthService } from '@scrum/api/modules/user/auth.service';
 import { UserService } from '@scrum/api/modules/user/user.service';
 import { VerifyService } from '@scrum/api/modules/verify/verify.service';
+import { PaginationQueryDto } from '@scrum/shared/dtos/pagination.query.dto';
 import { RecoveryFormDto } from '@scrum/shared/dtos/recovery/recovery.form.dto';
 import { RecoveryPasswordFormDto } from '@scrum/shared/dtos/recovery/recovery.password.form.dto';
 import { UserCreateFormDto } from '@scrum/shared/dtos/user/user.create.form.dto';
@@ -13,6 +16,7 @@ import { UserEditFormDto } from '@scrum/shared/dtos/user/user.edit.form.dto';
 import { UserLoginFormDto } from '@scrum/shared/dtos/user/user.login.form.dto';
 import { UserPasswordFormDto } from '@scrum/shared/dtos/user/user.password.form.dto';
 import { VerifyCreateDto } from '@scrum/shared/dtos/verify/verify.create.dto';
+import { RoleEnum } from '@scrum/shared/enums/role.enum';
 import { VerifyEmailTypeEnum } from '@scrum/shared/enums/verify.email.type.enum';
 import * as bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
@@ -27,6 +31,16 @@ export class UserController extends BaseController {
     private readonly verifyService: VerifyService
   ) {
     super();
+  }
+
+  @Roles(RoleEnum.SUPERADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Get()
+  public async findAll(@Res() res: Response, @Query() query: PaginationQueryDto) {
+    const queryParams = this.validate<PaginationQueryDto>(query, PaginationQueryDto);
+
+    const result = await this.userService.findAllWithPagination(queryParams);
+    return res.status(HttpStatus.OK).json(result).end();
   }
 
   @UseGuards(JwtAuthGuard)

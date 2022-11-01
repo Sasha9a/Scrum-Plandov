@@ -1,5 +1,5 @@
-import { ErrorHandler, NgModule } from "@angular/core";
 import { CommonModule, DecimalPipe } from "@angular/common";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "@scrum/web/core/app.component";
 import { GlobalErrorHandler } from "@scrum/web/core/services/error-handler.service";
@@ -34,6 +34,10 @@ const routes: Routes = [
       {
         path: 'task',
         loadChildren: () => import('../modules/task/task.module').then(m => m.TaskModule)
+      },
+      {
+        path: 'admin',
+        loadChildren: () => import('../modules/admin/admin.module').then(m => m.AdminModule)
       }
     ]
   }

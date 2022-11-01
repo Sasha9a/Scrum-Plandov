@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FileDto } from '@scrum/shared/dtos/file.dto';
+import { RoleEnum } from '@scrum/shared/enums/role.enum';
 import { ErrorService } from '@scrum/web/core/services/error.service';
 import { AuthService } from '@scrum/web/core/services/user/auth.service';
 import { MenuItem } from 'primeng/api';
@@ -31,12 +32,11 @@ export class HeaderLayoutComponent implements OnInit, OnDestroy {
         login: user?.login,
         file: user?.avatar
       };
+      this.loadMenu();
       this.cdRef.markForCheck();
     });
 
     this.authService.loginUser$.next(this.authService.currentUser);
-
-    this.loadMenu();
   }
 
   public ngOnDestroy() {
@@ -52,6 +52,15 @@ export class HeaderLayoutComponent implements OnInit, OnDestroy {
       {
         label: 'Настройки',
         routerLink: '/user/settings'
+      },
+      {
+        separator: true,
+        visible: this.authService.hasRole(RoleEnum.SUPERADMIN)
+      },
+      {
+        label: 'Админ-панель',
+        routerLink: '/admin',
+        visible: this.authService.hasRole(RoleEnum.SUPERADMIN)
       },
       {
         separator: true
